@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/admin/updateConfig" method="post">
+        <div>
+            <label for="db">db: </label>
+            <input type="text"  name="db">
+        </div>
+        <div>
+            <label for="pt">procedure/table: </label>
+            <input type="text"  name="pt">
+        </div>
+        <div>
+            <label for="table">tableName/procedureName: </label>
+            <input type="text"  name="table">
+        </div>
+        <div>
+            <label for="table">MTDTable/MTDProcedue/columns/values: </label>
+            <input type="text"  name="mcv">
+        </div>
+        <div>
+            <label for="ntd">name/type/description: </label>
+            <input type="text"  name="ntd">
+        </div>
+        <div>
+            <label for="ntd">valueName/columnName/procedureName/tableName: </label>
+            <input type="text"  name="vncn">
+        </div>
+        <div>
+            <label for="to">to: </label>
+            <input type="text" name="to">         
+        </div>
+        <input type="submit" value="submit">
+    </form>
+
+    <%for (let a=0; a < config.length; a++) {%>
+        <%for (let b in config[a]) {%>
+            <h2 style="color: green;">
+                <%= b%>
+            </h2>
+            <hr>
+            <hr>
+            <hr>
+            <%for (let c=0; c < config[a][b].length; c++) {%>
+                <%for (let d in config[a][b][c]) {%>
+                    <h3 style="color: blue;">
+                        <%= d%>
+                    </h3>
+                    <hr>
+                    <hr>
+                    <%for (let e=0; e < config[a][b][c][d].length; e++) {%>
+                        <%for (let f in config[a][b][c][d][e]) {%>
+                            <%if(f==='MTDProcedure'){%>
+                                <h4 style="color: red;">
+                                    <%= f%>
+                                </h4>
+                                <div style="display: flex;">
+                                    <h5>
+                                        <%= Object.keys(config[a][b][c][d][e][f]['name'])%> -
+                                    </h5>
+                                    <h5>
+                                        <%= Object.values(config[a][b][c][d][e][f]['name'])%>,
+                                    </h5>
+                                    <h5>
+                                        <%= Object.keys(config[a][b][c][d][e][f]['description'])%> -
+                                    </h5>
+                                    <h5>
+                                        <%= Object.values(config[a][b][c][d][e][f]['description'])%>,
+                                    </h5>
+                                </div>
+                                <%}%>
+                                <%if(f==='values'){%>
+                                    <h4 style="color: red;">
+                                        <%= f%>
+                                    </h4>
+                                    <%for(let g in config[a][b][c][d][e][f]){%>
+                                        <div style="display: flex;">
+                                            <h5>
+                                                <%= Object.keys(config[a][b][c][d][e][f][g]['name'])%> -
+                                            </h5>
+                                            <h5>
+                                                <%= Object.values(config[a][b][c][d][e][f][g]['name'])%>,
+                                            </h5>
+                                            <h5>
+                                                <%= Object.keys(config[a][b][c][d][e][f][g]['type'])%> -
+                                            </h5>
+                                            <h5>
+                                                <%= Object.values(config[a][b][c][d][e][f][g]['type'])%>,
+                                            </h5>
+                                        </div>
+                                    <%}%>
+                                <%}%>
+                                <%if(f==='MTDTable'){%>
+                                    <h4 style="color: red;">
+                                        <%= f%>
+                                    </h4>
+                                    <div style="display: flex;">
+                                        <h5>
+                                            <%= Object.keys(config[a][b][c][d][e][f]['name'])%> -
+                                        </h5>
+                                        <h5>
+                                            <%= Object.values(config[a][b][c][d][e][f]['name'])%>,
+                                        </h5>
+                                        <h5>
+                                            <%=
+                                                Object.keys(config[a][b][c][d][e][f]['description'])%>
+                                                -
+                                        </h5>
+                                        <h5>
+                                            <%=
+                                                Object.values(config[a][b][c][d][e][f]['description'])%>
+                                                ,
+                                        </h5>
+                                    </div>
+                                <%}%>
+                                <%if(f==='columns'){%>
+                                    <h4 style="color: red;">
+                                        <%= f%>
+                                    </h4>
+                                    <%for(let g in config[a][b][c][d][e][f]){%>
+                                    <div style="display: flex;">
+                                        <h5>
+                                            <%=
+                                                Object.keys(config[a][b][c][d][e][f][g]['name'])%>
+                                                -
+                                        </h5>
+                                        <h5>
+                                            <%=
+                                                Object.values(config[a][b][c][d][e][f][g]['name'])%>
+                                                ,
+                                        </h5>
+                                        <h5>
+                                            <%=
+                                                Object.keys(config[a][b][c][d][e][f][g]['type'])%>
+                                                -
+                                        </h5>
+                                        <h5>
+                                            <%=
+                                                Object.values(config[a][b][c][d][e][f][g]['type'])%>
+                                                ,
+                                        </h5>
+                                    </div>
+                                    <%}%>
+                                <%}%>
+                        <%}%>
+                    <%}%>
+                <%}%>
+            <%}%>
+        <%}%>
+    <%}%>
+</body>
+
+</html>
