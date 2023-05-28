@@ -16,7 +16,7 @@ const poolConfig = () => ({
 
 let pool;
 
-const connect = async () => {
+const connectSql = async () => {
     if (!pool) {
         pool = new sql.ConnectionPool(poolConfig());
     }
@@ -29,5 +29,5 @@ const getPool = () => pool;
 
 module.exports = {
     getPool,
-    connect
+    connectSql
 };
