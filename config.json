@@ -18,7 +18,7 @@
                                     "tableName": "tableName"
                                 },
                                 "type": {
-                                    "type": "NVARCHAR (20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -26,7 +26,7 @@
                                     "values": "values"
                                 },
                                 "type": {
-                                    "type": "NVARCHAR (200)"
+                                    "type": "NVARCHAR(200)"
                                 }
                             }
                         ]
@@ -55,6 +55,34 @@
                                 },
                                 "type": {
                                     "type": "NVARCHAR(MAX)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "condition": "condition"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "ReadAll": "pro_ReadAll"
+                            },
+                            "description": {
+                                "description": "Procedure for reading all columns from table"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "TableName": "TableName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(30)"
                                 }
                             },
                             {
@@ -99,6 +127,54 @@
                                 },
                                 "type": {
                                     "type": "NVARCHAR(MAX)"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "UpdateQuotation": "pro_UpdateQuotation"
+                            },
+                            "description": {
+                                "description": "Procedure for updating quotation"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "serialNumber": "serialNumber"
+                                },
+                                "type": {
+                                    "type": "INT"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "UpdateSuppliersBranches": "pro_UpdateSuppliersBranches"
+                            },
+                            "description": {
+                                "description": "Procedure for updating suppliers and branches together"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "name": "name"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(30)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "supplierCode": "supplierCode"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(30)"
                                 }
                             }
                         ]
@@ -732,7 +808,7 @@
                                     "Id": "Id"
                                 },
                                 "type": {
-                                    "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+                                    "type": "INT IDENTITY (1000,1) NOT NULL PRIMARY KEY"
                                 }
                             },
                             {
@@ -740,7 +816,7 @@
                                     "SupplierCode": "SupplierCode"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) NOT NULL "
+                                    "type": "NVARCHAR(50) NOT NULL "
                                 }
                             },
                             {
@@ -748,7 +824,7 @@
                                     "SupplierName": "SupplierName"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50)NOT NULL"
+                                    "type": "NVARCHAR(50) NOT NULL"
                                 }
                             },
                             {
@@ -756,7 +832,7 @@
                                     "licensedDealerNumber": "licensedDealerNumber"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -764,7 +840,7 @@
                                     "BokkeepingNumber": "BokkeepingNumber"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -772,7 +848,7 @@
                                     "ObjectiveBank": "ObjectiveBank"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -780,7 +856,7 @@
                                     "ConditionGushyPayment": "ConditionGushyPayment"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -788,7 +864,7 @@
                                     "PreferredPaymentDate": "PreferredPaymentDate"
                                 },
                                 "type": {
-                                    "type": "DATE  NULL"
+                                    "type": "DATE NULL"
                                 }
                             },
                             {
@@ -796,7 +872,7 @@
                                     "Ovligo": "Ovligo"
                                 },
                                 "type": {
-                                    "type": " int  NULL"
+                                    "type": "INT NULL"
                                 }
                             },
                             {
@@ -804,7 +880,7 @@
                                     "Status": "Status"
                                 },
                                 "type": {
-                                    "type": " int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -812,7 +888,7 @@
                                     "Street": "Street"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)NOT NULL"
+                                    "type": "NVARCHAR(20)NOT NULL"
                                 }
                             },
                             {
@@ -820,7 +896,7 @@
                                     "HomeNumber": "HomeNumber"
                                 },
                                 "type": {
-                                    "type": " int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -828,7 +904,7 @@
                                     "City": "City"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20)NOT NULL"
+                                    "type": "NVARCHAR(20)NOT NULL"
                                 }
                             },
                             {
@@ -836,7 +912,7 @@
                                     "ZipCode": "ZipCode"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -844,7 +920,7 @@
                                     "Phone1": "Phone1"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)NOT NULL"
+                                    "type": "NVARCHAR(20)NOT NULL"
                                 }
                             },
                             {
@@ -852,7 +928,7 @@
                                     "Phone2": "Phone2"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -860,7 +936,7 @@
                                     "Mobile": "Mobile"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -868,7 +944,7 @@
                                     "Fax": "Fax"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -876,7 +952,7 @@
                                     "Mail": "Mail"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NULL"
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             },
                             {
@@ -884,7 +960,7 @@
                                     "Notes": "Notes"
                                 },
                                 "type": {
-                                    "type": "nvarchar(MAX) NULL"
+                                    "type": "NVARCHAR(MAX) NULL"
                                 }
                             },
                             {
@@ -893,170 +969,6 @@
                                 },
                                 "type": {
                                     "type": "DATE NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT  NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "DisabledDate": "DisabledDate"
-                                },
-                                "type": {
-                                    "type": "DATE NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "DisableUser": "DisableUser"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "Branches": "tbl_Branches"
-                            },
-                            "description": {
-                                "description": "Table for the details of branches"
-                            }
-                        },
-                        "columns": [
-                            {
-                                "name": {
-                                    "Id": "Id"
-                                },
-                                "type": {
-                                    "type": "int Identity (1000,1) NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "SupplierCode": "SupplierCode"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL FOREIGN KEY(Id) REFERENCES tbl_Suppliers(Id) "
-                                }
-                            },
-                            {
-                                "name": {
-                                    "BranchName": "BranchName"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Status": "Status"
-                                },
-                                "type": {
-                                    "type": " int NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Street": "Street"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50)NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "HomeNumber": "HomeNumber"
-                                },
-                                "type": {
-                                    "type": " int NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "City": "City"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20)NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "ZipCode": "ZipCode"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Phone1": "Phone1"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Phone2": "Phone2"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Mobile": "Mobile"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Fax": "Fax"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Mail": "Mail"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "Notes": "Notes"
-                                },
-                                "type": {
-                                    "type": "nvarchar(MAX) NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "CreationDate": "CreationDate"
-                                },
-                                "type": {
-                                    "type": "DATE NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "UserThatInsert": "UserThatInsert"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
                                 }
                             },
                             {
@@ -1080,7 +992,171 @@
                                     "DisableUser": "DisableUser"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NULL"
+                                    "type": " NVARCHAR(20) NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Branches": "tbl_Branches"
+                            },
+                            "description": {
+                                "description": "Table for the details of branches"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "Id": "Id"
+                                },
+                                "type": {
+                                    "type": "INT Identity (1000,1) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "SupplierCode": "SupplierCode"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL FOREIGN KEY(Id) REFERENCES tbl_Suppliers(Id) "
+                                }
+                            },
+                            {
+                                "name": {
+                                    "BranchName": "BranchName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Status": "Status"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Street": "Street"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(50)NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "HomeNumber": "HomeNumber"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "City": "City"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ZipCode": "ZipCode"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Phone1": "Phone1"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Phone2": "Phone2"
+                                },
+                                "type": {
+                                    "type": " NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Mobile": "Mobile"
+                                },
+                                "type": {
+                                    "type": " NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Fax": "Fax"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Mail": "Mail"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Notes": "Notes"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "CreationDate": "CreationDate"
+                                },
+                                "type": {
+                                    "type": "DATE NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "UserThatInsert": "UserThatInsert"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DisabledDate": "DisabledDate"
+                                },
+                                "type": {
+                                    "type": "DATE NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DisableUser": "DisableUser"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NULL"
                                 }
                             }
                         ]
@@ -1091,7 +1167,7 @@
                                 "Orderers": "tbl_Orderers"
                             },
                             "description": {
-                                "description": "table of orderers details"
+                                "description": "Table of orderers details"
                             }
                         },
                         "columns": [
@@ -1151,7 +1227,7 @@
                                 "PouringsTypes": "tbl_PouringsTypes"
                             },
                             "description": {
-                                "description": "type of pourings "
+                                "description": "Type of pourings"
                             }
                         },
                         "columns": [
@@ -1203,7 +1279,7 @@
                                 "StatusesLead": "tbl_StatusesLead"
                             },
                             "description": {
-                                "description": "table of statuses leads option"
+                                "description": "Table of statuses leads option"
                             }
                         },
                         "columns": [
@@ -1272,7 +1348,7 @@
                                     "ClientCode": "ClientCode"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) NOT NULL"
+                                    "type": "NVARCHAR(50) NOT NULL"
                                 }
                             },
                             {
@@ -1280,7 +1356,7 @@
                                     "ClientName": "ClientName"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) NOT NULL"
+                                    "type": "NVARCHAR(50) NOT NULL"
                                 }
                             },
                             {
@@ -1288,7 +1364,7 @@
                                     "PrivateCompanyNumber": "PrivateCompanyNumber"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) NOT NULL"
+                                    "type": "NVARCHAR(50) NOT NULL"
                                 }
                             },
                             {
@@ -1296,7 +1372,7 @@
                                     "BookkeepingNumber": "BookkeepingNumber"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) "
+                                    "type": "NVARCHAR(50) "
                                 }
                             },
                             {
@@ -1304,7 +1380,7 @@
                                     "DestinationBank": "DestinationBank"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) "
+                                    "type": "NVARCHAR(50) "
                                 }
                             },
                             {
@@ -1312,7 +1388,7 @@
                                     "PaymentTermsFluent": "PaymentTermsFluent"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50)"
+                                    "type": "NVARCHAR(50)"
                                 }
                             },
                             {
@@ -1320,7 +1396,7 @@
                                     "PreferredPaymentDate": "PreferredPaymentDate"
                                 },
                                 "type": {
-                                    "type": "int"
+                                    "type": "INT"
                                 }
                             },
                             {
@@ -1328,7 +1404,7 @@
                                     "Ovligo": "Ovligo"
                                 },
                                 "type": {
-                                    "type": "int"
+                                    "type": "INT"
                                 }
                             },
                             {
@@ -1336,7 +1412,7 @@
                                     "ReceiptIssueTerm": "ReceiptIssueTerm"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1344,7 +1420,7 @@
                                     "ReceiptCentralism": "ReceiptCentralism"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1352,7 +1428,7 @@
                                     "AccountantClassifiedCode": "AccountantClassifiedCode"
                                 },
                                 "type": {
-                                    "type": "int"
+                                    "type": "INT"
                                 }
                             },
                             {
@@ -1360,7 +1436,7 @@
                                     "Status": "Status"
                                 },
                                 "type": {
-                                    "type": "int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -1368,7 +1444,7 @@
                                     "Description": "Description"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1376,7 +1452,7 @@
                                     "Street": "Street"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -1384,7 +1460,7 @@
                                     "House": "House"
                                 },
                                 "type": {
-                                    "type": "int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -1392,7 +1468,7 @@
                                     "City": "City"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -1400,7 +1476,7 @@
                                     "ZipCode": "ZipCode"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1408,7 +1484,7 @@
                                     "Telephone1": "Telephone1"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -1416,7 +1492,7 @@
                                     "Telephone2": "Telephone2"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1424,7 +1500,7 @@
                                     "MobilePhone": "MobilePhone"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1432,7 +1508,7 @@
                                     "Fax": "Fax"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1440,7 +1516,7 @@
                                     "Email": "Email"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1448,7 +1524,7 @@
                                     "Comments": "Comments"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             },
                             {
@@ -1456,7 +1532,7 @@
                                     "CreationDate": "CreationDate"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -1464,7 +1540,7 @@
                                     "UserThatAdd": "UserThatAdd"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -1472,7 +1548,7 @@
                                     "Disabled": "Disabled"
                                 },
                                 "type": {
-                                    "type": "bit NOT NULL"
+                                    "type": "BIT NOT NULL"
                                 }
                             },
                             {
@@ -1480,7 +1556,7 @@
                                     "DeletionDate": "DeletionDate"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) "
+                                    "type": "NVARCHAR(50)"
                                 }
                             },
                             {
@@ -1488,7 +1564,7 @@
                                     "UserThatDelete": "UserThatDelete"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)"
+                                    "type": "NVARCHAR(20)"
                                 }
                             }
                         ]
@@ -1516,7 +1592,7 @@
                                     "StatusName": "StatusName"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) NOT NULL"
+                                    "type": "NVARCHAR(50) NOT NULL"
                                 }
                             }
                         ]
@@ -1536,7 +1612,7 @@
                                     "SerialNumber": "SerialNumber"
                                 },
                                 "type": {
-                                    "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+                                    "type": "INT Identity (1000,1) NOT NULL PRIMARY KEY"
                                 }
                             },
                             {
@@ -1544,7 +1620,7 @@
                                     "ClientCode": "ClientCode"
                                 },
                                 "type": {
-                                    "type": "int NOT NULL "
+                                    "type": "INT NOT NULL "
                                 }
                             },
                             {
@@ -1552,7 +1628,7 @@
                                     "Date": "Date"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {
@@ -1560,7 +1636,7 @@
                                     "PriceBeforeDiscount": "PriceBeforeDiscount"
                                 },
                                 "type": {
-                                    "type": "int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -1568,7 +1644,7 @@
                                     "DiscountPercent": "DiscountPercent"
                                 },
                                 "type": {
-                                    "type": "float NULL"
+                                    "type": "FLOAT NULL"
                                 }
                             },
                             {
@@ -1576,7 +1652,7 @@
                                     "Discount": "Discount"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1584,7 +1660,7 @@
                                     "PriceAfterDiscount": "PriceAfterDiscount"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1592,7 +1668,7 @@
                                     "VATPercent": "VATPercent"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1600,7 +1676,7 @@
                                     "VAT": "VAT"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1608,7 +1684,7 @@
                                     "Total": "Total"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1616,7 +1692,7 @@
                                     "UserName": "UserName"
                                 },
                                 "type": {
-                                    "type": "int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -1624,7 +1700,7 @@
                                     "Comments": "Comments"
                                 },
                                 "type": {
-                                    "type": "nvarchar(1000) NULL"
+                                    "type": "NVARCHAR(1000) NULL"
                                 }
                             },
                             {
@@ -1632,7 +1708,7 @@
                                     "Contact": "Contact"
                                 },
                                 "type": {
-                                    "type": "varchar(255) NULL"
+                                    "type": "VARCHAR(255) NULL"
                                 }
                             },
                             {
@@ -1648,7 +1724,7 @@
                                     "ClosingComments": "ClosingComments"
                                 },
                                 "type": {
-                                    "type": "nvarchar(1000) NULL"
+                                    "type": "NVARCHAR(1000) NULL"
                                 }
                             },
                             {
@@ -1664,7 +1740,7 @@
                                     "Disabled": "Disabled"
                                 },
                                 "type": {
-                                    "type": "int NOT NULL"
+                                    "type": "INT NOT NULL"
                                 }
                             },
                             {
@@ -1683,7 +1759,7 @@
                                 "priceList": "tbl_PriceList"
                             },
                             "description": {
-                                "description": "table that contains all the priceList of the products"
+                                "description": "Table that contains all the priceList of the products"
                             }
                         },
                         "columns": [
@@ -1724,7 +1800,7 @@
                                     "CreateDate": "CreateDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {
@@ -1748,7 +1824,7 @@
                                     "DisableDate": "DisableDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {
@@ -1775,7 +1851,7 @@
                                 "PaymentTypes": "tbl_Prices"
                             },
                             "description": {
-                                "description": "table of prices by product"
+                                "description": "Table of prices by product"
                             }
                         },
                         "columns": [
@@ -1816,7 +1892,7 @@
                                     "AddedDate": "AddedDate"
                                 },
                                 "type": {
-                                    "type": "date NULL"
+                                    "type": "DATE NULL"
                                 }
                             },
                             {
@@ -1843,7 +1919,7 @@
                                 "priceList": "tbl_CitiesAdditions"
                             },
                             "description": {
-                                "description": "table that contains all the prices additions about the cities"
+                                "description": "Table that contains all the prices additions about the cities"
                             }
                         },
                         "columns": [
@@ -1876,7 +1952,7 @@
                                     "Price": "Price"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1895,7 +1971,7 @@
                                 "priceList": "tbl_TimeAdditions"
                             },
                             "description": {
-                                "description": "table that contains all the prices additions about the times"
+                                "description": "Table that contains all the prices additions about the times"
                             }
                         },
                         "columns": [
@@ -1920,7 +1996,7 @@
                                     "Price": "Price"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -1952,7 +2028,7 @@
                                     "StartDate": "StartDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {
@@ -1960,7 +2036,7 @@
                                     "EndDate": "EndDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {
@@ -1979,7 +2055,7 @@
                                 "PaymentTypes": "tbl_DistanceAdditions"
                             },
                             "description": {
-                                "description": "table that contains all the prices additions about the distance"
+                                "description": "Table that contains all the prices additions about the distance"
                             }
                         },
                         "columns": [
@@ -2031,7 +2107,7 @@
                                 "priceList": "tbl_TruckFill"
                             },
                             "description": {
-                                "description": "table that contains the fill count of truck"
+                                "description": "Table that contains the fill count of truck"
                             }
                         },
                         "columns": [
@@ -2056,7 +2132,7 @@
                                     "AmountTransportDiff": "AmountTransportDiff"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -2064,7 +2140,7 @@
                                     "MaxTransportDiff": "MaxTransportDiff"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -2072,7 +2148,7 @@
                                     "Price": "Price"
                                 },
                                 "type": {
-                                    "type": "float NOT NULL"
+                                    "type": "FLOAT NOT NULL"
                                 }
                             },
                             {
@@ -2091,7 +2167,7 @@
                                 "PaymentTypes": "tbl_PricesListBySupplierOrClient"
                             },
                             "description": {
-                                "description": "table that ocntacts between the suppliers and clients to them prices lists"
+                                "description": "Table that contacts between the suppliers and clients to them prices lists"
                             }
                         },
                         "columns": [
@@ -2124,7 +2200,7 @@
                                     "Price": "StartDate"
                                 },
                                 "type": {
-                                    "type": "date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {
@@ -2132,7 +2208,7 @@
                                     "SupplierOrClient": "EndDate"
                                 },
                                 "type": {
-                                    "type": "date NOT NULL"
+                                    "type": "DATE NOT NULL"
                                 }
                             },
                             {

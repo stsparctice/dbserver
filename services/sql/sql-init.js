@@ -118,7 +118,7 @@ async function createProcedures() {
 async function createSpecialProcedures() {
     _ = await getPool().request().query(`
     CREATE OR ALTER PROCEDURE pro_UpdateQuotation
-        @serialNumber int
+        @serialNumber INT
     AS
     BEGIN
     BEGIN TRAN

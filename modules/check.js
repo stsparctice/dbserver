@@ -1,5 +1,22 @@
 const config = require('../config.json')
 
+
+
+// לאה יקרה!!
+// בסיום השיעור תתקשרי אלי לפני שאת מתחילה לעבוד ולפני שאת פותחת לבדוק מה עשיתי
+// תודה מראש!!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
 //Check a read object
 async function checkObjRead(obj) {
     let message = await isEmpty(obj);
@@ -93,6 +110,24 @@ async function ColsEqualsToVals(obj) {
     if (array1.length === array2.length) return;
     return array1.length > array2.length ? 'One value is missing' : 'One column is missing';
 };
+
+
+// לאה יקרה!!
+// בסיום השיעור תתקשרי אלי לפני שאת מתחילה לעבוד ולפני שאת פותחת לבדוק מה עשיתי
+// תודה מראש!!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // async function isPerfect(obj) {
 //     let { tableName, columns, values } = obj;
