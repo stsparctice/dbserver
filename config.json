@@ -224,7 +224,15 @@
                                 "type": {
                                     "type": "INT NOT NULL"
                                 },
-                                "values": {"values":[1,2,3,4,5]}
+                                "values": {
+                                    "values": [
+                                        1,
+                                        2,
+                                        3,
+                                        4,
+                                        5
+                                    ]
+                                }
                             },
                             {
                                 "name": {
@@ -232,9 +240,16 @@
                                 },
                                 "type": {
                                     "type": "NVARCHAR(20)  NOT NULL"
-                                },                                
-                                "values": {"values":["Cash","Cheque","Credit","StandingOrder","BankTransfer"]}
-
+                                },
+                                "values": {
+                                    "values": [
+                                        "Cash",
+                                        "Cheque",
+                                        "Credit",
+                                        "StandingOrder",
+                                        "BankTransfer"
+                                    ]
+                                }
                             }
                         ]
                     },
@@ -441,7 +456,7 @@
                                     "ReceiptNumber": "ReceiptNumber"
                                 },
                                 "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
+                                    "type": "NVARCHAR(20) NOT NULL"
                                 }
                             },
                             {
@@ -701,7 +716,7 @@
                                 }
                             }
                         ]
-                    }, 
+                    },
                     {
                         "MTDTable": {
                             "name": {
@@ -905,7 +920,7 @@
                                 }
                             }
                         ]
-                    }, 
+                    },
                     {
                         "MTDTable": {
                             "name": {
@@ -1066,114 +1081,6 @@
                                 },
                                 "type": {
                                     "type": "nvarchar(20) NULL"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "priceList": "tbl_priceList"
-                            },
-                            "description": {
-                                "description": "table that contains all the priceList of the products"
-                            }
-                        },
-                        "columns": [
-                            {
-                                "name": {
-                                    "id": "id"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "date": "date"
-                                },
-                                "type": {
-                                    "type": "DATE NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "priceListCode": "priceListCode"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "areaName": "areaName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "itemCode": "itemCode"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "price": "price"
-                                },
-                                "type": {
-                                    "type": "INT  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "reduction": "reduction"
-                                },
-                                "type": {
-                                    "type": "INT"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "primaryAmount": "primaryAmount"
-                                },
-                                "type": {
-                                    "type": "INT  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "unitOfMeasure": "unitOfMeasure"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "additionDate": "additionDate"
-                                },
-                                "type": {
-                                    "type": "DATE  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "disable": "disable"
-                                },
-                                "type": {
-                                    "type": "INT  NOT NULL"
-                                }
-                            },
-                            {
-                                "name": {
-                                    "deleteDate": "deleteDate"
-                                },
-                                "type": {
-                                    "type": "DATE"
                                 }
                             }
                         ]
@@ -1613,12 +1520,648 @@
                                 }
                             }
                         ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Quotation": "tbl_Quotation"
+                            },
+                            "description": {
+                                "description": "Table for the details of quotations"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "SerialNumber": "SerialNumber"
+                                },
+                                "type": {
+                                    "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ClientCode": "ClientCode"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL "
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Date": "Date"
+                                },
+                                "type": {
+                                    "type": "Date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "PriceBeforeDiscount": "PriceBeforeDiscount"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DiscountPercent": "DiscountPercent"
+                                },
+                                "type": {
+                                    "type": "float NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Discount": "Discount"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "PriceAfterDiscount": "PriceAfterDiscount"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "VATPercent": "VATPercent"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "VAT": "VAT"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Total": "Total"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "UserName": "UserName"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Comments": "Comments"
+                                },
+                                "type": {
+                                    "type": "nvarchar(1000) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Contact": "Contact"
+                                },
+                                "type": {
+                                    "type": "varchar(255) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "PayoffDate": "PayoffDate"
+                                },
+                                "type": {
+                                    "type": "DATE NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ClosingComments": "ClosingComments"
+                                },
+                                "type": {
+                                    "type": "nvarchar(1000) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "AddedDate": "AddedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DisabledDate": "DisabledDate"
+                                },
+                                "type": {
+                                    "type": "DATE NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "priceList": "tbl_PriceList"
+                            },
+                            "description": {
+                                "description": "table that contains all the priceList of the products"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "Id": "Id"
+                                },
+                                "type": {
+                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "PriceListName": "PriceListName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Category": "Category"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Associate": "Associate"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "CreateDate": "CreateDate"
+                                },
+                                "type": {
+                                    "type": "Date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "UserName": "UserName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Active": "Active"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DisableDate": "DisableDate"
+                                },
+                                "type": {
+                                    "type": "Date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DisableUser": "DisableUser"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "PaymentTypes": "tbl_Prices"
+                            },
+                            "description": {
+                                "description": "table of prices by product"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "PriceListId": "PriceListId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ProductId": "ProductId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "Price"
+                                },
+                                "type": {
+                                    "type": "FLOAT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Discount": "Discount"
+                                },
+                                "type": {
+                                    "type": "FLOAT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "AddedDate": "AddedDate"
+                                },
+                                "type": {
+                                    "type": "date NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "UserName": "UserName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "priceList": "tbl_CitiesAdditions"
+                            },
+                            "description": {
+                                "description": "table that contains all the prices additions about the cities"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "PriceListId": "PriceListId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ProductId": "ProductId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "CityId": "CityId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "Price"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "priceList": "tbl_TimeAdditions"
+                            },
+                            "description": {
+                                "description": "table that contains all the prices additions about the times"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "PriceListId": "PriceListId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ProductId": "ProductId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "Price"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DayOfTheWeek": "DayOfTheWeek"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "StartHour": "StartHour"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "EndHour": "EndHour"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "StartDate": "StartDate"
+                                },
+                                "type": {
+                                    "type": "Date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "EndDate": "EndDate"
+                                },
+                                "type": {
+                                    "type": "Date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "PaymentTypes": "tbl_DistanceAdditions"
+                            },
+                            "description": {
+                                "description": "table that contains all the prices additions about the distance"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "PriceListId": "PriceListId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ProductId": "ProductId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "MinDistance": "MinDistance"
+                                },
+                                "type": {
+                                    "type": "FLOAT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "Price"
+                                },
+                                "type": {
+                                    "type": "FLOAT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "priceList": "tbl_TruckFill"
+                            },
+                            "description": {
+                                "description": "table that contains the fill count of truck"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "PriceListId": "PriceListId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ProductId": "ProductId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "AmountTransportDiff": "AmountTransportDiff"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "MaxTransportDiff": "MaxTransportDiff"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "Price"
+                                },
+                                "type": {
+                                    "type": "float NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "PaymentTypes": "tbl_PricesListBySupplierOrClient"
+                            },
+                            "description": {
+                                "description": "table that ocntacts between the suppliers and clients to them prices lists"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "Id": "Id"
+                                },
+                                "type": {
+                                    "type": "INT IDENTITY NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "PriceListId": "PriceListId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "SupplierOrClient": "SupplierOrClient"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "StartDate"
+                                },
+                                "type": {
+                                    "type": "date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "SupplierOrClient": "EndDate"
+                                },
+                                "type": {
+                                    "type": "date NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Price": "AreaId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "Disabled": "Disabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            }
+                        ]
                     }
                 ]
             }
         ]
     },
     {
-        "mongodb": []
+        "mongodb": {
+            "leads": "leads",
+            "products": "products",
+            "areas": "areas"
+        }
     }
 ]

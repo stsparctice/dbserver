@@ -9,4 +9,15 @@ const checkmember = obj => {
     return obj;
 };
 
-module.exports = { checkmember };
+const checkUserRole = (role) => {
+    return (req, res, next) => {
+        if (req.session.role === role) {
+            next();
+        }
+        else {
+            res.redirect('/');
+        };
+    };
+};
+
+module.exports = { checkmember, checkUserRole };
