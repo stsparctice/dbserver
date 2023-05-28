@@ -158,6 +158,21 @@ async function createSpecialProcedures() {
     COMMIT
     END
     `);
+
+    _ = await getPool().request().query(`
+    CREATE OR ALTER PROCEDURE pro_CountRows
+    @tableName NVARCHAR(20) , 
+    @condition NVARCHAR(MAX)
+        AS
+        DECLARE @COMMAND NVARCHAR(4000) 
+        BEGIN
+        SET @COMMAND = 
+            'SELECT COUNT(*) FROM ' + @tableName +
+            ' WHERE ' + @condition
+
+        EXEC(@COMMAND)
+    END
+`);
 }
 
 

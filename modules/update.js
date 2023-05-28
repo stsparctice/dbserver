@@ -23,4 +23,11 @@ async function updateSuppliersBranchesSql(obj) {
     return result;
 };
 
-module.exports = { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng };
+async function dropCollectionMng(obj) {
+    mongoCollection.setCollection(obj.collection);
+    const response = await mongoCollection.dropCollection(obj);
+    return response;
+};
+
+
+module.exports = { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng};

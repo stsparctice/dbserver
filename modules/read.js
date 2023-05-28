@@ -1,23 +1,19 @@
-const { read, readAll } = require('../services/sql/sql-operations');
-const { checkObjRead, checkObjReadAll } = require('./check')
+const { read, readAll ,countRows } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
-    let message = await checkObjRead(obj);
-    if (message) {
-        return message;
-    }
     const list = await read(obj);
     return list;
 };
 
 async function getAllSql(obj) {
-    let message = await checkObjReadAll(obj);
-    if (message) {
-        return message;
-    }
     const list = await readAll(obj);
+    return list;
+};
+
+async function countRowsSql(obj) {
+    const list = await countRows(obj);
     return list;
 };
 
@@ -39,4 +35,4 @@ async function getCountDocumentsMng(collection) {
     return response;
 };
 
-module.exports = { getDetailsSql, getAllSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng };
+module.exports = { getDetailsSql, getAllSql,countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng };

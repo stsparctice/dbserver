@@ -63,6 +63,15 @@ const updateSuppliersBranches = async function (obj) {
      return result;
 };
 
+const countRows = async function (obj) {
+     const { tableName, condition } = obj;
+     const result = await getPool().request()
+          .input('tableName', tableName)
+          .input('condition', condition)
+          .execute(`pro_CountRows`);
+     return result;
+};
+
 function setValues(obj) {
      let values = "";
      for (let key in obj) {
@@ -85,5 +94,6 @@ module.exports = {
      readAll,
      update,
      updateQuotation,
-     updateSuppliersBranches
+     updateSuppliersBranches,
+     countRows
 };

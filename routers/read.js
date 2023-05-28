@@ -1,12 +1,16 @@
 const express = require('express');
-const 
-router = express.Router();
-const { getDetailsSql, getAllSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
+const router = express.Router();
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
 router.use(express.json());
 
 router.post('/readTop20', async (req, res) => {
     const table = await getDetailsSql(req.body);
     res.status(200).send(table);
+});
+
+router.post('/countRows', async (req, res) => {
+    const count = await countRowsSql(req.body);
+    res.status(200).send(count);
 });
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
