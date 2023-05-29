@@ -1,7 +1,10 @@
 require('dotenv').config();
+const { findSubDirectoriesSync } = require('../readFiles')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection')
+const { create } = require('../sql/sql-operations')
 const config = require('../../config.json')
+const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
 
 function buildColumns(details) {
     let columns = '';
@@ -13,6 +16,13 @@ function buildColumns(details) {
 };
 
 async function createTables() {
+    let flag = false;
+    const result = await getPool().request()
+        .input('tableName', 'tbl_BuytonGrain')
+        .execute(`pro_checkTableIsExist`);
+    if (result.returnValue == 0) {
+        flag = true;
+    }
 
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') CREATE DATABASE [${SQL_DBNAME}];`);
 
@@ -24,7 +34,23 @@ async function createTables() {
         `);
     };
 
+    if (flag)
+        insertDataToSql()
+
 };
+
+async function insertDataToSql() {
+    console.log("in");
+
+    for (let i = 0; i < productTables.length; i++) {
+        const productData = await findSubDirectoriesSync(`U:/welcome to the project/קבצים למילוי טבלאות מוצרים/טבלאות ב-CSV/${productTables[i]}.csv`)
+        productData.forEach(p => {
+            const obj = { tableName: `tbl_${productTables[i]}`, values: p }
+            create(obj)
+        })
+    }
+}
+
 
 async function createProcedure() {
     _ = await getPool().request().query(`(
@@ -40,7 +66,8 @@ async function createProcedure() {
         ' VALUES(' + @values + ')'
     EXEC (@COMMAND)
     END
-
+`);
+    _ = await getPool().request().query(`(
     CREATE PROCEDURE pro_BasicRead
         @TableName NVARCHAR(30),
         @columns NVARCHAR(MAX),
@@ -54,7 +81,8 @@ async function createProcedure() {
             
     EXEC(@COMMAND)
     END   
-
+    `);
+    _ = await getPool().request().query(`(
     CREATE PROCEDURE pro_BasicUpdate
         @tableName NVARCHAR(20) , 
         @values NVARCHAR(MAX),
@@ -70,6 +98,21 @@ async function createProcedure() {
     EXEC(@COMMAND)
     END
     `);
+
+    _ = await getPool().request().query(`(
+    CREATE OR ALTER PROCEDURE pro_checkTableIsExist
+    @TableName NVARCHAR(30)
+  AS
+  BEGIN
+  DECLARE @COMMAND bit
+  IF NOT EXISTS(SELECT * FROM sys.tables WHERE name = @tableName)	
+  SET @COMMAND = 0
+  else
+  set @COMMAND=1
+   return @COMMAND
+  END
+  `);
+
 };
 
 module.exports = { createTables, createProcedure };
