@@ -1,10 +1,11 @@
+// נא לא למחוק את מה שבהערה!!!!!!!!!!!!!!!!!!!!!!!!!
 require('dotenv').config();
 const { findSubDirectoriesSync } = require('../readFiles')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection')
-const { create } = require('../sql/sql-operations')
+// const { create } = require('../sql/sql-operations')
 const config = require('../../config.json')
-const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
+// const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
 
 function buildColumns(details) {
     let columns = '';
@@ -16,13 +17,13 @@ function buildColumns(details) {
 };
 
 async function createTables() {
-    let flag = false;
-    const result = await getPool().request()
-        .input('tableName', 'tbl_BuytonGrain')
-        .execute(`pro_checkTableIsExist`);
-    if (result.returnValue == 0) {
-        flag = true;
-    }
+    // let flag = false;
+    // const result = await getPool().request()
+    //     .input('tableName', 'tbl_BuytonGrain')
+    //     .execute(`pro_checkTableIsExist`);
+    // if (result.returnValue == 0) {
+    //     flag = true;
+    // }
 
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') CREATE DATABASE [${SQL_DBNAME}];`);
 
@@ -34,22 +35,22 @@ async function createTables() {
         `);
     };
 
-    if (flag)
-        insertDataToSql()
+    // if (flag)
+    //     insertDataToSql()
 
 };
 
-async function insertDataToSql() {
-    console.log("in");
+// async function insertDataToSql() {
+//     console.log("in");
 
-    for (let i = 0; i < productTables.length; i++) {
-        const productData = await findSubDirectoriesSync(`U:/welcome to the project/קבצים למילוי טבלאות מוצרים/טבלאות ב-CSV/${productTables[i]}.csv`)
-        productData.forEach(p => {
-            const obj = { tableName: `tbl_${productTables[i]}`, values: p }
-            create(obj)
-        })
-    }
-}
+//     for (let i = 0; i < productTables.length; i++) {
+//         const productData = await findSubDirectoriesSync(`U:/welcome to the project/קבצים למילוי טבלאות מוצרים/טבלאות ב-CSV/${productTables[i]}.csv`)
+//         productData.forEach(p => {
+//             const obj = { tableName: `tbl_${productTables[i]}`, values: p }
+//             create(obj)
+//         })
+//     }
+// }
 
 
 async function createProcedure() {
