@@ -44,8 +44,6 @@ async function insertDataToSql() {
        
 
         for(let item of productData){
-
-         
             let arr = parseSQLType(item, tabledata)
             arr= arr.join()
             console.log(arr)
@@ -94,7 +92,7 @@ async function createProcedures() {
         ' VALUES(' + @values + ')'
     EXEC (@COMMAND)
     END
-    `);
+    `.trim());
 
     _ = await getPool().request().query(`
     CREATE OR ALTER PROCEDURE pro_BasicRead
