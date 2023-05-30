@@ -23,6 +23,6 @@ async function findSubDirectoriesSync(url) {
         allData.push(data)
     })
     // console.log(allData);
-    return {keys, allData}
+    return allData
 }
 module.exports = { findSubDirectoriesSync }

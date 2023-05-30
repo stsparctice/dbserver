@@ -1,7 +1,12 @@
 require('dotenv').config();
+const path = require('path')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection');
 const config = require('../../config.json');
+
+const {readAll, create} = require('./sql-operations')
+const {findSubDirectoriesSync} = require('../readFiles')
+const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
 
 function buildColumns(details) {
     let columns = '';
@@ -24,8 +29,26 @@ async function createTables() {
             `);
         };
     _ = await createNormalizationTable();
+    insertDataToSql()
 
 };
+
+async function insertDataToSql() {
+    
+    // for (let i = 0; i < productTables.length; i++) {
+        let ans = await readAll({tableName:productTables[0]})
+        if(!ans){
+        const productData = await findSubDirectoriesSync(path.join(__dirname, `../../files/${productTables[0]}.csv`))
+        const obj = { tableName: `tbl_${productTables[0]}`,columns:Object.keys(productData[0]).join(), values: Object.values(productData[0]).join() }
+        create(obj)
+
+        // productData.forEach(p => {
+        //     const obj = { tableName: `tbl_${productTables[i]}`,columns:Object.keys(p).join(), values: Object.values(p).join() }
+        //     create(obj)
+        // })
+    }
+    // }
+}
 
 async function createNormalizationTable() {
     for (let i = 0; i < config[0]['sql'][1]['Tables'].length; i++) {
