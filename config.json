@@ -2152,7 +2152,212 @@
                                 }
                             }
                         ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Status": "tbl_BuytonStrength"
+                            },
+                            "description": {
+                                "description": "Table that contain buyton strength"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "StrengthCode": "StrengthCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "strengthDescribe": "strengthDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "strengthNumber": "strengthNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Status": "tbl_BuytonDegree"
+                            },
+                            "description": {
+                                "description": "Table that contain Buyton Degree"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "DegreeCode": "DegreeCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DegreeDescribe": "DegreeDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "DegreeNumber": "DegreeNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Status": "tbl_BuytonGrain"
+                            },
+                            "description": {
+                                "description": "Table that contain Buyton Grain"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "GrainCode": "GrainCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "GrainDescribe": "GrainDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "GrainNumber": "GrainNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Status": "tbl_BuytonItems"
+                            },
+                            "description": {
+                                "description": "Table that contain Buyton items"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "ItemCode": "ItemCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ItemDescribe": "ItemDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ItemType": "ItemType"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ItemStrength": "ItemStrength"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "ItemDegreeExposure": "ItemDegreeExposure"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "SomechBuyton": "SomechBuyton"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Status": "tbl_SomechBuyton"
+                            },
+                            "description": {
+                                "description": "Table that contain SomechBuyton"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "SomechCode": "SomechCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "SomechDescribe": "SomechDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "SomechNumber": "SomechNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+                                }
+                            }
+                        ]
                     }
+
                 ]
             }
         ]
