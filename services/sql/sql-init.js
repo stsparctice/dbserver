@@ -138,6 +138,7 @@ async function createSpecialProcedures() {
     _ = await getPool().request().query(`
     CREATE OR ALTER PROCEDURE pro_UpdateSuppliersBranches
         @name NVARCHAR(30),
+        @id INT,
 		@supplierCode NVARCHAR(30)
     AS
     BEGIN
@@ -153,7 +154,7 @@ async function createSpecialProcedures() {
     SET DisableUser = @name,
 		Disabled ='1',
 		DisabledDate = GETDATE()
-	WHERE SupplierCode = @supplierCode
+	WHERE SupplierCode = @id
 
     COMMIT
     END
