@@ -13,14 +13,10 @@ function getSqlTableColumnsType(tablename) {
 }
 
 function parseSQLType(obj, tabledata) {
-    console.log({obj})
-    console.log({tabledata})
     const keys = Object.keys(obj)
     let str = []
     for (let i = 0; i < keys.length; i++) {
-       
         let type = tabledata.find(td => td.name.trim() == keys[i].trim()).type
-     
         if (type.includes('nvarchar')) {
             str.push(`'${obj[keys[i]]}'`)
         }

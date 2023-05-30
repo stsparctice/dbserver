@@ -1,7 +1,6 @@
 const { getPool } = require('./sql-connection');
 
 const create = async function (obj) {
-     console.log({obj});
      const { tableName, columns, values } = obj;
      const result = await getPool().request()
           .input('tableName', tableName)
@@ -25,6 +24,9 @@ const read = async function (obj) {
 };
 
 const readAll = async function (obj) {
+     if (!Object.keys(obj).includes("condition")) {
+          obj["condition"] = '1=1';
+     };
      const { tableName, condition } = obj;
      const result = await getPool().request()
           .input('tableName', tableName)

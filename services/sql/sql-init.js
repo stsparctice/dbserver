@@ -4,9 +4,9 @@ const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection');
 const config = require('../../config.json');
 
-const {readAll, create} = require('./sql-operations')
-const {findSubDirectoriesSync} = require('../readFiles')
-const {getSqlTableColumnsType,parseSQLType} = require('../../modules/config')
+const { readAll, create } = require('./sql-operations')
+const { findSubDirectoriesSync } = require('../readFiles')
+const { getSqlTableColumnsType, parseSQLType } = require('../../modules/config');
 const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
 
 function buildColumns(details) {
@@ -21,39 +21,37 @@ function buildColumns(details) {
 async function createTables() {
 
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') CREATE DATABASE [${SQL_DBNAME}];`);
-    
+
     for (let j = 0; j < (config[0]['sql'][1]['Tables']).length; j++) {
         let table = config[0]['sql'][1]['Tables'][j];
         _ = await getPool().request().query(`IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${Object.values(table['MTDTable']['name'])}') CREATE TABLE [dbo].[${Object.values(table['MTDTable']['name'])}](
             ${buildColumns(table['columns'])}
             )
             `);
-        };
+    };
     _ = await createNormalizationTable();
     insertDataToSql()
 
 };
 
 async function insertDataToSql() {
-    
-    for (let i = 0; i < productTables.length; i++) {
-        let ans = await readAll({tableName:productTables[i]})
-        if(!ans){
-        const productData = await findSubDirectoriesSync(path.join(__dirname, `../../files/${productTables[0]}.csv`))
-        let tabledata = getSqlTableColumnsType(`tbl_${productTables[0]}`)
-       
 
-        for(let item of productData){
-            let arr = parseSQLType(item, tabledata)
-            arr= arr.join()
-            console.log(arr)
-            const obj = { tableName: `tbl_${productTables[i]}`,columns:Object.keys(item).join(), values: arr }
-            create(obj)
+    for (let i = 0; i < productTables.length; i++) {
+        let ans = await readAll({ tableName: `tbl_${productTables[i]}` })
+        console.log({ans})
+        if (!ans) {
+            const productData = await findSubDirectoriesSync(path.join(__dirname, `../../files/${productTables[i]}.csv`))
+            let tabledata = getSqlTableColumnsType(`tbl_${productTables[i]}`)
+
+            for (let item of productData) {
+                let arr = parseSQLType(item, tabledata)
+                arr = arr.join()
+                const obj = { tableName: `tbl_${productTables[i]}`, columns: (Object.keys(item).join()).trim(), values: arr }
+                await create(obj)
+            }
         }
     }
-    }
 }
-
 async function createNormalizationTable() {
     for (let i = 0; i < config[0]['sql'][1]['Tables'].length; i++) {
         let table = config[0]['sql'][1]['Tables'][i];
@@ -101,7 +99,7 @@ async function createProcedures() {
         @condition NVARCHAR(MAX)
     AS
     BEGIN
-    DECLARE @COMMAND nvarchar(100)
+    DECLARE @COMMAND nvarchar(4000)
     SET @COMMAND = 'SELECT TOP 20' + @columns +
         ' FROM ' + @TableName +
         ' WHERE ' + @condition
@@ -116,7 +114,7 @@ async function createProcedures() {
     @condition NVARCHAR(MAX)
     AS
     BEGIN
-    DECLARE @COMMAND nvarchar(100)
+    DECLARE @COMMAND nvarchar(4000)
     SET @COMMAND = 'SELECT *  
         FROM ' + @TableName +
         ' WHERE ' + @condition
@@ -160,7 +158,7 @@ async function createSpecialProcedures() {
     
     COMMIT
     END
-    `);       
+    `);
 
     _ = await getPool().request().query(`
     CREATE OR ALTER PROCEDURE pro_UpdateSuppliersBranches
