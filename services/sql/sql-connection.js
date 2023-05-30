@@ -18,14 +18,18 @@ let pool;
 
 const connect = async () => {
     if (!pool) {
+
         pool = new sql.ConnectionPool(poolConfig());
+        console.log("pool "+pool );
     }
     if (!pool.connected) {
         _ = await pool.connect();
+        console.log("kkk "+_);
     }
 }
 
 const getPool = () => pool;
+console.log("getpull "+getPool());
 
 module.exports = {
     getPool,

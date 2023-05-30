@@ -6,6 +6,7 @@ router.use(express.json());
 
 router.post('/create', async (req, res) => {
     const result = await createMod(req.body);
+    console.log("res"+result);
     res.status(200).send(result);
 });
 
