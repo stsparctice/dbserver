@@ -29,7 +29,6 @@ const connect = async () => {
 }
 
 const getPool = () => pool;
-console.log("getpull "+getPool());
 
 module.exports = {
     getPool,
