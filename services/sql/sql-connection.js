@@ -18,10 +18,13 @@ let pool;
 
 const connectSql = async () => {
     if (!pool) {
+
         pool = new sql.ConnectionPool(poolConfig());
+        console.log("pool "+pool );
     }
     if (!pool.connected) {
         _ = await pool.connect();
+        console.log("kkk "+_);
     }
 }
 

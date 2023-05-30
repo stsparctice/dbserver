@@ -1524,31 +1524,53 @@
                     {
                         "MTDTable": {
                             "name": {
+<<<<<<< HEAD
                                 "Quotation": "tbl_Quotation"
                             },
                             "description": {
                                 "description": "Table for the details of quotations"
+=======
+                                "Status": "tbl_BuytonStrength"
+                            },
+                            "description": {
+                                "description": "Table that contain buyton strength"
+>>>>>>> main
                             }
                         },
                         "columns": [
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "SerialNumber": "SerialNumber"
                                 },
                                 "type": {
                                     "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+=======
+                                    "StrengthCode": "StrengthCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "ClientCode": "ClientCode"
                                 },
                                 "type": {
                                     "type": "int NOT NULL "
+=======
+                                    "strengthDescribe": "strengthDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "Date": "Date"
                                 },
                                 "type": {
@@ -1614,10 +1636,14 @@
                             {
                                 "name": {
                                     "UserName": "UserName"
+=======
+                                    "strengthNumber": "strengthNumber"
+>>>>>>> main
                                 },
                                 "type": {
                                     "type": "int NOT NULL"
                                 }
+<<<<<<< HEAD
                             },
                             {
                                 "name": {
@@ -1674,21 +1700,31 @@
                                 "type": {
                                     "type": "DATE NULL"
                                 }
+=======
+>>>>>>> main
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
+<<<<<<< HEAD
                                 "priceList": "tbl_PriceList"
                             },
                             "description": {
                                 "description": "table that contains all the priceList of the products"
+=======
+                                "Status": "tbl_BuytonDegree"
+                            },
+                            "description": {
+                                "description": "Table that contain Buyton Degree"
+>>>>>>> main
                             }
                         },
                         "columns": [
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "Id": "Id"
                                 },
                                 "type": {
@@ -1725,18 +1761,32 @@
                                 },
                                 "type": {
                                     "type": "Date NOT NULL"
+=======
+                                    "DegreeCode": "DegreeCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "UserName": "UserName"
                                 },
                                 "type": {
                                     "type": "NVARCHAR(20) NOT NULL"
+=======
+                                    "DegreeDescribe": "DegreeDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "Active": "Active"
                                 },
                                 "type": {
@@ -1969,6 +2019,12 @@
                                 },
                                 "type": {
                                     "type": "BIT NOT NULL"
+=======
+                                    "DegreeNumber": "DegreeNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             }
                         ]
@@ -1976,31 +2032,53 @@
                     {
                         "MTDTable": {
                             "name": {
+<<<<<<< HEAD
                                 "PaymentTypes": "tbl_DistanceAdditions"
                             },
                             "description": {
                                 "description": "table that contains all the prices additions about the distance"
+=======
+                                "Status": "tbl_BuytonGrain"
+                            },
+                            "description": {
+                                "description": "Table that contain Buyton Grain"
+>>>>>>> main
                             }
                         },
                         "columns": [
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "PriceListId": "PriceListId"
                                 },
                                 "type": {
                                     "type": "INT NOT NULL"
+=======
+                                    "GrainCode": "GrainCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "ProductId": "ProductId"
                                 },
                                 "type": {
                                     "type": "INT NOT NULL"
+=======
+                                    "GrainDescribe": "GrainDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "MinDistance": "MinDistance"
                                 },
                                 "type": {
@@ -2021,6 +2099,12 @@
                                 },
                                 "type": {
                                     "type": "BIT NOT NULL"
+=======
+                                    "GrainNumber": "GrainNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             }
                         ]
@@ -2028,59 +2112,108 @@
                     {
                         "MTDTable": {
                             "name": {
+<<<<<<< HEAD
                                 "priceList": "tbl_TruckFill"
                             },
                             "description": {
                                 "description": "table that contains the fill count of truck"
+=======
+                                "Status": "tbl_BuytonItems"
+                            },
+                            "description": {
+                                "description": "Table that contain Buyton items"
+>>>>>>> main
                             }
                         },
                         "columns": [
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "PriceListId": "PriceListId"
                                 },
                                 "type": {
                                     "type": "INT NOT NULL"
+=======
+                                    "ItemCode": "ItemCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "ProductId": "ProductId"
                                 },
                                 "type": {
                                     "type": "INT NOT NULL"
+=======
+                                    "ItemDescribe": "ItemDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "AmountTransportDiff": "AmountTransportDiff"
                                 },
                                 "type": {
                                     "type": "float NOT NULL"
+=======
+                                    "ItemType": "ItemType"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "MaxTransportDiff": "MaxTransportDiff"
                                 },
                                 "type": {
                                     "type": "float NOT NULL"
+=======
+                                    "ItemStrength": "ItemStrength"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "Price": "Price"
                                 },
                                 "type": {
                                     "type": "float NOT NULL"
+=======
+                                    "ItemDegreeExposure": "ItemDegreeExposure"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "Disabled": "Disabled"
                                 },
                                 "type": {
                                     "type": "BIT NOT NULL"
+=======
+                                    "SomechBuyton": "SomechBuyton"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             }
                         ]
@@ -2088,31 +2221,53 @@
                     {
                         "MTDTable": {
                             "name": {
+<<<<<<< HEAD
                                 "PaymentTypes": "tbl_PricesListBySupplierOrClient"
                             },
                             "description": {
                                 "description": "table that ocntacts between the suppliers and clients to them prices lists"
+=======
+                                "Status": "tbl_SomechBuyton"
+                            },
+                            "description": {
+                                "description": "Table that contain SomechBuyton"
+>>>>>>> main
                             }
                         },
                         "columns": [
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "Id": "Id"
                                 },
                                 "type": {
                                     "type": "INT IDENTITY NOT NULL"
+=======
+                                    "SomechCode": "SomechCode"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "PriceListId": "PriceListId"
                                 },
                                 "type": {
                                     "type": "INT NOT NULL"
+=======
+                                    "SomechDescribe": "SomechDescribe"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+>>>>>>> main
                                 }
                             },
                             {
                                 "name": {
+<<<<<<< HEAD
                                     "SupplierOrClient": "SupplierOrClient"
                                 },
                                 "type": {
@@ -2149,6 +2304,12 @@
                                 },
                                 "type": {
                                     "type": "BIT NOT NULL"
+=======
+                                    "SomechNumber": "SomechNumber"
+                                },
+                                "type": {
+                                    "type": "int NOT NULL"
+>>>>>>> main
                                 }
                             }
                         ]

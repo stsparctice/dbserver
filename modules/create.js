@@ -4,11 +4,10 @@ const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
 async function createSql(obj) {
-    // let message = await checkObjCreate(obj);
-    // if (message) {
-    //     return message;
-    // }
+   
     const result = await create(obj);
+    console.log("result: "+result);
+
     return result;
 };
 
