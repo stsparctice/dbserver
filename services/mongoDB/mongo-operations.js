@@ -49,6 +49,14 @@ class MongoDBOperations {
         return result;
     };
 
+    async dropCollection() {
+        const result = await getClient().db(this.dbName).collection(this.collectionName).drop((err, delOK) => {
+            if (err) throw err;
+            if (delOK) return "collection deleted";
+        });
+        return result;
+    };
+
 };
 
 const mongo = new MongoDBOperations();

@@ -2606,7 +2606,9 @@
         "mongodb": {
             "leads": "leads",
             "products": "products",
-            "areas": "areas"
+            "areas": "areas",
+            "users":"users",
+            "rand_password":"rand_password"
         }
     }
 ]
