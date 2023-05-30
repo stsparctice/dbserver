@@ -110,6 +110,246 @@
                     {
                         "MTDTable": {
                             "name": {
+                                "finishProducts": "tbl_finishProducts"
+                            },
+                            "description": {
+                                "description": "a table of finish products "
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "ordinalNumber": "ordinalNumber"
+                                },
+                                "type": {
+                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "name": "name"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)  NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "unitOfMeasure": "unitOfMeasure"
+                                },
+                                "type": {
+                                    "type": "INT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "bookkeepingCode": "bookkeepingCode"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)  NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "addedDate": "addedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "enabled": "enabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "deletedDate": "deletedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "additions ": "tbl_additions "
+                            },
+                            "description": {
+                                "description": "a table of additions to the byton "
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "ordinalNumber": "ordinalNumber"
+                                },
+                                "type": {
+                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "name": "name"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)  NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "unitOfMeasure": "unitOfMeasure"
+                                },
+                                "type": {
+                                    "type": "INT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "bookkeepingCode": "bookkeepingCode"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "addedDate": "addedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "enabled": "enabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "deletedDate": "deletedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "pumps ": "tbl_pumps "
+                            },
+                            "description": {
+                                "description": "a table of pumps and additions to the pumps "
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "ordinalNumber": "ordinalNumber"
+                                },
+                                "type": {
+                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "name": "name"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)  NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "unitOfMeasure": "unitOfMeasure"
+                                },
+                                "type": {
+                                    "type": "INT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "addition": "addition"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "bookkeepingCode": "bookkeepingCode"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "addedDate": "addedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "enabled": "enabled"
+                                },
+                                "type": {
+                                    "type": "BIT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "deletedDate": "deletedDate"
+                                },
+                                "type": {
+                                    "type": "DATE NULL"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "unitOfMeasure ": "tbl_unitOfMeasure "
+                            },
+                            "description": {
+                                "description": "a normalization table of unitsOfMeasure"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "id": "id"
+                                },
+                                "type": {
+                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "measure": "measure"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20) NOT NULL "
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
                                 "BasicDetails": "tbl_BasicDetails"
                             },
                             "description": {

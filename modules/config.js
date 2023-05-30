@@ -1,8 +1,6 @@
 const config = require('../config.json')
 
-const parse = {
-    'INT': 'number', 'NVARCHAR': 'string'
-}
+
 
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(o => Object.keys(o).includes('sql'))
