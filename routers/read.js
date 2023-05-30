@@ -3,7 +3,7 @@ const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
 router.use(express.json());
 
-router.post('/readTop20', async (req, res) => {
+router.post('/readTopN', async (req, res) => {
     const table = await getDetailsSql(req.body);
     res.status(200).send(table);
 });

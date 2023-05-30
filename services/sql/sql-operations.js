@@ -15,11 +15,15 @@ const read = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {
           obj["condition"] = '1=1';
      };
-     const { tableName, columns, condition } = obj;
+     if (!Object.keys(obj).includes("n")) {
+          obj["n"] = 100;
+     }
+     const { tableName, columns, condition, n } = obj;
      const result = await getPool().request()
           .input('tableName', tableName)
           .input('columns', columns)
           .input('condition', condition)
+          .input('n', n)
           .execute(`pro_BasicRead`);
      return result.recordset;
 };

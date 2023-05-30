@@ -38,7 +38,7 @@ async function insertDataToSql() {
 
     for (let i = 0; i < productTables.length; i++) {
         let ans = await readAll({ tableName: `tbl_${productTables[i]}` })
-        console.log({ans})
+        console.log({ ans })
         if (!ans) {
             const productData = await findSubDirectoriesSync(path.join(__dirname, `../../files/${productTables[i]}.csv`))
             let tabledata = getSqlTableColumnsType(`tbl_${productTables[i]}`)
@@ -94,13 +94,14 @@ async function createProcedures() {
 
     _ = await getPool().request().query(`
     CREATE OR ALTER PROCEDURE pro_BasicRead
-        @TableName NVARCHAR(30),
-        @columns NVARCHAR(MAX),
-        @condition NVARCHAR(MAX)
+    @TableName NVARCHAR(30),
+    @columns NVARCHAR(MAX),
+    @condition NVARCHAR(MAX),
+    @n NVARCHAR(200)
     AS
     BEGIN
-    DECLARE @COMMAND nvarchar(4000)
-    SET @COMMAND = 'SELECT TOP 20' + @columns +
+    DECLARE @COMMAND nvarchar(100)
+    SET @COMMAND = 'SELECT TOP '+ @n + @columns +
         ' FROM ' + @TableName +
         ' WHERE ' + @condition
             
