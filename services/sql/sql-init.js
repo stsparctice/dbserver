@@ -6,6 +6,7 @@ const config = require('../../config.json');
 
 const {readAll, create} = require('./sql-operations')
 const {findSubDirectoriesSync} = require('../readFiles')
+const {getSqlTableColumnsType,parseSQLType} = require('../../modules/config')
 const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
 
 function buildColumns(details) {
@@ -35,19 +36,24 @@ async function createTables() {
 
 async function insertDataToSql() {
     
-    // for (let i = 0; i < productTables.length; i++) {
-        let ans = await readAll({tableName:productTables[0]})
+    for (let i = 0; i < productTables.length; i++) {
+        let ans = await readAll({tableName:productTables[i]})
         if(!ans){
         const productData = await findSubDirectoriesSync(path.join(__dirname, `../../files/${productTables[0]}.csv`))
-        const obj = { tableName: `tbl_${productTables[0]}`,columns:Object.keys(productData[0]).join(), values: Object.values(productData[0]).join() }
-        create(obj)
+        let tabledata = getSqlTableColumnsType(`tbl_${productTables[0]}`)
+       
 
-        // productData.forEach(p => {
-        //     const obj = { tableName: `tbl_${productTables[i]}`,columns:Object.keys(p).join(), values: Object.values(p).join() }
-        //     create(obj)
-        // })
+        for(let item of productData){
+
+         
+            let arr = parseSQLType(item, tabledata)
+            arr= arr.join()
+            console.log(arr)
+            const obj = { tableName: `tbl_${productTables[i]}`,columns:Object.keys(item).join(), values: arr }
+            create(obj)
+        }
     }
-    // }
+    }
 }
 
 async function createNormalizationTable() {
