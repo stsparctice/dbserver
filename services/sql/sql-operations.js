@@ -2,11 +2,11 @@ const { getPool } = require('./sql-connection');
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     let object =await buildcolumns({columns,values})
+     // let object =await buildcolumns({columns,values})
      const result = await getPool().request()
           .input('tableName', tableName)
-          .input('columns',object['columns'])
-          .input('values', object['values'])
+          .input('columns',columns)
+          .input('values', values)
           .execute(`pro_BasicCreate`);
      return result;
 };
