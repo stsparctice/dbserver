@@ -5,6 +5,7 @@ const { createSql, createMng } = require('../modules/create');
 router.use(express.json());
 
 router.post('/create', async (req, res) => {
+    // console.log({body:req.body});
     const result = await createSql(req.body);
     res.status(200).send(result);
 });

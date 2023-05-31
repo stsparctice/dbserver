@@ -178,7 +178,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "additions ": "tbl_additions "
+                                "additions": "tbl_additions"
                             },
                             "description": {
                                 "description": "a table of additions to the byton "
@@ -246,7 +246,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "pumps ": "tbl_pumps "
+                                "pumps": "tbl_pumps"
                             },
                             "description": {
                                 "description": "a table of pumps and additions to the pumps "
@@ -322,7 +322,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "unitOfMeasure ": "tbl_unitOfMeasure "
+                                "unitOfMeasure": "tbl_unitOfMeasure"
                             },
                             "description": {
                                 "description": "a normalization table of unitsOfMeasure"
