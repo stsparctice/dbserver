@@ -1696,7 +1696,7 @@
                                     "CreationDate": "CreationDate"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "nvarchar(50) NOT NULL"
                                 }
                             },
                             {
@@ -1720,7 +1720,7 @@
                                     "DeletionDate": "DeletionDate"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50) "
+                                    "type": "nvarchar(50)"
                                 }
                             },
                             {
