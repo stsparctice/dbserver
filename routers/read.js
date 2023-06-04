@@ -17,7 +17,9 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
     let obj = {};
     obj['tableName'] = req.params.tbname;
     obj['condition'] = req.params.condition;
+    console.log(obj['condition']);
     const table = await getAllSql(obj);
+    console.log(table);
     res.status(200).send(table);
 });
 

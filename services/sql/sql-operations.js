@@ -2,7 +2,7 @@ const { getPool } = require('./sql-connection');
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     console.log(tableName, columns, values);
+     console.log({tableName, columns, values});
      // let object =await buildcolumns({columns,values})
      const result = await getPool().request()
           .input('tableName', tableName)
