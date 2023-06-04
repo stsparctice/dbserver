@@ -988,7 +988,7 @@
                                     "SupplierName": "SupplierName"
                                 },
                                 "type": {
-                                    "type": "nvarchar(50)NOT NULL"
+                                    "type": "nvarchar(50) NOT NULL"
                                 }
                             },
                             {
@@ -996,7 +996,7 @@
                                     "licensedDealerNumber": "licensedDealerNumber"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)NOT NULL"
+                                    "type": "nvarchar(20) NOT NULL"
                                 }
                             },
                             {
@@ -1036,7 +1036,7 @@
                                     "Ovligo": "Ovligo"
                                 },
                                 "type": {
-                                    "type": " int  NULL"
+                                    "type": "int  NULL"
                                 }
                             },
                             {

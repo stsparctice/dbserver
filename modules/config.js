@@ -6,7 +6,7 @@ function getSqlTableColumnsType(tablename) {
     let sql = config.find(o => Object.keys(o).includes('sql'))
     let tables = sql.sql.find(o => Object.keys(o).includes('Tables'))
     let x = tables.Tables.find(t => Object.values(t.MTDTable.name)[0] == tablename)
-    let col = x.columns.map(c => ({ name: Object.values(c[Object.keys(c)[0]])[0], type: c[Object.keys(c.type)[0]].type.split(' ')[0] }))
+    let col = x.columns.map(c => ({ name: Object.values(c[Object.keys(c)[0]])[0], type: c[Object.keys(c.type)[0]].type.trim().split(' ')[0] }))
     return col
 }
 
