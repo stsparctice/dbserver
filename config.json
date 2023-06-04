@@ -1028,7 +1028,7 @@
                                     "PreferredPaymentDate": "PreferredPaymentDate"
                                 },
                                 "type": {
-                                    "type": "DATE  NULL"
+                                    "type": "INT  NULL"
                                 }
                             },
                             {
@@ -1068,7 +1068,7 @@
                                     "City": "City"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20)NOT NULL"
+                                    "type": "nvarchar(20) NOT NULL"
                                 }
                             },
                             {
@@ -1148,7 +1148,7 @@
                                     "DisabledDate": "DisabledDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "nvarchar(20) NOT NULL"
                                 }
                             },
                             {
