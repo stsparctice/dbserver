@@ -1140,7 +1140,7 @@
                                     "Disabled": "Disabled"
                                 },
                                 "type": {
-                                    "type": "BIT  NULL"
+                                    "type": "BIT"
                                 }
                             },
                             {
@@ -1148,7 +1148,7 @@
                                     "DisabledDate": "DisabledDate"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20) NOT NULL"
+                                    "type": "nvarchar(50)"
                                 }
                             },
                             {
