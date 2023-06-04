@@ -16,9 +16,9 @@ function parseSQLType(obj, tabledata) {
     const keys = Object.keys(obj)
     let str = []
     for (let i = 0; i < keys.length; i++) {
-        let type = tabledata.find(td => td.name.trim() == keys[i].trim()).type
+        let type = tabledata.find(td => td.name.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
         
-        if (type.toLowerCase().includes('nvarchar') || type.toLowerCase().includes('date') ) {
+        if (type.toLowerCase().includes('nvarchar') || type.toLowerCase().includes('date') || type.toLowerCase().includes('bit')) {
             str.push(`'${obj[keys[i]]}'`)
         }
         else{

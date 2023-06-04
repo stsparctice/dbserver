@@ -9,7 +9,7 @@ const http = require('http');
 const { app } = require('./app');
 const { HOST, PORT } = process.env;
 
-connectMng().then(_ => {
+// connectMng().then(_ => {
     connectSql().then(_ => {
         createTables().then(_ => {
             createProcedures().then(_ => {
@@ -22,6 +22,6 @@ connectMng().then(_ => {
             });
         });
     });
-});
+// });
 
 const server = http.createServer(app);
