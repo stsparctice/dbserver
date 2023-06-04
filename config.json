@@ -1184,7 +1184,7 @@
                                     "SupplierCode": "SupplierCode"
                                 },
                                 "type": {
-                                    "type": "INT NOT NULL FOREIGN KEY(Id) REFERENCES tbl_Suppliers(Id) "
+                                    "type": "INT NOT NULL FOREIGN KEY(SupplierCode) REFERENCES tbl_Suppliers(Id) "
                                 }
                             },
                             {
