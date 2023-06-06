@@ -8,6 +8,7 @@ const poolConfig = () => ({
     database: SQL_DBNAME,
     user: SQL_USERNAME,
     password: SQL_PASSWORD,
+    database:'master',
     options: {
         encrypt: false,
         enableArithAbort: false
@@ -15,16 +16,16 @@ const poolConfig = () => ({
 });
 
 let pool;
-
+console.log(poolConfig());
 const connectSql = async () => {
     if (!pool) {
 
         pool = new sql.ConnectionPool(poolConfig());
-        console.log("pool "+pool );
+        console.log("pool" );
     }
     if (!pool.connected) {
         _ = await pool.connect();
-        console.log("kkk "+_);
+        console.log("connected");
     }
 }
 

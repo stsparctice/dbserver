@@ -17,7 +17,7 @@ function buildColumns(details) {
 
 async function createTables() {
 
-    _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') CREATE DATABASE [${SQL_DBNAME}];`);
+    _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
     for (let j = 0; j < (config[0]['sql'][1]['Tables']).length; j++) {
         let table = config[0]['sql'][1]['Tables'][j];
