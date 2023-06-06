@@ -27,7 +27,7 @@ async function createTables() {
             `);
     };
     _ = await createNormalizationTable();
-    
+
 
 };
 
@@ -41,15 +41,30 @@ async function createNormalizationTable() {
             let m = table['columns'][j];
             if (Object.keys(m).includes('values')) {
                 let values = table['columns'].filter(f => Object.keys(f).includes('values'));
-                let values2 = values.map(f => f['values']['values']);
-                for (let y = 0; y < values2[0].length; y++) {
-                    _ = await getPool().request().query(`
+                console.log(values)
+                if (!values[0].type.type.toLowerCase().includes('PRIMARY'.toLowerCase())) {
+                    let values2 = values.map(f => f['values']['values']);
+                    console.log(values2)
+                    for (let y = 0; y < values2[0].length; y++) {
+                        _ = await getPool().request().query(`
                         IF(SELECT COUNT(*)
                         FROM ${name[0]})<${values2[0].length}
                         INSERT INTO ${name[0]} VALUES (${values2[0][y]}, '${values2[1][y]}')
                     `);
-                };
-                break;
+                    };
+                    break;
+                }
+                else{
+                    let insertvals = values[1].values.values
+                    for (let y = 0; y < insertvals.length ; y++) {
+                        _ = await getPool().request().query(`
+                        IF(SELECT COUNT(*)
+                        FROM ${name[0]})<${insertvals.length}
+                        INSERT INTO ${name[0]} VALUES ( '${insertvals[y]}')
+                    `);
+                    };
+                    break;
+                }
             };
         };
     };

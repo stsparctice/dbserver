@@ -154,7 +154,7 @@
                                     "addedDate": "addedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -170,7 +170,7 @@
                                     "deletedDate": "deletedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             }
                         ]
@@ -222,7 +222,7 @@
                                     "addedDate": "addedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -238,7 +238,7 @@
                                     "deletedDate": "deletedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             }
                         ]
@@ -298,7 +298,7 @@
                                     "addedDate": "addedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -314,7 +314,7 @@
                                     "deletedDate": "deletedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             }
                         ]
@@ -1044,7 +1044,7 @@
                                     "Status": "Status"
                                 },
                                 "type": {
-                                    "type": " int NOT NULL"
+                                    "type": "int NOT NULL"
                                 }
                             },
                             {
@@ -1084,7 +1084,7 @@
                                     "Phone1": "Phone1"
                                 },
                                 "type": {
-                                    "type": "nvarchar(20)NOT NULL"
+                                    "type": "nvarchar(20) NOT NULL"
                                 }
                             },
                             {
@@ -1108,7 +1108,7 @@
                                     "Fax": "Fax"
                                 },
                                 "type": {
-                                    "type": " nvarchar(20) NULL"
+                                    "type": "nvarchar(20) NULL"
                                 }
                             },
                             {
@@ -1132,7 +1132,15 @@
                                     "CreationDate": "CreationDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "InsertUser": "InsertUser"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(50) NOT NULL"
                                 }
                             },
                             {
@@ -1288,7 +1296,7 @@
                                     "CreationDate": "CreationDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1312,7 +1320,7 @@
                                     "DisabledDate": "DisabledDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             },
                             {
@@ -1364,7 +1372,7 @@
                                     "AddedDate": "AddedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1380,7 +1388,7 @@
                                     "DeletintDate": "DeletingDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             }
                         ]
@@ -1416,7 +1424,7 @@
                                     "AddedDate": "AddedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1432,7 +1440,7 @@
                                     "DeletintDate": "DeletingDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             }
                         ]
@@ -1468,7 +1476,7 @@
                                     "AddedDate": "AddedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1484,7 +1492,7 @@
                                     "DeletintDate": "DeletingDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             }
                         ]
@@ -1749,6 +1757,13 @@
                                 },
                                 "type": {
                                     "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                },
+                                "values": {
+                                    "values": [
+                                        1,
+                                        2,
+                                        3
+                                    ]
                                 }
                             },
                             {
@@ -1757,6 +1772,11 @@
                                 },
                                 "type": {
                                     "type": "nvarchar(50) NOT NULL"
+                                },
+                                "values": {
+                                    "values": [
+                                        "פעיל", "מושהה", "מוגבל"
+                                    ]
                                 }
                             }
                         ]
@@ -1792,7 +1812,7 @@
                                     "Date": "Date"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1880,7 +1900,7 @@
                                     "PayoffDate": "PayoffDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             },
                             {
@@ -1896,7 +1916,7 @@
                                     "AddedDate": "AddedDate"
                                 },
                                 "type": {
-                                    "type": "DATE NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1912,7 +1932,7 @@
                                     "DisabledDate": "DisabledDate"
                                 },
                                 "type": {
-                                    "type": "DATE NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             }
                         ]
@@ -1964,7 +1984,7 @@
                                     "CreateDate": "CreateDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -1988,7 +2008,7 @@
                                     "DisableDate": "DisableDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -2056,7 +2076,7 @@
                                     "AddedDate": "AddedDate"
                                 },
                                 "type": {
-                                    "type": "date NULL"
+                                    "type": "DATETIME NULL"
                                 }
                             },
                             {
@@ -2192,7 +2212,7 @@
                                     "StartDate": "StartDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -2200,7 +2220,7 @@
                                     "EndDate": "EndDate"
                                 },
                                 "type": {
-                                    "type": "Date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -2364,7 +2384,7 @@
                                     "Price": "StartDate"
                                 },
                                 "type": {
-                                    "type": "date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
@@ -2372,7 +2392,7 @@
                                     "SupplierOrClient": "EndDate"
                                 },
                                 "type": {
-                                    "type": "date NOT NULL"
+                                    "type": "DATETIME NOT NULL"
                                 }
                             },
                             {
