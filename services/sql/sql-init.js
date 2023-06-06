@@ -21,7 +21,7 @@ async function createTables() {
 
     for (let j = 0; j < (config[0]['sql'][1]['Tables']).length; j++) {
         let table = config[0]['sql'][1]['Tables'][j];
-        _ = await getPool().request().query(`IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${Object.values(table['MTDTable']['name'])}') CREATE TABLE [dbo].[${Object.values(table['MTDTable']['name'])}](
+        _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${Object.values(table['MTDTable']['name'])}') CREATE TABLE [dbo].[${Object.values(table['MTDTable']['name'])}](
             ${buildColumns(table['columns'])}
             )
             `);
