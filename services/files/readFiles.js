@@ -7,8 +7,6 @@ async function findSubDirectoriesSync(url) {
     let ans = fs.readFileSync(url);
     let arr = ans.toString()
     let arr2 = arr.split('\n')
-    // console.log("aaa ",arr2);
-    // console.log(parseSQLType(arr2,));
     let keys = arr2[0].split(',');
     keys[keys.length - 1] = keys[keys.length - 1].split('\r')[0]
     arr2 = arr2.splice(1)
@@ -25,7 +23,6 @@ async function findSubDirectoriesSync(url) {
         }
         allData.push(data)
     })
-    // console.log(allData);
     return allData
 }
 module.exports = { findSubDirectoriesSync }

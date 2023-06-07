@@ -6,7 +6,6 @@ router.use(express.json());
 
 router.post('/update', async (req, res) => {
     const result = await updateSql(req.body);
-    console.log(req.body);
     res.status(200).send(result);
 });
 
