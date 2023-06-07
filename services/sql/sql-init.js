@@ -9,7 +9,7 @@ const config = require('../../config.json');
 function buildColumns(details) {
     let columns = '';
     for (let i = 0; i < details.length; i++) {
-        columns += Object.values(details[i]['name']) + ' ' + Object.values(details[i]['type']) + ', ';
+        columns += details[i].name + ' ' + details[i].type + ', ';
     };
     columns = columns.substring(0, columns.length - 2);
     return columns;
@@ -19,10 +19,11 @@ async function createTables() {
 
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
-    for (let j = 0; j < (config[0]['sql'][1]['Tables']).length; j++) {
-        let table = config[0]['sql'][1]['Tables'][j];
-        _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${Object.values(table['MTDTable']['name'])}') CREATE TABLE [dbo].[${Object.values(table['MTDTable']['name'])}](
-            ${buildColumns(table['columns'])}
+    let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
+    for (let j = 0; j < tables.length; j++) {
+        let table = tables[j];
+        _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](
+            ${buildColumns(table.columns)}
             )
             `);
     };
@@ -33,34 +34,32 @@ async function createTables() {
 
 
 async function createNormalizationTable() {
-    for (let i = 0; i < config[0]['sql'][1]['Tables'].length; i++) {
-        let table = config[0]['sql'][1]['Tables'][i];
-        let tableName = config[0]['sql'][1]['Tables'][i]['MTDTable']['name'];
-        let name = Object.values(tableName);
-        for (let j = 0; j < table['columns'].length; j++) {
-            let m = table['columns'][j];
+    let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
+
+    for (let i = 0; i < tables.length; i++) {
+        let tableName = tables[i].MTDTable.name.sqlName;
+        for (let j = 0; j < tables[i].columns.length; j++) {
+            let m = tables[i].columns[j];
             if (Object.keys(m).includes('values')) {
-                let values = table['columns'].filter(f => Object.keys(f).includes('values'));
-                console.log(values)
-                if (!values[0].type.type.toLowerCase().includes('PRIMARY'.toLowerCase())) {
-                    let values2 = values.map(f => f['values']['values']);
-                    console.log(values2)
-                    for (let y = 0; y < values2[0].length; y++) {
+                let values = tables[i].columns.filter(v => Object.keys(v).includes("values"))
+                if (!values[0].type.toUpperCase().includes('PRIMARY')) {
+                    let values2 = values.map(f => f.values);
+                    for (let y = 0; y < values2.length; y++) {
                         _ = await getPool().request().query(`
                         IF(SELECT COUNT(*)
-                        FROM ${name[0]})<${values2[0].length}
-                        INSERT INTO ${name[0]} VALUES (${values2[0][y]}, '${values2[1][y]}')
+                        FROM ${tableName})<${values2.length}
+                        INSERT INTO ${tableName} VALUES (${values2[0][y]}, '${values2[1][y]}')
                     `);
                     };
                     break;
                 }
-                else{
-                    let insertvals = values[1].values.values
-                    for (let y = 0; y < insertvals.length ; y++) {
+                else {
+                    let insertvals = values[1].values
+                    for (let y = 0; y < insertvals.length; y++) {
                         _ = await getPool().request().query(`
                         IF(SELECT COUNT(*)
-                        FROM ${name[0]})<${insertvals.length}
-                        INSERT INTO ${name[0]} VALUES ( '${insertvals[y]}')
+                        FROM ${tableName})<${insertvals.length}
+                        INSERT INTO ${tableName} VALUES ( '${insertvals[y]}')
                     `);
                     };
                     break;

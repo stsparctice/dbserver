@@ -1,8 +1,10 @@
 [
     {
-        "sql": [
+        "database": "sql",
+        "dbobjects": [
             {
-                "Procedures": [
+                "type": "Procedures",
+                "list": [
                     {
                         "MTDProcedure": {
                             "name": {
@@ -106,2529 +108,1444 @@
                 ]
             },
             {
-                "Tables": [
+                "type": "Tables",
+                "list": [
                     {
                         "MTDTable": {
                             "name": {
-                                "finishProducts": "tbl_finishProducts"
+                                "name": "finishProducts",
+                                "sqlName": "tbl_finishProducts"
                             },
-                            "description": {
-                                "description": "a table of finish products "
-                            }
+                            "description": "a table of finish products "
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "ordinalNumber": "ordinalNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "ordinalNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "name": "name"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
+                                "name": "name",
+                                "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": {
-                                    "unitOfMeasure": "unitOfMeasure"
-                                },
-                                "type": {
-                                    "type": "INT NULL"
-                                }
+                                "name": "unitOfMeasure",
+                                "type": "INT NULL"
                             },
                             {
-                                "name": {
-                                    "bookkeepingCode": "bookkeepingCode"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NULL"
-                                }
+                                "name": "bookkeepingCode",
+                                "type": "NVARCHAR(20)  NULL"
                             },
                             {
-                                "name": {
-                                    "addedDate": "addedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "addedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "enabled": "enabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "enabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "deletedDate": "deletedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "deletedDate",
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "additions": "tbl_additions"
+                                "name": "additions",
+                                "sqlName": "tbl_additions"
                             },
-                            "description": {
-                                "description": "a table of additions to the byton "
-                            }
+                            "description": "a table of additions to the byton "
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "ordinalNumber": "ordinalNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "ordinalNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "name": "name"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
+                                "name": "name",
+                                "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": {
-                                    "unitOfMeasure": "unitOfMeasure"
-                                },
-                                "type": {
-                                    "type": "INT NULL"
-                                }
+                                "name": "unitOfMeasure",
+                                "type": "INT NULL"
                             },
                             {
-                                "name": {
-                                    "bookkeepingCode": "bookkeepingCode"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "bookkeepingCode",
+                                "type": "NVARCHAR(20) NULL"
                             },
                             {
-                                "name": {
-                                    "addedDate": "addedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "addedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "enabled": "enabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "enabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "deletedDate": "deletedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "deletedDate",
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "pumps": "tbl_pumps"
+                                "name": "pumps",
+                                "sqlName": "tbl_pumps"
                             },
-                            "description": {
-                                "description": "a table of pumps and additions to the pumps "
-                            }
+                            "description": "a table of pumps and additions to the pumps "
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "ordinalNumber": "ordinalNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "ordinalNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "name": "name"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
+                                "name": "name",
+                                "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": {
-                                    "unitOfMeasure": "unitOfMeasure"
-                                },
-                                "type": {
-                                    "type": "INT NULL"
-                                }
+                                "name": "unitOfMeasure",
+                                "type": "INT NULL"
                             },
                             {
-                                "name": {
-                                    "addition": "addition"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "addition",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "bookkeepingCode": "bookkeepingCode"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "bookkeepingCode",
+                                "type": "NVARCHAR(20) NULL"
                             },
                             {
-                                "name": {
-                                    "addedDate": "addedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "addedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "enabled": "enabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "enabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "deletedDate": "deletedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "deletedDate",
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "unitOfMeasure": "tbl_unitOfMeasure"
+                                "name": "unitOfMeasure",
+                                "sqlName": "tbl_unitOfMeasure"
                             },
-                            "description": {
-                                "description": "a normalization table of unitsOfMeasure"
-                            }
+                            "description": "a normalization table of unitsOfMeasure"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "id": "id"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "measure": "measure"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL "
-                                }
+                                "name": "measure",
+                                "type": "NVARCHAR(20) NOT NULL "
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "BasicDetails": "tbl_BasicDetails"
+                                "name": "BasicDetails",
+                                "sqlName": "tbl_BasicDetails"
                             },
-                            "description": {
-                                "description": "Table for the Basic details of receipt"
-                            }
+                            "description": "Table for the Basic details of receipt"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) PRIMARY KEY NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ClientCode": "ClientCode"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "ClientCode",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DateReceipt": "DateReceipt"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "DateReceipt",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "TotalSum": "TotalSum"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "TotalSum",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UserName": "UserName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "UserName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Comments": "Comments"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(MAX) NULL"
-                                }
+                                "name": "Comments",
+                                "type": "NVARCHAR(MAX) NULL"
                             },
                             {
-                                "name": {
-                                    "InsertDate": "InsertDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "InsertDate",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NULL"
                             },
                             {
-                                "name": {
-                                    "DeleteDate": "DeleteDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "PaymentTypes": "tbl_PaymentTypes"
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_PaymentTypes"
                             },
-                            "description": {
-                                "description": "Normalization table to describe the paymentId of BasicDetails table"
-                            }
+                            "description": "Normalization table to describe the paymentId of BasicDetails table"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PaymentId": "PaymentId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                },
-                                "values": {
-                                    "values": [
-                                        1,
-                                        2,
-                                        3,
-                                        4,
-                                        5
-                                    ]
-                                }
+                                "name": "PaymentId",
+                                "type": "INT NOT NULL",
+                                "values": [
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5
+                                ]
                             },
                             {
-                                "name": {
-                                    "PaymentType": "PaymentType"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                },
-                                "values": {
-                                    "values": [
-                                        "Cash",
-                                        "Cheque",
-                                        "Credit",
-                                        "StandingOrder",
-                                        "BankTransfer"
-                                    ]
-                                }
+                                "name": "PaymentType",
+                                "type": "NVARCHAR(20)  NOT NULL",
+                                "values": [
+                                    "Cash",
+                                    "Cheque",
+                                    "Credit",
+                                    "StandingOrder",
+                                    "BankTransfer"
+                                ]
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "NormalizationTable": "tbl_NormalizationTable"
+                                "name": "NormalizationTable",
+                                "sqlName": "tbl_NormalizationTable"
                             },
-                            "description": {
-                                "description": "Normalization table BasicDatails with the payment types tables"
-                            }
+                            "description": "Normalization table BasicDatails with the payment types tables"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PaymentId": "PaymentId"
-                                },
-                                "type": {
-                                    "type": "INT  NOT NULL"
-                                }
+                                "name": "PaymentId",
+                                "type": "INT  NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Cash": "tbl_Cash"
+                                "name": "Cash",
+                                "sqlName": "tbl_Cash"
                             },
-                            "description": {
-                                "description": "Table of cash details"
-                            }
+                            "description": "Table of cash details"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SumOfCash": "SumOfCash"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "SumOfCash",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeleteDate": "DeleteDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Cheque": "tbl_Cheque"
+                                "name": "Cheque",
+                                "sqlName": "tbl_Cheque"
                             },
-                            "description": {
-                                "description": "Table of cheque details"
-                            }
+                            "description": "Table of cheque details"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SumOfCheque": "SumOfCheque"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "SumOfCheque",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "BankNumber": "BankNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(10) NOT NULL"
-                                }
+                                "name": "BankNumber",
+                                "type": "NVARCHAR(10) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "BankBranch": "BankBranch"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(10) NOT NULL"
-                                }
+                                "name": "BankBranch",
+                                "type": "NVARCHAR(10) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AccountNumber": "AccountNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
+                                "name": "AccountNumber",
+                                "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UntilDate": "UntilDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "UntilDate",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DocumentUrl": "DocumentUrl"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)NOT NULL"
-                                }
+                                "name": "DocumentUrl",
+                                "type": "NVARCHAR(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeleteDate": "DeleteDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Credit": "tbl_Credit"
+                                "name": "Credit",
+                                "sqlName": "tbl_Credit"
                             },
-                            "description": {
-                                "description": "Table of credit details"
-                            }
+                            "description": "Table of credit details"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SumOfCredit": "SumOfCredit"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "SumOfCredit",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "CreditNumber": "CreditNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(16)NOT NULL"
-                                }
+                                "name": "CreditNumber",
+                                "type": "NVARCHAR(16)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "CardType": "CardType"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)NOT NULL"
-                                }
+                                "name": "CardType",
+                                "type": "NVARCHAR(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "OwnerCard": "OwnerCard"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(40)NOT NULL"
-                                }
+                                "name": "OwnerCard",
+                                "type": "NVARCHAR(40)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "IdOwnerCard": "IdOwnerCard"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(9)NOT NULL"
-                                }
+                                "name": "IdOwnerCard",
+                                "type": "NVARCHAR(9)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Validity": "Validity"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(4)NOT NULL"
-                                }
+                                "name": "Validity",
+                                "type": "NVARCHAR(4)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PaymentMethod": "PaymentMethod"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)NOT NULL"
-                                }
+                                "name": "PaymentMethod",
+                                "type": "NVARCHAR(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PaymentsSum": "PaymentsSum"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PaymentsSum",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "CardName": "CardName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)NOT NULL"
-                                }
+                                "name": "CardName",
+                                "type": "NVARCHAR(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeleteDate": "DeleteDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "StandingOrder": "tbl_StandingOrder"
+                                "name": "StandingOrder",
+                                "sqlName": "tbl_StandingOrder"
                             },
-                            "description": {
-                                "description": "Table of standingOrder details"
-                            }
+                            "description": "Table of standingOrder details"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SumOfStandingOrder": "SumOfStandingOrder"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "SumOfStandingOrder",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "StandingOrderType": "StandingOrderType"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)NOT NULL"
-                                }
+                                "name": "StandingOrderType",
+                                "type": "NVARCHAR(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AccountNumberOrCard": "AccountNumberOrCard"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(40)NOT NULL"
-                                }
+                                "name": "AccountNumberOrCard",
+                                "type": "NVARCHAR(40)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UntilDate": "UntilDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "UntilDate",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProofBackFromBank": "ProofBackFromBank"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)NOT NULL"
-                                }
+                                "name": "ProofBackFromBank",
+                                "type": "NVARCHAR(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeleteDate": "DeleteDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "BankTransfer": "tbl_BankTransfer"
+                                "name": "BankTransfer",
+                                "sqlName": "tbl_BankTransfer"
                             },
-                            "description": {
-                                "description": "Table of bankTransfer details"
-                            }
+                            "description": "Table of bankTransfer details"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ReceiptNumber": "ReceiptNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20)  NOT NULL"
-                                }
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SumOfBankTransfer": "SumOfBankTransfer"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "SumOfBankTransfer",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "TransferDate": "TransferDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "TransferDate",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Proof": "Proof"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(100) NOT NULL"
-                                }
+                                "name": "Proof",
+                                "type": "NVARCHAR(100) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProofNumber": "ProofNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(30) NOT NULL"
-                                }
+                                "name": "ProofNumber",
+                                "type": "NVARCHAR(30) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AccountNumber": "AccountNumber"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(15) NOT NULL"
-                                }
+                                "name": "AccountNumber",
+                                "type": "NVARCHAR(15) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeleteDate": "DeleteDate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NULL"
-                                }
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Suppliers": "tbl_Suppliers"
+                                "name": "Suppliers",
+                                "sqlName": "tbl_Suppliers"
                             },
-                            "description": {
-                                "description": "Table for the details of suppliers"
-                            }
+                            "description": "Table for the details of suppliers"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "Id": "Id"
-                                },
-                                "type": {
-                                    "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
-                                }
+                                "name": "Id",
+                                "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
                             },
                             {
-                                "name": {
-                                    "SupplierCode": "SupplierCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL "
-                                }
+                                "name": "SupplierCode",
+                                "type": "nvarchar(50) NOT NULL "
                             },
                             {
-                                "name": {
-                                    "SupplierName": "SupplierName"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL"
-                                }
+                                "name": "SupplierName",
+                                "type": "nvarchar(50) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "licensedDealerNumber": "licensedDealerNumber"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "licensedDealerNumber",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "BokkeepingNumber": "BokkeepingNumber"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "BokkeepingNumber",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "ObjectiveBank": "ObjectiveBank"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "ObjectiveBank",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "ConditionGushyPayment": "ConditionGushyPayment"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "ConditionGushyPayment",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "PreferredPaymentDate": "PreferredPaymentDate"
-                                },
-                                "type": {
-                                    "type": "INT  NULL"
-                                }
+                                "name": "PreferredPaymentDate",
+                                "type": "INT  NULL"
                             },
                             {
-                                "name": {
-                                    "Ovligo": "Ovligo"
-                                },
-                                "type": {
-                                    "type": "int  NULL"
-                                }
+                                "name": "Ovligo",
+                                "type": "int  NULL"
                             },
                             {
-                                "name": {
-                                    "Status": "Status"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "Status",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Street": "Street"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
-                                }
+                                "name": "Street",
+                                "type": "nvarchar(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "HomeNumber": "HomeNumber"
-                                },
-                                "type": {
-                                    "type": " int NOT NULL"
-                                }
+                                "name": "HomeNumber",
+                                "type": " int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "City": "City"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "City",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ZipCode": "ZipCode"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "ZipCode",
+                                "type": " nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Phone1": "Phone1"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "Phone1",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Phone2": "Phone2"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "Phone2",
+                                "type": " nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Mobile": "Mobile"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "Mobile",
+                                "type": " nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Fax": "Fax"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "Fax",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Mail": "Mail"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "Mail",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Notes": "Notes"
-                                },
-                                "type": {
-                                    "type": "nvarchar(MAX) NULL"
-                                }
+                                "name": "Notes",
+                                "type": "nvarchar(MAX) NULL"
                             },
                             {
-                                "name": {
-                                    "CreationDate": "CreationDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "CreationDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "InsertUser": "InsertUser"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(50) NOT NULL"
-                                }
+                                "name": "InsertUser",
+                                "type": "NVARCHAR(50) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": {
-                                    "DisabledDate": "DisabledDate"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50)"
-                                }
+                                "name": "DisabledDate",
+                                "type": "nvarchar(50)"
                             },
                             {
-                                "name": {
-                                    "DisableUser": "DisableUser"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "DisableUser",
+                                "type": " nvarchar(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Branches": "tbl_Branches"
+                                "name": "Branches",
+                                "sqlName": "tbl_Branches"
                             },
-                            "description": {
-                                "description": "Table for the details of branches"
-                            }
+                            "description": "Table for the details of branches"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "Id": "Id"
-                                },
-                                "type": {
-                                    "type": "int Identity (1000,1) NOT NULL"
-                                }
+                                "name": "Id",
+                                "type": "int Identity (1000,1) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SupplierCode": "SupplierCode"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL FOREIGN KEY(SupplierCode) REFERENCES tbl_Suppliers(Id) "
-                                }
+                                "name": "SupplierCode",
+                                "type": "INT NOT NULL FOREIGN KEY(SupplierCode) REFERENCES tbl_Suppliers(Id) "
                             },
                             {
-                                "name": {
-                                    "BranchName": "BranchName"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
-                                }
+                                "name": "BranchName",
+                                "type": "nvarchar(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Status": "Status"
-                                },
-                                "type": {
-                                    "type": " int NOT NULL"
-                                }
+                                "name": "Status",
+                                "type": " int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Street": "Street"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50)NOT NULL"
-                                }
+                                "name": "Street",
+                                "type": "nvarchar(50)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "HomeNumber": "HomeNumber"
-                                },
-                                "type": {
-                                    "type": " int NOT NULL"
-                                }
+                                "name": "HomeNumber",
+                                "type": " int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "City": "City"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20)NOT NULL"
-                                }
+                                "name": "City",
+                                "type": " nvarchar(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ZipCode": "ZipCode"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "ZipCode",
+                                "type": " nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Phone1": "Phone1"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
-                                }
+                                "name": "Phone1",
+                                "type": "nvarchar(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Phone2": "Phone2"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "Phone2",
+                                "type": " nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Mobile": "Mobile"
-                                },
-                                "type": {
-                                    "type": " nvarchar(20) NULL"
-                                }
+                                "name": "Mobile",
+                                "type": " nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Fax": "Fax"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "Fax",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Mail": "Mail"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "Mail",
+                                "type": "nvarchar(20) NULL"
                             },
                             {
-                                "name": {
-                                    "Notes": "Notes"
-                                },
-                                "type": {
-                                    "type": "nvarchar(MAX) NULL"
-                                }
+                                "name": "Notes",
+                                "type": "nvarchar(MAX) NULL"
                             },
                             {
-                                "name": {
-                                    "CreationDate": "CreationDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "CreationDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UserThatInsert": "UserThatInsert"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)NOT NULL"
-                                }
+                                "name": "UserThatInsert",
+                                "type": "nvarchar(20)NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NULL"
                             },
                             {
-                                "name": {
-                                    "DisabledDate": "DisabledDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "DisabledDate",
+                                "type": "DATETIME NULL"
                             },
                             {
-                                "name": {
-                                    "DisableUser": "DisableUser"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NULL"
-                                }
+                                "name": "DisableUser",
+                                "type": "nvarchar(20) NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Orderers": "tbl_Orderers"
+                                "name": "Orderers",
+                                "sqlName": "tbl_Orderers"
                             },
-                            "description": {
-                                "description": "table of orderers details"
-                            }
+                            "description": "table of orderers details"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "OrdererName": "OrdereName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "OrdereName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "OrdererPhone": "OrdererPhone"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(10) NOT NULL"
-                                }
+                                "name": "OrdererPhone",
+                                "type": "NVARCHAR(10) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AddedDate": "AddedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disable": "Disable"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disable",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeletintDate": "DeletingDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "DeletingDate",
+                                "type": "DATETIME NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "PouringsTypes": "tbl_PouringsTypes"
+                                "name": "PouringsTypes",
+                                "sqlName": "tbl_PouringsTypes"
                             },
-                            "description": {
-                                "description": "type of pourings "
-                            }
+                            "description": "type of pourings "
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PouringName": "PouringName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "PouringName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AddedDate": "AddedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disable": "Disable"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disable",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeletintDate": "DeletingDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "DeletingDate",
+                                "type": "DATETIME NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "StatusesLead": "tbl_StatusesLead"
+                                "name": "StatusesLead",
+                                "sqlName": "tbl_StatusesLead"
                             },
-                            "description": {
-                                "description": "table of statuses leads option"
-                            }
+                            "description": "table of statuses leads option"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "StatusName": "StatusName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "StatusName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AddedDate": "AddedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disable": "Disable"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disable",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeletintDate": "DeletingDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "DeletingDate",
+                                "type": "DATETIME NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Clients": "tbl_Clients"
+                                "name": "Clients",
+                                "sqlName": "tbl_Clients"
                             },
-                            "description": {
-                                "description": "Table that contain all the details of the clients"
-                            }
+                            "description": "Table that contain all the details of the clients"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ClientCode": "ClientCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL"
-                                }
+                                "name": "ClientCode",
+                                "type": "nvarchar(50) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ClientName": "ClientName"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL"
-                                }
+                                "name": "ClientName",
+                                "type": "nvarchar(50) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PrivateCompanyNumber": "PrivateCompanyNumber"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL"
-                                }
+                                "name": "PrivateCompanyNumber",
+                                "type": "nvarchar(50) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "BookkeepingNumber": "BookkeepingNumber"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) "
-                                }
+                                "name": "BookkeepingNumber",
+                                "type": "nvarchar(50) "
                             },
                             {
-                                "name": {
-                                    "DestinationBank": "DestinationBank"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) "
-                                }
+                                "name": "DestinationBank",
+                                "type": "nvarchar(50) "
                             },
                             {
-                                "name": {
-                                    "PaymentTermsFluent": "PaymentTermsFluent"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50)"
-                                }
+                                "name": "PaymentTermsFluent",
+                                "type": "nvarchar(50)"
                             },
                             {
-                                "name": {
-                                    "PreferredPaymentDate": "PreferredPaymentDate"
-                                },
-                                "type": {
-                                    "type": "int"
-                                }
+                                "name": "PreferredPaymentDate",
+                                "type": "int"
                             },
                             {
-                                "name": {
-                                    "Ovligo": "Ovligo"
-                                },
-                                "type": {
-                                    "type": "int"
-                                }
+                                "name": "Ovligo",
+                                "type": "int"
                             },
                             {
-                                "name": {
-                                    "ReceiptIssueTerm": "ReceiptIssueTerm"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "ReceiptIssueTerm",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "ReceiptCentralism": "ReceiptCentralism"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "ReceiptCentralism",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "AccountantClassifiedCode": "AccountantClassifiedCode"
-                                },
-                                "type": {
-                                    "type": "int"
-                                }
+                                "name": "AccountantClassifiedCode",
+                                "type": "int"
                             },
                             {
-                                "name": {
-                                    "Status": "Status"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "Status",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Description": "Description"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "Description",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "Street": "Street"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "Street",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "House": "House"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "House",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "City": "City"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "City",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ZipCode": "ZipCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "ZipCode",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "Telephone1": "Telephone1"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "Telephone1",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Telephone2": "Telephone2"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "Telephone2",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "MobilePhone": "MobilePhone"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "MobilePhone",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "Fax": "Fax"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "Fax",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "Email": "Email"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "Email",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "Comments": "Comments"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "Comments",
+                                "type": "nvarchar(20)"
                             },
                             {
-                                "name": {
-                                    "CreationDate": "CreationDate"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL"
-                                }
+                                "name": "CreationDate",
+                                "type": "nvarchar(50) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UserThatAdd": "UserThatAdd"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "UserThatAdd",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "bit NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "bit NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DeletionDate": "DeletionDate"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50)"
-                                }
+                                "name": "DeletionDate",
+                                "type": "nvarchar(50)"
                             },
                             {
-                                "name": {
-                                    "UserThatDelete": "UserThatDelete"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20)"
-                                }
+                                "name": "UserThatDelete",
+                                "type": "nvarchar(20)"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Status": "tbl_Status"
+                                "name": "Status",
+                                "sqlName": "tbl_Status"
                             },
-                            "description": {
-                                "description": "Table that contain all the statuses"
-                            }
+                            "description": "Table that contain all the statuses"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                },
-                                "values": {
-                                    "values": [
-                                        1,
-                                        2,
-                                        3
-                                    ]
-                                }
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
+                                "values": [
+                                    1,
+                                    2,
+                                    3
+                                ]
                             },
                             {
-                                "name": {
-                                    "StatusName": "StatusName"
-                                },
-                                "type": {
-                                    "type": "nvarchar(50) NOT NULL"
-                                },
-                                "values": {
-                                    "values": [
-                                        "פעיל", "מושהה", "מוגבל"
-                                    ]
-                                }
+                                "name": "StatusName",
+                                "type": "nvarchar(50) NOT NULL",
+                                "values": [
+                                    "פעיל",
+                                    "מושהה",
+                                    "מוגבל"
+                                ]
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Quotation": "tbl_Quotation"
+                                "name": "Quotation",
+                                "sqlName": "tbl_Quotation"
                             },
-                            "description": {
-                                "description": "Table for the details of quotations"
-                            }
+                            "description": "Table for the details of quotations"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SerialNumber": "SerialNumber"
-                                },
-                                "type": {
-                                    "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
-                                }
+                                "name": "SerialNumber",
+                                "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
                             },
                             {
-                                "name": {
-                                    "ClientCode": "ClientCode"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL "
-                                }
+                                "name": "ClientCode",
+                                "type": "int NOT NULL "
                             },
                             {
-                                "name": {
-                                    "Date": "Date"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "Date",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PriceBeforeDiscount": "PriceBeforeDiscount"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "PriceBeforeDiscount",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DiscountPercent": "DiscountPercent"
-                                },
-                                "type": {
-                                    "type": "float NULL"
-                                }
+                                "name": "DiscountPercent",
+                                "type": "float NULL"
                             },
                             {
-                                "name": {
-                                    "Discount": "Discount"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "Discount",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PriceAfterDiscount": "PriceAfterDiscount"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "PriceAfterDiscount",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "VATPercent": "VATPercent"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "VATPercent",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "VAT": "VAT"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "VAT",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Total": "Total"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "Total",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UserName": "UserName"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "UserName",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Comments": "Comments"
-                                },
-                                "type": {
-                                    "type": "nvarchar(1000) NULL"
-                                }
+                                "name": "Comments",
+                                "type": "nvarchar(1000) NULL"
                             },
                             {
-                                "name": {
-                                    "Contact": "Contact"
-                                },
-                                "type": {
-                                    "type": "varchar(255) NULL"
-                                }
+                                "name": "Contact",
+                                "type": "varchar(255) NULL"
                             },
                             {
-                                "name": {
-                                    "PayoffDate": "PayoffDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "PayoffDate",
+                                "type": "DATETIME NULL"
                             },
                             {
-                                "name": {
-                                    "ClosingComments": "ClosingComments"
-                                },
-                                "type": {
-                                    "type": "nvarchar(1000) NULL"
-                                }
+                                "name": "ClosingComments",
+                                "type": "nvarchar(1000) NULL"
                             },
                             {
-                                "name": {
-                                    "AddedDate": "AddedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DisabledDate": "DisabledDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "DisabledDate",
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "priceList": "tbl_PriceList"
+                                "name": "priceList",
+                                "sqlName": "tbl_PriceList"
                             },
-                            "description": {
-                                "description": "table that contains all the priceList of the products"
-                            }
+                            "description": "table that contains all the priceList of the products"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "Id": "Id"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                                }
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PriceListName": "PriceListName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "PriceListName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Category": "Category"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "Category",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Associate": "Associate"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "Associate",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "CreateDate": "CreateDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "CreateDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "UserName": "UserName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "UserName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Active": "Active"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Active",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DisableDate": "DisableDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "DisableDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DisableUser": "DisableUser"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "DisableUser",
+                                "type": "BIT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "PaymentTypes": "tbl_Prices"
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_Prices"
                             },
-                            "description": {
-                                "description": "table of prices by product"
-                            }
+                            "description": "table of prices by product"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "PriceListId": "PriceListId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProductId": "ProductId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "Price"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "Price",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Discount": "Discount"
-                                },
-                                "type": {
-                                    "type": "FLOAT NULL"
-                                }
+                                "name": "Discount",
+                                "type": "FLOAT NULL"
                             },
                             {
-                                "name": {
-                                    "AddedDate": "AddedDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NULL"
-                                }
+                                "name": "AddedDate",
+                                "type": "DATETIME NULL"
                             },
                             {
-                                "name": {
-                                    "UserName": "UserName"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "UserName",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "priceList": "tbl_CitiesAdditions"
+                                "name": "priceList",
+                                "sqlName": "tbl_CitiesAdditions"
                             },
-                            "description": {
-                                "description": "table that contains all the prices additions about the cities"
-                            }
+                            "description": "table that contains all the prices additions about the cities"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "PriceListId": "PriceListId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProductId": "ProductId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "CityId": "CityId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "CityId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "Price"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "Price",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "priceList": "tbl_TimeAdditions"
+                                "name": "priceList",
+                                "sqlName": "tbl_TimeAdditions"
                             },
-                            "description": {
-                                "description": "table that contains all the prices additions about the times"
-                            }
+                            "description": "table that contains all the prices additions about the times"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "PriceListId": "PriceListId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProductId": "ProductId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "Price"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "Price",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DayOfTheWeek": "DayOfTheWeek"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "DayOfTheWeek",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "StartHour": "StartHour"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "StartHour",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "EndHour": "EndHour"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "EndHour",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "StartDate": "StartDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "StartDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "EndDate": "EndDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "EndDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "PaymentTypes": "tbl_DistanceAdditions"
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_DistanceAdditions"
                             },
-                            "description": {
-                                "description": "table that contains all the prices additions about the distance"
-                            }
+                            "description": "table that contains all the prices additions about the distance"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "PriceListId": "PriceListId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProductId": "ProductId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "MinDistance": "MinDistance"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "MinDistance",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "Price"
-                                },
-                                "type": {
-                                    "type": "FLOAT NOT NULL"
-                                }
+                                "name": "Price",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "priceList": "tbl_TruckFill"
+                                "name": "priceList",
+                                "sqlName": "tbl_TruckFill"
                             },
-                            "description": {
-                                "description": "table that contains the fill count of truck"
-                            }
+                            "description": "table that contains the fill count of truck"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "PriceListId": "PriceListId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ProductId": "ProductId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "AmountTransportDiff": "AmountTransportDiff"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "AmountTransportDiff",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "MaxTransportDiff": "MaxTransportDiff"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "MaxTransportDiff",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "Price"
-                                },
-                                "type": {
-                                    "type": "float NOT NULL"
-                                }
+                                "name": "Price",
+                                "type": "float NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "PaymentTypes": "tbl_PricesListBySupplierOrClient"
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_PricesListBySupplierOrClient"
                             },
-                            "description": {
-                                "description": "table that ocntacts between the suppliers and clients to them prices lists"
-                            }
+                            "description": "table that ocntacts between the suppliers and clients to them prices lists"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "Id": "Id"
-                                },
-                                "type": {
-                                    "type": "INT IDENTITY NOT NULL"
-                                }
+                                "name": "Id",
+                                "type": "INT IDENTITY NOT NULL"
                             },
                             {
-                                "name": {
-                                    "PriceListId": "PriceListId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SupplierOrClient": "SupplierOrClient"
-                                },
-                                "type": {
-                                    "type": "NVARCHAR(20) NOT NULL"
-                                }
+                                "name": "SupplierOrClient",
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "StartDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "StartDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SupplierOrClient": "EndDate"
-                                },
-                                "type": {
-                                    "type": "DATETIME NOT NULL"
-                                }
+                                "name": "EndDate",
+                                "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Price": "AreaId"
-                                },
-                                "type": {
-                                    "type": "INT NOT NULL"
-                                }
+                                "name": "AreaId",
+                                "type": "INT NOT NULL"
                             },
                             {
-                                "name": {
-                                    "Disabled": "Disabled"
-                                },
-                                "type": {
-                                    "type": "BIT NOT NULL"
-                                }
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Status": "tbl_BuytonStrength"
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonStrength"
                             },
-                            "description": {
-                                "description": "Table that contain buyton strength"
-                            }
+                            "description": "Table that contain buyton strength"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "StrengthCode": "StrengthCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "StrengthCode",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "strengthDescribe": "strengthDescribe"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "strengthDescribe",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "strengthNumber": "strengthNumber"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "strengthNumber",
+                                "type": "int NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Status": "tbl_BuytonDegree"
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonDegree"
                             },
-                            "description": {
-                                "description": "Table that contain Buyton Degree"
-                            }
+                            "description": "Table that contain Buyton Degree"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "DegreeCode": "DegreeCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "DegreeCode",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DegreeDescribe": "DegreeDescribe"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "DegreeDescribe",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "DegreeNumber": "DegreeNumber"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "DegreeNumber",
+                                "type": "int NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Status": "tbl_BuytonGrain"
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonGrain"
                             },
-                            "description": {
-                                "description": "Table that contain Buyton Grain"
-                            }
+                            "description": "Table that contain Buyton Grain"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "GrainCode": "GrainCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "GrainCode",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "GrainDescribe": "GrainDescribe"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "GrainDescribe",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "GrainNumber": "GrainNumber"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "GrainNumber",
+                                "type": "int NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Status": "tbl_BuytonItems"
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonItems"
                             },
-                            "description": {
-                                "description": "Table that contain Buyton items"
-                            }
+                            "description": "Table that contain Buyton items"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "ItemCode": "ItemCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "ItemCode",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ItemDescribe": "ItemDescribe"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "ItemDescribe",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ItemType": "ItemType"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "ItemType",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ItemStrength": "ItemStrength"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "ItemStrength",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "ItemDegreeExposure": "ItemDegreeExposure"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "ItemDegreeExposure",
+                                "type": "int NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SomechBuyton": "SomechBuyton"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "SomechBuyton",
+                                "type": "int NOT NULL"
                             }
                         ]
                     },
                     {
                         "MTDTable": {
                             "name": {
-                                "Status": "tbl_SomechBuyton"
+                                "name": "Status",
+                                "sqlName": "tbl_SomechBuyton"
                             },
-                            "description": {
-                                "description": "Table that contain SomechBuyton"
-                            }
+                            "description": "Table that contain SomechBuyton"
                         },
                         "columns": [
                             {
-                                "name": {
-                                    "SomechCode": "SomechCode"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "SomechCode",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SomechDescribe": "SomechDescribe"
-                                },
-                                "type": {
-                                    "type": "nvarchar(20) NOT NULL"
-                                }
+                                "name": "SomechDescribe",
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
-                                "name": {
-                                    "SomechNumber": "SomechNumber"
-                                },
-                                "type": {
-                                    "type": "int NOT NULL"
-                                }
+                                "name": "SomechNumber",
+                                "type": "int NOT NULL"
                             }
                         ]
                     }
-
                 ]
             }
         ]
     },
     {
+        "database": "mongoDB",
         "mongodb": {
             "leads": "leads",
             "products": "products",
             "areas": "areas",
-            "users":"users",
-            "rand_password":"rand_password"
+            "users": "users",
+            "rand_password": "rand_password"
         }
     }
 ]

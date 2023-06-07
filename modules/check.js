@@ -100,6 +100,7 @@ async function isPerfect(obj) {
     let array1 = await splitString(columns);
     let array2 = await splitString(values);
     let newObj = config.find(a => { return Object.keys(a).includes('sql'); });
+    console.log({newObj});
     newObj = newObj['sql'].find(b => { return Object.keys(b).includes('Tables'); });
     newObj = newObj['Tables'].find(c => { return Object.values(c['MTDTable']['name']).includes(tableName) })['columns'];
     for (let d = 0; d < newObj.length; d++) {

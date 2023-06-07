@@ -3,7 +3,7 @@ const { create } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
-const {getSqlTableColumnsType, parseSQLType} = require('../modules/config')
+const {getSqlTableColumnsType, parseSQLType} = require('../modules/config/config')
 
 async function createSql(obj) {
   
