@@ -49,7 +49,7 @@ async function createNormalizationTable() {
                         _ = await getPool().request().query(`
                         IF(SELECT COUNT(*)
                         FROM ${name[0]})<${values2[0].length}
-                        INSERT INTO ${name[0]} VALUES (${values2[0][y]}, '${values2[1][y]}')
+                        INSERT INTO ${name[0]} VALUES (${values2[0][y]}, 'N${values2[1][y]}')
                     `);
                     };
                     break;
@@ -60,7 +60,7 @@ async function createNormalizationTable() {
                         _ = await getPool().request().query(`
                         IF(SELECT COUNT(*)
                         FROM ${name[0]})<${insertvals.length}
-                        INSERT INTO ${name[0]} VALUES ( '${insertvals[y]}')
+                        INSERT INTO ${name[0]} VALUES ( 'N${insertvals[y]}')
                     `);
                     };
                     break;

@@ -3,9 +3,10 @@ const { SQL_SERVER, SQL_DBNAME, SQL_USERNAME, SQL_PASSWORD, SQL_PORT } = process
 const sql = require('mssql');
 
 const poolConfig = () => ({
-    driver: SQL_PORT,
+    // driver: SQL_PORT,
+    port:parseInt(SQL_PORT),
     server: SQL_SERVER,
-    database: SQL_DBNAME,
+    // database: SQL_DBNAME,
     user: SQL_USERNAME,
     password: SQL_PASSWORD,
     database:'master',
