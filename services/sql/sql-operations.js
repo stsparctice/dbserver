@@ -101,7 +101,7 @@ async function buildcolumns(obj) {
      let columns = "";
      for (let key=0;key<obj['values'].length;key++) {
           if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `'${obj['values'][key]}'`;
+               values += `'N${obj['values'][key]}'`;
           }
           else {
                values += obj['values'][key];
