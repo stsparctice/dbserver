@@ -69,9 +69,10 @@ const updateQuotation = async function (obj) {
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode } = obj;
+     const { name, supplierCode,id } = obj;
      const result = await getPool().request()
           .input('name', name)
+          .input('id', id)
           .input('supplierCode', supplierCode)
           .execute(`pro_UpdateSuppliersBranches`);
      return result;
@@ -107,7 +108,7 @@ async function buildcolumns(obj) {
      let columns = "";
      for (let key=0;key<obj['values'].length;key++) {
           if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `'${obj['values'][key]}'`;
+               values += `'N${obj['values'][key]}'`;
           }
           else {
                values += obj['values'][key];
