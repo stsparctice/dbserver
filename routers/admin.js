@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const config = require('../config.json');
+const { checkUserRole } = require('../modules/authorization');
 const { updateConfig } = require('../modules/admin');
+const { routerLogger } = require('../utils/logger');
+
+router.use(routerLogger())
+
+router.use(checkUserRole('admin'));
 
 router.get('/', async (req, res) => {
     res.render('admin', { config });

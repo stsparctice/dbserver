@@ -3,11 +3,13 @@ const { SQL_SERVER, SQL_DBNAME, SQL_USERNAME, SQL_PASSWORD, SQL_PORT } = process
 const sql = require('mssql');
 
 const poolConfig = () => ({
-    driver: SQL_PORT,
+    // driver: SQL_PORT,
+    port:parseInt(SQL_PORT),
     server: SQL_SERVER,
-    database: SQL_DBNAME,
+    // database: SQL_DBNAME,
     user: SQL_USERNAME,
     password: SQL_PASSWORD,
+    database:'master',
     options: {
         encrypt: false,
         enableArithAbort: false
@@ -15,16 +17,16 @@ const poolConfig = () => ({
 });
 
 let pool;
-
-const connect = async () => {
+console.log(poolConfig());
+const connectSql = async () => {
     if (!pool) {
 
         pool = new sql.ConnectionPool(poolConfig());
-        console.log("pool "+pool );
+        console.log("pool" );
     }
     if (!pool.connected) {
         _ = await pool.connect();
-        console.log("kkk "+_);
+        console.log("connected");
     }
 }
 
@@ -32,5 +34,5 @@ const getPool = () => pool;
 
 module.exports = {
     getPool,
-    connect
+    connectSql
 };

@@ -1,30 +1,82 @@
 const { getPool } = require('./sql-connection');
 
 const create = async function (obj) {
-     let values = await buildcolumns(obj['values']);
+     const { tableName, columns, values } = obj;
      const result = await getPool().request()
-          .input('tableName', obj.tableName)
+          .input('tableName', tableName)
+          .input('columns',columns)
           .input('values', values)
           .execute(`pro_BasicCreate`);
      return result;
 };
 
 const read = async function (obj) {
-     let result = await getPool().request()
-          .input('tableName', obj.tableName)
-          .input('columns', obj.columns)
-          .input('condition', obj.condition)
+     if (!Object.keys(obj).includes("condition")) {
+          obj.condition = '1=1';
+     };
+     if (!Object.keys(obj).includes("n")) {
+          obj.n = 100;
+     }
+     const { tableName, columns, condition, n } = obj;
+     const result = await getPool().request()
+          .input('tableName', tableName)
+          .input('columns', columns)
+          .input('condition', condition)
+          .input('n', n)
           .execute(`pro_BasicRead`);
-     return result;
+     return result.recordset;
+};
+
+const readAll = async function (obj) {
+     if (!Object.keys(obj).includes("condition")) {
+          obj["condition"] = '1=1';
+     };
+     const { tableName, condition } = obj;
+     const result = await getPool().request()
+          .input('tableName', tableName)
+          .input('condition', condition)
+          .execute(`pro_ReadAll`);
+     return result.recordset;
 };
 
 const update = async function (obj) {
-     let values = setValues(obj['values']);
-     let result = await getPool().request()
-          .input('tableName', obj.tableName)
-          .input('values', values)
-          .input('condition', obj.condition)
+     if (!Object.keys(obj).includes("condition")) {
+          obj["condition"] = '1=1';
+     };
+     const { tableName, values, condition } = obj;
+     const value = setValues(values);
+     const result = await getPool().request()
+          .input('tableName', tableName)
+          .input('values', value)
+          .input('condition', condition)
           .execute(`pro_BasicUpdate`);
+     return result;
+};
+
+// 
+const updateQuotation = async function (obj) {
+     const { serialNumber } = obj;
+     const result = await getPool().request()
+          .input('serialNumber', serialNumber)
+          .execute(`pro_UpdateQuotation`);
+     return result;
+};
+
+const updateSuppliersBranches = async function (obj) {
+     const { name, supplierCode } = obj;
+     const result = await getPool().request()
+          .input('name', name)
+          .input('supplierCode', supplierCode)
+          .execute(`pro_UpdateSuppliersBranches`);
+     return result;
+};
+
+const countRows = async function (obj) {
+     const { tableName, condition } = obj;
+     const result = await getPool().request()
+          .input('tableName', tableName)
+          .input('condition', condition)
+          .execute(`pro_CountRows`);
      return result;
 };
 
@@ -32,10 +84,12 @@ function setValues(obj) {
      let values = "";
      for (let key in obj) {
           values += `${key} = `;
-          if (typeof (obj[key]) === 'string' || typeof (obj[key]) === 'boolean')
+          if (typeof (obj[key]) === 'string' || typeof (obj[key]) === 'boolean') {
                values += `'${obj[key]}'`;
-          else
+          }
+          else {
                values += obj[key];
+          };
           values += ' , ';
      };
      values = values.substring(0, values.length - 2);
@@ -44,22 +98,30 @@ function setValues(obj) {
 
 async function buildcolumns(obj) {
      let values = "";
-     for (let key in obj) {
-          if (typeof (obj[key]) === 'string' && obj[key] != 'NULL') {
-               values += `'${obj[key]}'`;
+     let columns = "";
+     for (let key=0;key<obj['values'].length;key++) {
+          if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
+               values += `'${obj['values'][key]}'`;
           }
           else {
-               values += obj[key];
-          }
+               values += obj['values'][key];
+          };
           values += ', ';
      };
      values = values.substring(0, values.length - 2);
-     return values;
+     for (let key=0;key<obj['columns'].length;key++) {
+          columns += `${obj['columns'][key]},`;
+     };
+     columns = columns.substring(0, columns.length - 1);
+     return {columns,values};
 };
 
 module.exports = {
      create,
      read,
-     update
+     readAll,
+     update,
+     updateQuotation,
+     updateSuppliersBranches,
+     countRows
 };
-
