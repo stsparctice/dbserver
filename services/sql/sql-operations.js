@@ -2,8 +2,6 @@ const { getPool } = require('./sql-connection');
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     console.log({tableName, columns, values});
-     // let object =await buildcolumns({columns,values})
      const result = await getPool().request()
           .input('tableName', tableName)
           .input('columns',columns)
@@ -14,10 +12,10 @@ const create = async function (obj) {
 
 const read = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
+          obj.condition = '1=1';
      };
      if (!Object.keys(obj).includes("n")) {
-          obj["n"] = 100;
+          obj.n = 100;
      }
      const { tableName, columns, condition, n } = obj;
      const result = await getPool().request()

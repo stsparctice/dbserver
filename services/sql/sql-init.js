@@ -41,10 +41,8 @@ async function createNormalizationTable() {
             let m = table['columns'][j];
             if (Object.keys(m).includes('values')) {
                 let values = table['columns'].filter(f => Object.keys(f).includes('values'));
-                console.log(values)
                 if (!values[0].type.type.toLowerCase().includes('PRIMARY'.toLowerCase())) {
                     let values2 = values.map(f => f['values']['values']);
-                    console.log(values2)
                     for (let y = 0; y < values2[0].length; y++) {
                         _ = await getPool().request().query(`
                         IF(SELECT COUNT(*)
