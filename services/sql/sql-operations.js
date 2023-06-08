@@ -18,12 +18,15 @@ const read = async function (obj) {
           obj.n = 100;
      }
      const { tableName, columns, condition, n } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('columns', columns)
-          .input('condition', condition)
-          .input('n', n)
-          .execute(`pro_BasicRead`);
+     console.log({ tableName, columns, condition, n })
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('condition', condition)
+     //      .input('n', n)
+     //      .execute(`pro_BasicRead`);
+     const result = await getPool().request().query(`select top ${n} ${columns} from ${tableName} where ${condition}`)
+     console.log({result})
      return result.recordset;
 };
 
@@ -32,10 +35,11 @@ const readAll = async function (obj) {
           obj["condition"] = '1=1';
      };
      const { tableName, condition } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('condition', condition)
-          .execute(`pro_ReadAll`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('condition', condition)
+     //      .execute(`pro_ReadAll`);
+     const result = await getPool().request().query(`select * from ${tableName} where ${condition}`)
      return result.recordset;
 };
 
