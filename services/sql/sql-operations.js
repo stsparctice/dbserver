@@ -1,4 +1,6 @@
+require('dotenv').config()
 const { getPool } = require('./sql-connection');
+const {SQL_DBNAME} = process.env
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
@@ -25,7 +27,7 @@ const read = async function (obj) {
      //      .input('condition', condition)
      //      .input('n', n)
      //      .execute(`pro_BasicRead`);
-     const result = await getPool().request().query(`select top ${n} ${columns} from ${tableName} where ${condition}`)
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`)
      console.log({result})
      return result.recordset;
 };
@@ -39,7 +41,7 @@ const readAll = async function (obj) {
      //      .input('tableName', tableName)
      //      .input('condition', condition)
      //      .execute(`pro_ReadAll`);
-     const result = await getPool().request().query(`select * from ${tableName} where ${condition}`)
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
      return result.recordset;
 };
 
