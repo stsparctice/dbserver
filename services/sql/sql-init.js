@@ -17,7 +17,7 @@ function buildColumns(details) {
 
 async function createTables() {
 
-    _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
+    _ = await getPool().request().query(`use master IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
     for (let j = 0; j < (config[0]['sql'][1]['Tables']).length; j++) {
         let table = config[0]['sql'][1]['Tables'][j];
@@ -44,8 +44,12 @@ async function createNormalizationTable() {
                 if (!values[0].type.type.toLowerCase().includes('PRIMARY'.toLowerCase())) {
                     let values2 = values.map(f => f['values']['values']);
                     for (let y = 0; y < values2[0].length; y++) {
+                        console.log({name:name[0]});
+                        console.log({v:values2});
+                        console.log({v1:values2[0][y]});
+                        console.log({v2:values2[1][y]});
                         _ = await getPool().request().query(`
-                        use ${SQL_DBNAME} IF(SELECT COUNT(*)
+                        use ${SQL_DBNAME}  IF(SELECT COUNT(*)
                         FROM ${name[0]})<${values2[0].length}
                         INSERT INTO ${name[0]} VALUES (${values2[0][y]}, 'N${values2[1][y]}')
                     `);
@@ -56,7 +60,7 @@ async function createNormalizationTable() {
                     let insertvals = values[1].values.values
                     for (let y = 0; y < insertvals.length ; y++) {
                         _ = await getPool().request().query(`
-                        use ${SQL_DBNAME} IF(SELECT COUNT(*)
+                        use ${SQL_DBNAME}  IF(SELECT COUNT(*)
                         FROM ${name[0]})<${insertvals.length}
                         INSERT INTO ${name[0]} VALUES ( 'N${insertvals[y]}')
                     `);
@@ -70,7 +74,7 @@ async function createNormalizationTable() {
 
 async function createProcedures() {
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_BasicCreate
+    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_BasicCreate
 	    @tableName NVARCHAR (20),
         @columns NVARCHAR (MAX),
 	    @values NVARCHAR (MAX)
@@ -86,7 +90,7 @@ async function createProcedures() {
     `.trim());
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_BasicRead
+    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_BasicRead
     @TableName NVARCHAR(30),
     @columns NVARCHAR(MAX),
     @condition NVARCHAR(MAX),
@@ -94,7 +98,7 @@ async function createProcedures() {
     AS
     BEGIN
     DECLARE @COMMAND nvarchar(100)
-    SET @COMMAND = 'SELECT TOP '+ @n + @columns +
+    SET @COMMAND = 'use ${SQL_DBNAME} SELECT TOP '+ @n + @columns +
         ' FROM ' + @TableName +
         ' WHERE ' + @condition
             
@@ -103,13 +107,13 @@ async function createProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_ReadAll
+    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_ReadAll
     @TableName NVARCHAR(30),
     @condition NVARCHAR(MAX)
     AS
     BEGIN
     DECLARE @COMMAND nvarchar(4000)
-    SET @COMMAND = 'SELECT *  
+    SET @COMMAND = 'use ${SQL_DBNAME} SELECT *  
         FROM ' + @TableName +
         ' WHERE ' + @condition
     EXEC(@COMMAND)
@@ -117,7 +121,7 @@ async function createProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_BasicUpdate
+    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_BasicUpdate
         @tableName NVARCHAR(20) , 
         @values NVARCHAR(MAX),
         @condition NVARCHAR(MAX)
@@ -125,7 +129,7 @@ async function createProcedures() {
     DECLARE @COMMAND NVARCHAR(4000) 
     BEGIN
     SET @COMMAND = 
-        'UPDATE ' +  @tableName +
+        'use ${SQL_DBNAME} UPDATE ' +  @tableName +
         ' SET ' + @values + 
         ' WHERE ' + @condition
 
@@ -136,7 +140,7 @@ async function createProcedures() {
 
 async function createSpecialProcedures() {
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_UpdateQuotation
+    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_UpdateQuotation
         @serialNumber int
     AS
     BEGIN
@@ -155,7 +159,7 @@ async function createSpecialProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_UpdateSuppliersBranches
+    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_UpdateSuppliersBranches
         @name NVARCHAR(30),
         @id INT,
 		@supplierCode NVARCHAR(30)
@@ -180,14 +184,14 @@ async function createSpecialProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE pro_CountRows
+   CREATE OR ALTER  ${SQL_DBNAME}.PROCEDURE pro_CountRows
     @tableName NVARCHAR(20) , 
     @condition NVARCHAR(MAX)
         AS
         DECLARE @COMMAND NVARCHAR(4000) 
         BEGIN
         SET @COMMAND = 
-            'SELECT COUNT(*) FROM ' + @tableName +
+            'use ${SQL_DBNAME}  SELECT COUNT(*) FROM ' + @tableName +
             ' WHERE ' + @condition
 
         EXEC(@COMMAND)
