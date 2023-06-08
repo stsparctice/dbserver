@@ -44,6 +44,10 @@ async function createNormalizationTable() {
                 if (!values[0].type.type.toLowerCase().includes('PRIMARY'.toLowerCase())) {
                     let values2 = values.map(f => f['values']['values']);
                     for (let y = 0; y < values2[0].length; y++) {
+                        console.log({name:name[0]});
+                        console.log({v:values2});
+                        console.log({v1:values2[0][y]});
+                        console.log({v2:values2[1][y]});
                         _ = await getPool().request().query(`
                         use ${SQL_DBNAME}  IF(SELECT COUNT(*)
                         FROM ${name[0]})<${values2[0].length}

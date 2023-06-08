@@ -1,4 +1,6 @@
+require('dotenv').config()
 const { getPool } = require('./sql-connection');
+const {SQL_DBNAME} = process.env
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
@@ -18,12 +20,15 @@ const read = async function (obj) {
           obj.n = 100;
      }
      const { tableName, columns, condition, n } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('columns', columns)
-          .input('condition', condition)
-          .input('n', n)
-          .execute(`pro_BasicRead`);
+     console.log({ tableName, columns, condition, n })
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('condition', condition)
+     //      .input('n', n)
+     //      .execute(`pro_BasicRead`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`)
+     console.log({result})
      return result.recordset;
 };
 
@@ -32,10 +37,11 @@ const readAll = async function (obj) {
           obj["condition"] = '1=1';
      };
      const { tableName, condition } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('condition', condition)
-          .execute(`pro_ReadAll`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('condition', condition)
+     //      .execute(`pro_ReadAll`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
      return result.recordset;
 };
 
@@ -63,9 +69,10 @@ const updateQuotation = async function (obj) {
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode } = obj;
+     const { name, supplierCode,id } = obj;
      const result = await getPool().request()
           .input('name', name)
+          .input('id', id)
           .input('supplierCode', supplierCode)
           .execute(`pro_UpdateSuppliersBranches`);
      return result;
