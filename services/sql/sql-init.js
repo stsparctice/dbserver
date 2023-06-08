@@ -45,7 +45,7 @@ async function createNormalizationTable() {
                     let values2 = values.map(f => f['values']['values']);
                     for (let y = 0; y < values2[0].length; y++) {
                         _ = await getPool().request().query(`
-                        IF(SELECT COUNT(*)
+                        use ${SQL_DBNAME} IF(SELECT COUNT(*)
                         FROM ${name[0]})<${values2[0].length}
                         INSERT INTO ${name[0]} VALUES (${values2[0][y]}, 'N${values2[1][y]}')
                     `);
@@ -56,7 +56,7 @@ async function createNormalizationTable() {
                     let insertvals = values[1].values.values
                     for (let y = 0; y < insertvals.length ; y++) {
                         _ = await getPool().request().query(`
-                        IF(SELECT COUNT(*)
+                        use ${SQL_DBNAME} IF(SELECT COUNT(*)
                         FROM ${name[0]})<${insertvals.length}
                         INSERT INTO ${name[0]} VALUES ( 'N${insertvals[y]}')
                     `);
@@ -78,7 +78,7 @@ async function createProcedures() {
     DECLARE @COMMAND NVARCHAR(4000) 
     BEGIN
 
-    SET @COMMAND = 'INSERT INTO ' +
+    SET @COMMAND = 'use ${SQL_DBNAME} INSERT INTO ' +
         @tableName + ' ('+ @columns +')'+ 
         ' VALUES(' + @values + ')'
     EXEC (@COMMAND)
