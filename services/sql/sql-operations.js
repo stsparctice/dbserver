@@ -69,9 +69,10 @@ const updateQuotation = async function (obj) {
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode } = obj;
+     const { name, supplierCode,id } = obj;
      const result = await getPool().request()
           .input('name', name)
+          .input('id', id)
           .input('supplierCode', supplierCode)
           .execute(`pro_UpdateSuppliersBranches`);
      return result;
