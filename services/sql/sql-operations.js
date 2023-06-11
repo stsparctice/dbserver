@@ -4,12 +4,15 @@ const { SQL_DBNAME } = process.env
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('columns', columns)
-          .input('values', values)
-          .execute(`pro_BasicCreate`);
-          console.log({result})
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('values', values)
+     //      .execute(`pro_BasicCreate`);
+     console.log({values})
+     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES( ${values} )`)
+
+     console.log({ result })
      return result;
 };
 
@@ -112,7 +115,7 @@ async function buildcolumns(obj) {
      let columns = "";
      for (let key = 0; key < obj['values'].length; key++) {
           if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `'N${obj['values'][key]}'`;
+               values += `N'${obj['values'][key]}'`;
           }
           else {
                values += obj['values'][key];

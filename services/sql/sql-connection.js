@@ -34,8 +34,6 @@ const connectSql = async () => {
 }
 
 const getPool = () => {
-    console.log({connected: pool.connected})
-    console.log(new Date().toISOString())
     return pool
 };
 
