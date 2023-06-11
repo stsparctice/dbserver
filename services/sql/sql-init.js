@@ -74,7 +74,7 @@ async function createNormalizationTable() {
 
 async function createProcedures() {
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_BasicCreate
+    CREATE OR ALTER PROCEDURE pro_BasicCreate
 	    @tableName NVARCHAR (20),
         @columns NVARCHAR (MAX),
 	    @values NVARCHAR (MAX)
@@ -90,7 +90,7 @@ async function createProcedures() {
     `.trim());
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_BasicRead
+    CREATE OR ALTER PROCEDURE pro_BasicRead
     @TableName NVARCHAR(30),
     @columns NVARCHAR(MAX),
     @condition NVARCHAR(MAX),
@@ -107,7 +107,7 @@ async function createProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_ReadAll
+    CREATE OR ALTER PROCEDURE pro_ReadAll
     @TableName NVARCHAR(30),
     @condition NVARCHAR(MAX)
     AS
@@ -121,7 +121,7 @@ async function createProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_BasicUpdate
+    CREATE OR ALTER PROCEDURE pro_BasicUpdate
         @tableName NVARCHAR(20) , 
         @values NVARCHAR(MAX),
         @condition NVARCHAR(MAX)
@@ -140,7 +140,7 @@ async function createProcedures() {
 
 async function createSpecialProcedures() {
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_UpdateQuotation
+    CREATE OR ALTER PROCEDURE pro_UpdateQuotation
         @serialNumber int
     AS
     BEGIN
@@ -159,7 +159,7 @@ async function createSpecialProcedures() {
     `);
 
     _ = await getPool().request().query(`
-    CREATE OR ALTER PROCEDURE ${SQL_DBNAME}.pro_UpdateSuppliersBranches
+    CREATE OR ALTER PROCEDURE pro_UpdateSuppliersBranches
         @name NVARCHAR(30),
         @id INT,
 		@supplierCode NVARCHAR(30)
@@ -184,7 +184,7 @@ async function createSpecialProcedures() {
     `);
 
     _ = await getPool().request().query(`
-   CREATE OR ALTER  ${SQL_DBNAME}.PROCEDURE pro_CountRows
+   CREATE OR ALTER  PROCEDURE pro_CountRows
     @tableName NVARCHAR(20) , 
     @condition NVARCHAR(MAX)
         AS
