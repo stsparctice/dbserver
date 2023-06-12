@@ -83,10 +83,11 @@ const updateSuppliersBranches = async function (obj) {
 
 const countRows = async function (obj) {
      const { tableName, condition } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('condition', condition)
-          .execute(`pro_CountRows`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('condition', condition)
+     //      .execute(`pro_CountRows`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
      return result;
 };
 
