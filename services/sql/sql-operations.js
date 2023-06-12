@@ -9,8 +9,11 @@ const create = async function (obj) {
      //      .input('columns', columns)
      //      .input('values', values)
      //      .execute(`pro_BasicCreate`);
+
      //      console.log({result})
      const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`)
+
+     
      return result;
 };
 
@@ -115,7 +118,7 @@ async function buildcolumns(obj) {
      let columns = "";
      for (let key = 0; key < obj['values'].length; key++) {
           if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `'N${obj['values'][key]}'`;
+               values += `N'${obj['values'][key]}'`;
           }
           else {
                values += obj['values'][key];
