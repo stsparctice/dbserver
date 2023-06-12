@@ -7,11 +7,14 @@ const config = require('../../config.json');
 
 
 function buildColumns(details) {
+    console.log({details});
     let columns = '';
     for (let i = 0; i < details.length; i++) {
-        columns += details[i].name + ' ' + details[i].type + ', ';
+        columns += details[i].sqlName + ' ' + details[i].type + ', ';
+        // console.log(details[i].sqlName);
     };
     columns = columns.substring(0, columns.length - 2);
+    console.log({columns});
     return columns;
 };
 
@@ -22,6 +25,7 @@ async function createTables() {
     let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
     for (let j = 0; j < tables.length; j++) {
         let table = tables[j];
+        console.log('finish');
         _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](
             ${buildColumns(table.columns)}
             )

@@ -1,6 +1,4 @@
-
-
-const types = {
+export const types = {
     NVARCHAR:{
         string:"''"
     },
