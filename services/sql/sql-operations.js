@@ -53,11 +53,12 @@ const update = async function (obj) {
      };
      const { tableName, values, condition } = obj;
      const value = setValues(values);
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('values', value)
-          .input('condition', condition)
-          .execute(`pro_BasicUpdate`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('values', value)
+     //      .input('condition', condition)
+     //      .execute(`pro_BasicUpdate`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${values} WHERE ${condition}`)
      return result;
 };
 
