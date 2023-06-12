@@ -4,12 +4,13 @@ const { SQL_DBNAME } = process.env
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('columns', columns)
-          .input('values', values)
-          .execute(`pro_BasicCreate`);
-          console.log({result})
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('values', values)
+     //      .execute(`pro_BasicCreate`);
+     //      console.log({result})
+     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`)
      return result;
 };
 
