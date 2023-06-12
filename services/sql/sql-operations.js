@@ -9,10 +9,11 @@ const create = async function (obj) {
      //      .input('columns', columns)
      //      .input('values', values)
      //      .execute(`pro_BasicCreate`);
-     console.log({values})
-     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES( ${values} )`)
 
-     console.log({ result })
+     //      console.log({result})
+     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`)
+
+     
      return result;
 };
 
@@ -55,11 +56,12 @@ const update = async function (obj) {
      };
      const { tableName, values, condition } = obj;
      const value = setValues(values);
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('values', value)
-          .input('condition', condition)
-          .execute(`pro_BasicUpdate`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('values', value)
+     //      .input('condition', condition)
+     //      .execute(`pro_BasicUpdate`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${values} WHERE ${condition}`)
      return result;
 };
 
@@ -84,10 +86,11 @@ const updateSuppliersBranches = async function (obj) {
 
 const countRows = async function (obj) {
      const { tableName, condition } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('condition', condition)
-          .execute(`pro_CountRows`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('condition', condition)
+     //      .execute(`pro_CountRows`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
      return result;
 };
 
