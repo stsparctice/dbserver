@@ -61,7 +61,7 @@ const update = async function (obj) {
      //      .input('values', value)
      //      .input('condition', condition)
      //      .execute(`pro_BasicUpdate`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${values} WHERE ${condition}`)
+     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
      return result;
 };
 
