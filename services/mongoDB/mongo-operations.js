@@ -12,7 +12,8 @@ class MongoDBOperations {
     };
 
     async setCollection(collection) {
-        this.collectionName = this.collections[collection];
+        // this.collectionName = this.collections[collection];
+        this.collectionName = collection
     };
 
     async insertOne(obj = null) {
@@ -20,17 +21,20 @@ class MongoDBOperations {
         if (obj) {
             result = await getClient().db(this.dbName).collection(this.collectionName).insertOne(obj);
             result = result.insertedId;
+            console.log(result.toString())
         }
         else {
-            result = false;
+            return false
         }
-        return result;
+        return result.toString();
     };
 
     async find(obj = {}) {
         let sort = {};
         sort[obj.sort] = 1;
-        const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter, obj.project).sort(sort).toArray();
+        console.log({obj})
+        const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter).sort(sort).toArray();
+        console.log({result})
         return result;
     };
 
