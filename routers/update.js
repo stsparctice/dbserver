@@ -14,6 +14,9 @@ router.post('/updateQuotation', async (req, res) => {
     res.status(200).send(result);
 });
 
+
+
+
 router.post('/updateSuppliersBranches', async (req, res) => {
     const result = await updateSuppliersBranchesSql(req.body);
     res.status(200).send(result);

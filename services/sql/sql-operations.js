@@ -1,16 +1,80 @@
+
+require('dotenv').config();
+
 const { getPool } = require('./sql-connection');
+const { SQL_DBNAME } = process.env;
+
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     console.log({tableName, columns, values});
+     // console.log({ tableName, columns, values });
      // let object =await buildcolumns({columns,values})
      const result = await getPool().request()
           .input('tableName', tableName)
-          .input('columns',columns)
+          .input('columns', columns)
           .input('values', values)
           .execute(`pro_BasicCreate`);
      return result;
 };
+
+
+// obj:
+// {
+//      "tableName": "clients",
+//      "column":
+//      {
+//           "name": "id",
+//           "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+//      },
+// }
+// SELECT *
+// FROM   INFORMATION_SCHEMA.COLUMNS
+// WHERE  TABLE_NAME = 'Employees'
+//  AND COLUMN_NAME = 'FirstName'
+const insertColumn = async function (obj) {
+     console.log(obj);
+     _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
+     (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName} AND COLUMN_NAME=${OBJ.columns.name}') 
+     ALTER TABLE ${obj.tableName} ADD ${obj.column.name} ${obj.column.type}
+     ELSE PRINT('NO')`)
+     return 'success_column'
+}
+
+
+
+// obj:
+// {
+//      "MTDTable": {
+//          "name": {
+//              "name": "unitOfMeasure",
+//              "sqlName": "tbl_unitOfMeasure"
+//          },
+//          "description": "a normalization table of unitsOfMeasure"
+//      },
+//      "columns": [
+//          {
+//              "name": "id",
+//              "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+//          },
+//          {
+//              "name": "measure",
+//              "type": "NVARCHAR(20) NOT NULL "
+//          }
+//      ]
+//  },
+
+const createNewTable = async function (obj) {
+     console.log(obj);
+     let str = ''
+     obj.columns.forEach(element => {
+          str += `${element.name} ${element.type},`
+     });
+     _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
+      (SELECT * FROM sys.tables WHERE name = '${obj.MTDTable.name.sqlName}') 
+      CREATE TABLE [dbo].[${obj.MTDTable.name.sqlName}](${str})
+      ELSE PRINT('NO')`)
+     return 'success'
+}
 
 const read = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {
@@ -101,7 +165,7 @@ function setValues(obj) {
 async function buildcolumns(obj) {
      let values = "";
      let columns = "";
-     for (let key=0;key<obj['values'].length;key++) {
+     for (let key = 0; key < obj['values'].length; key++) {
           if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
                values += `'${obj['values'][key]}'`;
           }
@@ -111,11 +175,11 @@ async function buildcolumns(obj) {
           values += ', ';
      };
      values = values.substring(0, values.length - 2);
-     for (let key=0;key<obj['columns'].length;key++) {
+     for (let key = 0; key < obj['columns'].length; key++) {
           columns += `${obj['columns'][key]},`;
      };
      columns = columns.substring(0, columns.length - 1);
-     return {columns,values};
+     return { columns, values };
 };
 
 module.exports = {
@@ -125,5 +189,7 @@ module.exports = {
      update,
      updateQuotation,
      updateSuppliersBranches,
-     countRows
+     countRows,
+     createNewTable,
+     insertColumn
 };
