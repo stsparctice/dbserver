@@ -37,6 +37,7 @@ const read = async function (obj) {
      return result.recordset;
 };
 
+
 const readAll = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {
           obj["condition"] = '1=1';
@@ -48,6 +49,14 @@ const readAll = async function (obj) {
      //      .execute(`pro_ReadAll`);
      const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
      return result.recordset;
+};
+
+const join = async (query = "") => {
+     const result = await getPool().request().query(query.trim());
+     if (result.recordset) {
+          return result.recordset;
+     }
+     return false;
 };
 
 const update = async function (obj) {
@@ -143,5 +152,6 @@ module.exports = {
      update,
      updateQuotation,
      updateSuppliersBranches,
-     countRows
+     countRows,
+     join
 };

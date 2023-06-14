@@ -14,7 +14,7 @@ async function createSql(obj) {
 
     return result;
 };
-
+ 
 async function createMng(obj) {
     mongoCollection.setCollection(obj.collection);
     const response = await mongoCollection.insertOne(obj.data);

@@ -1,5 +1,6 @@
-const { read, readAll ,countRows } = require('../services/sql/sql-operations');
+const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
+const { readJoin } = require('./config/config');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
@@ -11,6 +12,13 @@ async function getAllSql(obj) {
     const list = await readAll(obj);
     return list;
 };
+
+async function readWithJoin(tableName, column) {
+
+    const query = await readJoin(tableName, column);
+    const result = await join(query);
+    return result;
+}
 
 async function countRowsSql(obj) {
     const list = await countRows(obj);
@@ -35,4 +43,4 @@ async function getCountDocumentsMng(collection) {
     return response;
 };
 
-module.exports = { getDetailsSql, getAllSql,countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng };
+module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng };
