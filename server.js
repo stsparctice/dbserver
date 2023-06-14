@@ -16,7 +16,7 @@ const {deleteData} = require('./services/sql/sql-helpers')
         createTables().then(_ => {
             createProcedures().then(_ => {
                 createSpecialProcedures().then(_ => {
-                    insertDataToSql()
+                    // insertDataToSql()
                     app.listen(PORT, HOST, () => {
                         console.log(`http://${HOST}:${PORT}`);
                     });

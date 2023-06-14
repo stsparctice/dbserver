@@ -1578,7 +1578,7 @@
                             },
                             {
                                 "name": "Disabled",
-                                "sqlName": "Disabled",
+                                "sqlName":"Disabled",
                                 "type": "BIT NOT NULL"
                             }
                         ]
