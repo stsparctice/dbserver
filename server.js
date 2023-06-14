@@ -9,6 +9,8 @@ const http = require('http');
 const { app } = require('./app');
 const { HOST, PORT } = process.env;
 
+const {deleteData} = require('./services/sql/sql-helpers')
+
 // connectMng().then(_ => {
     connectSql().then(_ => {
         createTables().then(_ => {
@@ -21,6 +23,8 @@ const { HOST, PORT } = process.env;
                 })
             });
         });
+        // deleteData()
+
     });
 // });
 

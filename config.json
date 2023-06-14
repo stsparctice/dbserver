@@ -2270,6 +2270,42 @@
                                 "type": "NVARCHAR (50) NOT NULL"
                             }
                         ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "Areas": "tbl_Areas"
+                            },
+                            "description": {
+                                "description": "Table that contain all areas"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "AreaId": "AreaId"
+                                },
+                                "type": {
+                                    "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "AreaIdFromMongo": "AreaIdFromMongo"
+                                },
+                                "type": {
+                                    "type": "nvarchar(1000) NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "AreaName": "AreaName"
+                                },
+                                "type": {
+                                    "type": "nvarchar(20) NOT NULL"
+                                }
+                            }
+                        ]
                     }
                 ]
             }

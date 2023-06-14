@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
-router.use(express.json());
+const { routerLogger } = require('../utils/logger');
 
+router.use(express.json());
+router.use(routerLogger())
 router.post('/readTopN', async (req, res) => {
     const table = await getDetailsSql(req.body);
     res.status(200).send(table);
@@ -11,6 +13,14 @@ router.post('/readTopN', async (req, res) => {
 router.post('/countRows', async (req, res) => {
     const count = await countRowsSql(req.body);
     res.status(200).send(count);
+});
+
+router.get('/readAll/:tbname/', async (req, res) => {
+    let obj = {};
+    obj['tableName'] = req.params.tbname;
+    const table = await getAllSql(obj);
+    console.log(table);
+    res.status(200).send(table);
 });
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
