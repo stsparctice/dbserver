@@ -1,10 +1,10 @@
-const config = require('../../config.json')
+const config = require('../../configCreate.json')
 
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     let x = tables.find(table => table.MTDTable.name.sqlName == tablename)
-    let col = x.columns.map(col => ({ name: col.sqlName, type: col.type.trim().split(' ')[0] }))
+    let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 }
 

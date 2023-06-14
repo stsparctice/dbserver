@@ -1,4 +1,4 @@
-const { create } = require('../services/sql/sql-operations');
+const { create, createNewTable, insertColumn } = require('../services/sql/sql-operations');
 // const { checkObjCreate } = require('./check')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
@@ -29,10 +29,42 @@ async function insertManySql(obj) {
 }
 
 
+// {
+//     "MTDTable": {
+//         "name": {
+//             "name": "unitOfMeasure",
+//             "sqlName": "tbl_unitOfMeasure"
+//         },
+//         "description": "a normalization table of unitsOfMeasure"
+//     },
+//     "columns": [
+//         {
+//             "name": "id",
+//             "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+//         },
+//         {
+//             "name": "measure",
+//             "type": "NVARCHAR(20) NOT NULL "
+//         }
+//     ]
+// },
+
+async function creatNewColumn(obj) {
+    const result = await insertColumn(obj)
+}
+
+async function creatSqlTable(obj) {
+    const result = await createNewTable(obj)
+    return result
+}
+
+
+
+
 async function createMng(obj) {
     mongoCollection.setCollection(obj.collection);
     const response = await mongoCollection.insertOne(obj.data);
     return response;
 };
 
-module.exports = { createSql, insertManySql, createMng };
+module.exports = { createSql,insertManySql, createMng, creatSqlTable, creatNewColumn };
