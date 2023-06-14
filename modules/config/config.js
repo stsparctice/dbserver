@@ -14,20 +14,24 @@ function parseSQLType(obj, tabledata) {
     let str = []
     for (let i = 0; i < keys.length; i++) {
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+        if (obj[keys[i]]) {
+            if (type.toLowerCase().includes('nvarchar')) {
 
-        if (type.toLowerCase().includes('nvarchar')) {
-
-            str.push(`N'${obj[keys[i]]}'`)
-        }
-
-        else {
-            if (type.toLowerCase().includes('date') || type.toLowerCase().includes('bit')) {
-                str.push(`'${obj[keys[i]]}'`)
-
+                str.push(`N'${obj[keys[i]]}'`);
             }
+
             else {
-                str.push(obj[keys[i]])
+                if (type.toLowerCase().includes('date') && obj[keys[i]] || type.toLowerCase().includes('bit')) {
+                    str.push(`'${obj[keys[i]]}'`);
+
+                }
+                else {
+                    str.push(obj[keys[i]]);
+                }
             }
+        }
+        else {
+            str.push(`NULL`);
         }
     }
 

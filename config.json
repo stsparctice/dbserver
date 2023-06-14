@@ -1116,7 +1116,7 @@
                             {
                                 "name": "deletingDate",
                                 "sqlName": "DeletingDate",
-                                "type": "DATETIME NOT NULL"
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },
@@ -1157,7 +1157,7 @@
                             { 
                                 "name": "deletingDate",
                                 "sqlName": "DeletingDate",
-                                "type": "DATETIME NOT NULL"
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },
@@ -1193,7 +1193,7 @@
                             {
                                 "name": "deletingDate",
                                 "sqlName": "DeletingDate",
-                                "type": "DATETIME NOT NULL"
+                                "type": "DATETIME NULL"
                             }
                         ]
                     },

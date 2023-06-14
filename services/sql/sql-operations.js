@@ -11,6 +11,8 @@ const create = async function (obj) {
      //      .execute(`pro_BasicCreate`);
 
      //      console.log({result})
+     
+     const query = `use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`;
      const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`)
 
      
@@ -32,7 +34,7 @@ const read = async function (obj) {
      //      .input('condition', condition)
      //      .input('n', n)
      //      .execute(`pro_BasicRead`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`)
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
      console.log({ result })
      return result.recordset;
 };
