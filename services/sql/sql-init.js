@@ -184,7 +184,7 @@ async function createSpecialProcedures() {
     CREATE OR ALTER PROCEDURE pro_UpdateSuppliersBranches
         @name NVARCHAR(30),
         @id INT,
-		@supplierCode NVARCHAR(30)
+		@SupplierCode NVARCHAR(30)
     AS
     BEGIN
     BEGIN TRAN
@@ -193,7 +193,7 @@ async function createSpecialProcedures() {
     SET DisableUser = @name,
 		Disabled = '1',
 		DisabledDate = GETDATE()
-    WHERE SupplierCode = @supplierCode
+    WHERE SupplierCode = @SupplierCode   
 
     UPDATE tbl_Branches
     SET DisableUser = @name,
