@@ -8,18 +8,14 @@ function getSqlTableColumnsType(tablename) {
     return col
 }
 
-
-
 function parseSQLType(obj, tabledata) {
-    console.log({tabledata});
-    console.log({obj});
+    console.log({ tabledata });
+    console.log({ obj });
     const keys = Object.keys(obj)
-    console.log({keys});
+    console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
-        //let type = tabledata.find(td =>console.log(td.name,' tddddd'))
-       let type = tabledata.find(td =>td.name.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-
+        let type = tabledata.find(td => td.name.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
         if (type.toLowerCase().includes('nvarchar') || type.toLowerCase().includes('date') || type.toLowerCase().includes('bit')) {
             str.push(`'${obj[keys[i]]}'`)
         }
