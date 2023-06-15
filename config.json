@@ -1476,67 +1476,7 @@
                             }
                         ]
                     },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "priceList",
-                                "sqlName": "tbl_PriceList"
-                            },
-                            "description": "table that contains all the priceList of the products"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName":"Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "PriceListName",
-                                "sqlName":"PriceListName",
-                                "type": "NVARCHAR(20) NOT NULL"
-                            },
-                            {
-                                "name": "Category",
-                                "sqlName":"Category",
-                                "type": "NVARCHAR(20) NOT NULL"
-                            },
-                            {
-                                "name": "Associate",
-                                "sqlName":"Associate",
-                                "type": "NVARCHAR(20) NOT NULL"
-                            },
-                            {
-                                "name": "CreateDate",
-                                "sqlName":"CreateDate",
-                                "type": "DATETIME NOT NULL"
-                            },
-                            {
-                                "name": "UserName",
-                                "sqlName":"UserName",
-                                "type": "NVARCHAR(20) NOT NULL"
-                            },
-                            {
-                                "name": "Active",
-                                "sqlName":"Active",
-                                "type": "BIT NOT NULL"
-                            },
-                            {
-                                "name": "DisableDate",
-                                "sqlName":"DisableDate",
-                                "type": "DATETIME NOT NULL"
-                            },
-                            {
-                                "name": "DisableUser",
-                                "sqlName":"DisableUser",
-                                "type": "BIT NOT NULL"
-                            },
-                            {
-                                "name": "Disabled",
-                                "sqlName":"Disabled",
-                                "type": "BIT NOT NULL"
-                            }
-                        ]
-                    },
+                   
                     {
                         "MTDTable": {
                             "name": {
@@ -2166,6 +2106,54 @@
                                 "name": "EndDate",
                                 "sqlName":"EndDate",
                                 "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "sqlName":"AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "sqlName":"UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PricelistForProducts",
+                                "sqlName": "tbl_PricelistForProducts"
+                            },
+                            "description": {
+                                "description": "table that contacts  between products to them priclist"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName":"Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "sqlName":"PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "sqlName":"ProductId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(OrdinalNumber) NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "sqlName":"Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Discount",
+                                "sqlName":"Discount",
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
