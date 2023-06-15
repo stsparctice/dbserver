@@ -12,6 +12,7 @@ class MongoDBOperations {
     };
 
     async setCollection(collection) {
+        console.log('settttttttttttttt');
         this.collectionName = this.collections[collection];
     };
 
@@ -28,6 +29,7 @@ class MongoDBOperations {
     };
 
     async find(obj = {}) {
+        console.log('obj',obj);
         let sort = {};
         sort[obj.sort] = 1;
         const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter, obj.project).sort(sort).toArray();
