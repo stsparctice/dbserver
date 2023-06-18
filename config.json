@@ -2654,6 +2654,34 @@
                                 }
                             }
                         ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "ProductsCombinations": "tbl_productsCombinations"
+                            },
+                            "description": {
+                                "description": "Table that contain pumps and them childrens"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": {
+                                    "parentId": "parentId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "childId": "childId"
+                                },
+                                "type": {
+                                    "type": "INT NOT NULL"
+                                }
+                            }
+                        ]
                     }
                 ]
             }

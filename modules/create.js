@@ -13,7 +13,7 @@ async function createSql(obj) {
     console.log({obj})
     const result = await create({tableName:obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values:arr.join()});
     // console.log("result: "+result);
-
+    
     return result;
 };
 
