@@ -1,4 +1,4 @@
-const config = require('../configCreate.json');
+const config = require('../config.json');
 const fs = require('fs');
 
 async function updateConfigInFiled(tableName, columnObj) {

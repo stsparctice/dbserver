@@ -1,4 +1,4 @@
-const config = require('../../configCreate.json')
+const config = require('../../config.json')
 
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(db => db.database == 'sql')
