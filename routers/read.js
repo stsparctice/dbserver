@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin} = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -8,6 +8,18 @@ router.use(routerLogger())
 router.post('/readTopN', async (req, res) => {
     const table = await getDetailsSql(req.body);
     res.status(200).send(table);
+});
+
+router.get('/readjoin/:tableName/:column',async(req,res)=>{
+    try{
+        const response =await readWithJoin (req.params.tableName,req.params.column);
+        res.status(200).send(response);
+    }
+    
+    catch(error){
+        console.log(error);
+        res.status(404).send(error);
+    }
 });
 
 router.post('/countRows', async (req, res) => {
