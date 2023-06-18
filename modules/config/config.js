@@ -1,6 +1,7 @@
 const config = require('../../config.json');
 require('dotenv');
 const { SQL_DBNAME } = process.env;
+
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list

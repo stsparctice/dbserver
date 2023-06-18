@@ -11,7 +11,7 @@ const { HOST, PORT } = process.env;
 
 const {deleteData} = require('./services/sql/sql-helpers')
 
-// connectMng().then(_ => {
+connectMng().then(_ => {
     connectSql().then(_ => {
         createTables().then(_ => {
             createProcedures().then(_ => {
@@ -26,6 +26,6 @@ const {deleteData} = require('./services/sql/sql-helpers')
         // deleteData()
 
     });
-// });
+});
 
 const server = http.createServer(app);
