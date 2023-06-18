@@ -1911,7 +1911,7 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName":"PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id)"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
                             },
                             {
                                 "name": "ProductId",
@@ -1921,12 +1921,12 @@
                             {
                                 "name": "Price",
                                 "sqlName":"Price",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName":"CountPrecent",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "DayOfWeek",
@@ -1983,7 +1983,7 @@
                             },
                             {
                                 "name": "Distance",
-                                "sqlName":"Distence",
+                                "sqlName":"Distance",
                                 "type": "FLOAT NOT NULL"
                             },
                             {
