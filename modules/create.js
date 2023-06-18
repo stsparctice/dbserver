@@ -12,7 +12,7 @@ async function createSql(obj) {
     const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
     return result;
 };
- 
+
 
 
 async function insertManySql(obj) {
@@ -20,12 +20,17 @@ async function insertManySql(obj) {
     let arr
     let values = obj.values
 
-    let result
-    _ = values.forEach(async o => (
-        tabledata = getSqlTableColumnsType(obj.tableName),
-        arr = parseSQLType(o, tabledata),
-        await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() })))
-    return result
+    let result = []
+    for (let o of values) {
+        tabledata = getSqlTableColumnsType(obj.tableName)
+        arr = parseSQLType(o, tabledata);
+        let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
+        result = [...result, res.recordset[0]]
+    }
+    if (result)
+        return result;
+    else
+        return false;
 
 }
 
@@ -68,4 +73,4 @@ async function createMng(obj) {
     return response;
 };
 
-module.exports = { createSql,insertManySql, createMng, creatSqlTable, creatNewColumn };
+module.exports = { createSql, insertManySql, createMng, creatSqlTable, creatNewColumn };

@@ -1213,7 +1213,7 @@
                             },
                             {
                                 "name": "supplyDate",
-                                "sqlName": "SuplpyDate",
+                                "sqlName": "SupplyDate",
                                 "type": "DATETIME NOT NULL"
                             },
                             {
@@ -1304,7 +1304,7 @@
                             {
                                 "name": "DeletingDate",
                                 "sqlName": "DeletingDate",
-                                "type": "DATETIME NOT NULL"
+                                "type": "DATETIME  NULL"
                             }
                         ]
                     },

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin} = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -17,6 +17,7 @@ router.get('/readjoin/:tableName/:column',async(req,res)=>{
     }
     
     catch(error){
+        console.log(error);
         res.status(404).send(error);
     }
 });

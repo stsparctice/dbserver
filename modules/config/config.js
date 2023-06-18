@@ -10,19 +10,16 @@ function getSqlTableColumnsType(tablename) {
 };
 
 function parseSQLType(obj, tabledata) {
-    console.log({ tabledata });
-    console.log({ obj });
     const keys = Object.keys(obj)
     console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
-        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
         if (obj[keys[i]]) {
             if (type.toLowerCase().includes('nvarchar')) {
 
                 str.push(`N'${obj[keys[i]]}'`);
             }
-
             else {
                 if (type.toLowerCase().includes('date') && obj[keys[i]] || type.toLowerCase().includes('bit')) {
                     str.push(`'${obj[keys[i]]}'`);
@@ -79,6 +76,7 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
+    console.log(result);
     return result;
 };
 module.exports = { getSqlTableColumnsType, parseSQLType, readJoin };
