@@ -28,8 +28,10 @@ class MongoDBOperations {
     };
 
     async find(obj = {}) {
+        console.log("im here");
         let sort = {};
         sort[obj.sort] = 1;
+        console.log(obj.filter,'*',obj.project,'*',sort);
         const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter, obj.project).sort(sort).toArray();
         return result;
     };
@@ -56,6 +58,11 @@ class MongoDBOperations {
         });
         return result;
     };
+
+    async complete(obj){
+        const result = await getClient().db(this.dbName).collection(this.collectionName).find().toArray();
+        return result;
+    }
 
 };
 

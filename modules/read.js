@@ -1,4 +1,4 @@
-const { read, readAll ,countRows } = require('../services/sql/sql-operations');
+const { read, readAll, countRows } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
@@ -35,4 +35,5 @@ async function getCountDocumentsMng(collection) {
     return response;
 };
 
-module.exports = { getDetailsSql, getAllSql,countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng };
+
+module.exports = { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng };
