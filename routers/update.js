@@ -1,10 +1,11 @@
 const express = require('express');
+const { parseTableName, parseColumnName } = require('../modules/config/config');
 const router = express.Router();
 const { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng} = require('../modules/update');
 
 router.use(express.json());
 
-router.post('/update', async (req, res) => {
+router.post('/update',parseTableName,parseColumnName, async (req, res) => {
     const result = await updateSql(req.body);
     res.status(200).send(result);
 });
