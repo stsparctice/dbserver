@@ -5,18 +5,21 @@ const { SQL_DBNAME } = process.env;
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let x = tables.find(table => table.MTDTable.name.sqlName == tablename)
+    console.log({tables})
+    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
     let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 };
 
 function parseSQLType(obj, tabledata) {
+    console.log({obj});
     const keys = Object.keys(obj)
     console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
-        if (obj[keys[i]]) {
+        if (obj[keys[i]]&& !type.toLowerCase().includes('bit')|| type.toLowerCase().includes('bit')) {
+            console.log(type, obj[keys[i]])
             if (type.toLowerCase().includes('nvarchar')) {
 
                 str.push(`N'${obj[keys[i]]}'`);

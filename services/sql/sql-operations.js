@@ -12,7 +12,7 @@ const create = async function (obj) {
      //      .execute(`pro_BasicCreate`);
 
      //      console.log({result})
-     
+     console.log({ tableName, columns, values })
      const query = `use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`;
      const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY Id`)
      console.log(result);
@@ -141,9 +141,9 @@ const update = async function (obj) {
 
 // 
 const updateQuotation = async function (obj) {
-     const { serialNumber } = obj;
+     const { Id } = obj;
      const result = await getPool().request()
-          .input('serialNumber', serialNumber)
+          .input('serialNumber', Id)
           .execute(`pro_UpdateQuotation`);
      return result;
 };

@@ -9,21 +9,22 @@ const http = require('http');
 const { app } = require('./app');
 const { HOST, PORT } = process.env;
 
-const {deleteData} = require('./services/sql/sql-helpers')
+const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers')
 
 connectMng().then(_ => {
     connectSql().then(_ => {
-        createTables().then(_ => {
-            createProcedures().then(_ => {
-                createSpecialProcedures().then(_ => {
-                    // insertDataToSql()
-                    app.listen(PORT, HOST, () => {
-                        console.log(`http://${HOST}:${PORT}`);
-                    });
-                })
-            });
-        });
-        // deleteData()
+        // createTables().then(_ => {
+        //     createProcedures().then(_ => {
+        //         createSpecialProcedures().then(_ => {
+        //             insertDataToSql()
+        //             app.listen(PORT, HOST, () => {
+        //                 console.log(`http://${HOST}:${PORT}`);
+        //             });
+        //         })
+        //     });
+        // });
+        // deleteSQLData()
+        dropSQLTables()
 
     });
 });

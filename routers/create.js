@@ -8,7 +8,7 @@ router.use(express.json());
 router.use(routerLogger())
 router.post('/create', async (req, res) => {
     const result = await createSql(req.body);
-    res.status(200).send(result);
+    res.status(201).send(result);
 });
 
 router.post('/createManySql', async (req, res) => {
