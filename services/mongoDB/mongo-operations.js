@@ -12,7 +12,7 @@ class MongoDBOperations {
     };
 
     async setCollection(collection) {
-        this.collectionName = this.collections[collection];
+        this.collectionName = collection;
     };
 
     async insertOne(obj = null) {
