@@ -1249,7 +1249,13 @@
                             {
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
-                                "type": " INT NULL"
+                                "type": "INT NULL", 
+                                "referenceTable":"Tablname"
+                            },
+                            {
+                                "name": "tablname",
+                                "sqlName": "Tablname",
+                                "type": "NVARCHAR(MAX) NULL"
                             },
                             {
                                 "name": "concretAmount",
@@ -1259,7 +1265,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Pump) REFERENCES tbl_FinishProducts(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",
