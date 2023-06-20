@@ -2138,13 +2138,13 @@
                             },
 
                             {
-                                "name": "AreaIdFromMongo",
+                                "name": "areaIdFromMongo",
                                 "sqlName": "AreaIdFromMongo",
                                 "type": "NVARCHAR(MAX) NOT NULL"
                             },
 
                             {
-                                "name": "AreaName",
+                                "name": "areaName",
                                 "sqlName": "AreaName",
                                 "type": "NVARCHAR(MAX) NOT NULL"
                             }
