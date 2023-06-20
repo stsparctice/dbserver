@@ -9,7 +9,7 @@ const http = require('http');
 const { app } = require('./app');
 const { HOST, PORT } = process.env;
 
-const {deleteData} = require('./services/sql/sql-helpers')
+const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers')
 
 
 
@@ -26,7 +26,8 @@ const {deleteData} = require('./services/sql/sql-helpers')
                 })
             });
         });
-        // deleteData()
+        // deleteSQLData()
+        // dropSQLTables()
 
     });
 // });

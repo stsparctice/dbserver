@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin} = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -23,6 +23,18 @@ router.post('/readTopN', async (req, res) => {
     res.status(200).send(table);
 });
 
+router.get('/readjoin/:tableName/:column',async(req,res)=>{
+    try{
+        const response =await readWithJoin (req.params.tableName,req.params.column);
+        res.status(200).send(response);
+    }
+    
+    catch(error){
+        console.log(error);
+        res.status(404).send(error);
+    }
+});
+
 router.post('/countRows', async (req, res) => {
     const count = await countRowsSql(req.body);
     res.status(200).send(count);
@@ -41,9 +53,7 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
     let obj = {};
     obj['tableName'] = req.params.tbname;
     obj['condition'] = req.params.condition;
-    console.log(obj['condition']);
     const table = await getAllSql(obj);
-    console.log(table);
     res.status(200).send(table);
 });
 
