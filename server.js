@@ -9,7 +9,7 @@ const http = require('http');
 const { app } = require('./app');
 const { HOST, PORT } = process.env;
 
-const { deleteData } = require('./services/sql/sql-helpers')
+const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers')
 
 connectMng().then(_ => {
     console.log('connect to mongo')
@@ -24,7 +24,8 @@ connectMng().then(_ => {
                 })
             });
         });
-    //    deleteData()
+        // deleteSQLData()
+        // dropSQLTables()
 
     });
 });

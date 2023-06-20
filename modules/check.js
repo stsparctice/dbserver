@@ -104,7 +104,7 @@ async function isPerfect(obj) {
     newObj = newObj['Tables'].find(c => { return Object.values(c['MTDTable']['name']).includes(tableName) })['columns'];
     for (let d = 0; d < newObj.length; d++) {
         if ((newObj[d]['type']['type']).includes('NOT NULL')) {
-            if (!array1.includes(Object.values(newObj[d]['name'])[0]) && Object.values(newObj[d]['name'])[0] !== 'SerialNumber') {
+            if (!array1.includes(Object.values(newObj[d]['name'])[0]) && Object.values(newObj[d]['name'])[0] !== 'Id') {
                 return `The ${Object.values(newObj[d]['name'])[0]} column is required to be filled`;
             };
             let index = array1.indexOf(...Object.values(newObj[d]['name']));
