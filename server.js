@@ -11,22 +11,22 @@ const { HOST, PORT } = process.env;
 
 const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers')
 
-connectMng().then(_ => {
+// connectMng().then(_ => {
     connectSql().then(_ => {
-        // createTables().then(_ => {
-        //     createProcedures().then(_ => {
-        //         createSpecialProcedures().then(_ => {
-        //             insertDataToSql()
-        //             app.listen(PORT, HOST, () => {
-        //                 console.log(`http://${HOST}:${PORT}`);
-        //             });
-        //         })
-        //     });
-        // });
+        createTables().then(_ => {
+            createProcedures().then(_ => {
+                createSpecialProcedures().then(_ => {
+                    insertDataToSql()
+                    app.listen(PORT, HOST, () => {
+                        console.log(`http://${HOST}:${PORT}`);
+                    });
+                })
+            });
+        });
         // deleteSQLData()
-        dropSQLTables()
+        // dropSQLTables()
 
     });
-});
+// });
 
 const server = http.createServer(app);
