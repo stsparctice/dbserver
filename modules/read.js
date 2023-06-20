@@ -29,10 +29,16 @@ async function getDetailsWithAggregateMng(obj) {
     return response;
 };
 
+async function getDetailsWithDistinct(collection,filter) {
+    mongoCollection.setCollection(collection);
+    const response = await mongoCollection.distinct(filter);
+    return response;
+};
+
 async function getCountDocumentsMng(collection) {
     mongoCollection.setCollection(collection);
     const response = await mongoCollection.countDocuments();
     return response;
 };
 
-module.exports = { getDetailsSql, getAllSql,countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng };
+module.exports = { getDetailsSql, getAllSql,countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,getDetailsWithDistinct};

@@ -49,6 +49,13 @@ class MongoDBOperations {
         return result;
     };
 
+    async distinct(filter = '') {
+        console.log('filter----------',filter);
+        const result = await getClient().db(this.dbName).collection(this.collectionName).distinct(filter)
+        console.log('result----------',result);
+        return result;
+    }
+
     async dropCollection() {
         const result = await getClient().db(this.dbName).collection(this.collectionName).drop((err, delOK) => {
             if (err) throw err;

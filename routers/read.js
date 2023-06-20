@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng } = require('../modules/read');
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -36,6 +36,13 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
 router.post('/find', async (req, res) => {
     const response = await getDetailsMng(req.body);
     res.status(200).send(response);
+});
+
+router.get('/distinct/:collection/:filter', async (req, res) => {
+    console.log('distinct---------',req.params.collection,req.params.filter);
+    const response = await getDetailsWithDistinct(req.params.collection,req.params.filter);
+    console.log({response});
+    res.status(200).send({response});
 });
 
 router.post('/aggregate', async (req, res) => {
