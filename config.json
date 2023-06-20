@@ -2158,7 +2158,7 @@
         "database": "mongoDB",
         "mongodb": {
             "leads": "leads",
-            "products": "products",
+            "products": "Products",
             "areas": "areas",
             "users": "users",
             "rand_password": "rand_password"

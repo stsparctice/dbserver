@@ -5,6 +5,7 @@ const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
 router.use(routerLogger())
+
 router.post('/update', async (req, res) => {
     const result = await updateSql(req.body);
     res.status(200).send(result);

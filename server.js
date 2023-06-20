@@ -11,7 +11,14 @@ const { HOST, PORT } = process.env;
 
 const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers')
 
+<<<<<<< HEAD
 // connectMng().then(_ => {
+=======
+
+
+// connectMng().then(_ => {
+    // console.log("connect to mongo");
+>>>>>>> b176d448b8d3cdb2f383742907a0b8039ec8c416
     connectSql().then(_ => {
         createTables().then(_ => {
             createProcedures().then(_ => {
