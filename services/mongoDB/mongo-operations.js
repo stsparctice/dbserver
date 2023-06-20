@@ -12,7 +12,6 @@ class MongoDBOperations {
     };
 
     async setCollection(collection) {
-        console.log('settttttttttttttt');
         this.collectionName = this.collections[collection];
     };
 
@@ -25,11 +24,12 @@ class MongoDBOperations {
         else {
             result = false;
         }
+        console.log('insrted');
         return result;
     };
 
     async find(obj = {}) {
-        console.log('obj',obj);
+        // console.log('client', await getClient().db(this.dbName).collection(this.collectionName).find().toArray());
         let sort = {};
         sort[obj.sort] = 1;
         const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter, obj.project).sort(sort).toArray();
@@ -54,7 +54,7 @@ class MongoDBOperations {
     async dropCollection() {
         const result = await getClient().db(this.dbName).collection(this.collectionName).drop((err, delOK) => {
             if (err) throw err;
-            if (delOK) return "collection deleted";
+            if (delOK) return "c v nollection deleted";
         });
         return result;
     };

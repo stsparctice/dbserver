@@ -6,7 +6,9 @@ const { routerLogger } = require('../utils/logger');
 router.use(express.json());
 router.use(routerLogger())
 router.post('/create', async (req, res) => {
+    console.log('body-------------',req.body);
     const result = await createSql(req.body);
+    console.log('--------------',result);
     res.status(200).send(result);
 });
 
@@ -15,4 +17,4 @@ router.post('/insertone', async (req, res) => {
     res.status(200).send(result);
 });
 
-module.exports = router
+module.exports = router;

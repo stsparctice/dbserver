@@ -1,0 +1,42 @@
+# volumes:
+#   data:
+
+# services:
+app:
+  image: "Buyton_mongo"
+  depends_on:
+    - mongodb_local
+  environment:
+    - MONGO_CONNECTION=mongodb://mongodb:27018/node-boilerplate
+  ports:
+    - '1313:1313'
+mongodb_local:
+  image: mongo
+  restart: unless-stopped
+  ports:
+    - '27018:27018'
+
+# services:
+#   node-app:
+#     build: .
+#     image: node-app
+#     environment:
+#       - MONGO_CONNECTION=mongodb://mongodb:27017/node-boilerplate
+#     ports:
+#       - '1313:1313'
+#     depends_on:
+#       - mongodb
+#     volumes:
+#       - .:/src
+
+
+#   mongodb:
+#     image: mongo:6-jammy
+#     ports:
+#       - '27017:27017'
+#     volumes:
+#       - mongo_volume:/data/db
+
+
+# volumes:
+#   mongo_volume:

@@ -33,7 +33,7 @@ const read = async function (obj) {
      //      .input('n', n)
      //      .execute(`pro_BasicRead`);
      const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`)
-     console.log({ result })
+     // console.log({ result })
      return result.recordset;
 };
 

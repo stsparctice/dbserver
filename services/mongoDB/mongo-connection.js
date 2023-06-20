@@ -8,7 +8,7 @@ const connectMng = async (server_url = MONGO_CONNECTION) => {
     if (server_url.indexOf('mongodb') != 0) {
         throw new Error('connection string is not in the right format');
     };
-    client = new MongoClient(server_url.trim());
+    client = new MongoClient(server_url);
     await client.connect();
 };
 

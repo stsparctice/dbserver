@@ -17,13 +17,12 @@ const poolConfig = () => ({
 });
 
 let pool;
-console.log(poolConfig());
+// console.log(poolConfig());
 const connectSql = async () => {
     if (!pool) {
 
         pool = new sql.ConnectionPool(poolConfig());
-
-        console.log("pool" );
+        console.log("pool to sql" ,pool);
     }
     if (!pool.connected) {
         console.log(new Date().toISOString())
