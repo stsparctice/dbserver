@@ -1249,8 +1249,8 @@
                             {
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
-                                "type": "INT NULL", 
-                                "referenceTable":"Tablname"
+                                "type": "INT NULL",
+                                "referenceTable": "Tablname"
                             },
                             {
                                 "name": "tablname",
@@ -2091,7 +2091,6 @@
                             }
                         ]
                     },
-                  
                     {
                         "MTDTable": {
                             "name": {
@@ -2118,6 +2117,12 @@
                                 "sqlName": "ChildId",
                                 "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
                             }
+                            ,
+                            {
+                                "name": "disable",
+                                "sqlName": "Disable",
+                                "type": "BIT NOT NULL"
+                            }
                         ]
                     },
                     {
@@ -2136,13 +2141,11 @@
                                 "sqlName": "Id",
                                 "type": "INT IDENTITY (1000,1) PRIMARY KEY NOT NULL"
                             },
-
                             {
                                 "name": "areaIdFromMongo",
                                 "sqlName": "AreaIdFromMongo",
                                 "type": "NVARCHAR(MAX) NOT NULL"
                             },
-
                             {
                                 "name": "areaName",
                                 "sqlName": "AreaName",
