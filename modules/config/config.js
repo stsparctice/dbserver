@@ -5,20 +5,20 @@ const { SQL_DBNAME } = process.env;
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({tables})
+    console.log({ tables })
     let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
     let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 };
 
 function parseSQLType(obj, tabledata) {
-    console.log({obj});
+    console.log({ obj });
     const keys = Object.keys(obj)
     console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
-        if (obj[keys[i]]&& !type.toLowerCase().includes('bit')|| type.toLowerCase().includes('bit')) {
+        if (obj[keys[i]] && !type.toLowerCase().includes('bit') || type.toLowerCase().includes('bit')) {
             console.log(type, obj[keys[i]])
             if (type.toLowerCase().includes('nvarchar')) {
 
@@ -83,4 +83,31 @@ const readJoin = async (baseTableName, baseColumn) => {
     console.log(result);
     return result;
 };
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin };
+
+const viewConnectionsTables = (tableName, condition = "") => {
+    const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
+    const myTable = tables.find(({ MTDTable }) => MTDTable.name.name === tableName);
+    const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
+    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => { return sqlName })] }];
+    let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
+    columns.forEach(column => {
+        const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
+        const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
+        const thisTable = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableToJoin);
+        const alias = thisTable.MTDTable.name.name;
+        columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [thisTable.MTDTable.default] }];
+        join = `${join} JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
+    });
+    if (condition.length > 0 && condition.includes('=')) {
+        join = `${join} WHERE ${condition}`;
+    }
+    let select = ``;
+    columnsSelect.forEach(cs => {
+        cs.columnsName.forEach(cn => {
+            select = `${select} ${cs.tableName}.${cn},`;
+        })
+    })
+    select = select.slice(0, select.length - 1);
+    return `SELECT ${select} FROM ${join}`;
+}
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, viewConnectionsTables };

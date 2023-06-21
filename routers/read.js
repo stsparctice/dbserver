@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin} = require('../modules/read');
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng, readWithJoin, connectTables } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -10,14 +10,24 @@ router.post('/readTopN', async (req, res) => {
     res.status(200).send(table);
 });
 
-router.get('/readjoin/:tableName/:column',async(req,res)=>{
-    try{
-        const response =await readWithJoin (req.params.tableName,req.params.column);
+router.get('/readjoin/:tableName/:column', async (req, res) => {
+    try {
+        const response = await readWithJoin(req.params.tableName, req.params.column);
         res.status(200).send(response);
     }
-    
-    catch(error){
+
+    catch (error) {
         console.log(error);
+        res.status(404).send(error);
+    }
+});
+
+router.get('/connectTables/:tableName/:condition', async (req, res) => {
+    try {
+        const response = await connectTables(req.params.tableName,req.params.condition);
+        res.status(200).send(response);
+    }
+    catch (error) {
         res.status(404).send(error);
     }
 });
@@ -37,6 +47,7 @@ router.get('/readAll/:tbname/', async (req, res) => {
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
     let obj = {};
+    console.log(req.params.condition,"condition");
     obj['tableName'] = req.params.tbname;
     obj['condition'] = req.params.condition;
     const table = await getAllSql(obj);
