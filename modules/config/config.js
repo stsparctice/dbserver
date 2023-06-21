@@ -1,4 +1,5 @@
-const config = require('../../config.json');
+const config = require('../../config.json')
+const types = require('./config-objects')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
 
@@ -14,33 +15,20 @@ function getSqlTableColumnsType(tablename) {
 function parseSQLType(obj, tabledata) {
     console.log({ obj });
     const keys = Object.keys(obj)
-    console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
-        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
-        if (obj[keys[i]] && !type.toLowerCase().includes('bit') || type.toLowerCase().includes('bit')) {
-            console.log(type, obj[keys[i]])
-            if (type.toLowerCase().includes('nvarchar')) {
+        if (obj[keys[i]]) {
+            let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+            str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
 
-                str.push(`N'${obj[keys[i]]}'`);
-            }
-            else {
-                if (type.toLowerCase().includes('date') && obj[keys[i]] || type.toLowerCase().includes('bit')) {
-                    str.push(`'${obj[keys[i]]}'`);
-
-                }
-                else {
-                    str.push(obj[keys[i]]);
-                }
-            }
         }
         else {
-            str.push(`NULL`);
+            str.push('NULL')
         }
     }
-
-    return str;
-};
+    return str
+}
 
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
@@ -111,3 +99,25 @@ const viewConnectionsTables = (tableName, condition = "") => {
     return `SELECT ${select} FROM ${join}`;
 }
 module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, viewConnectionsTables };
+function getPrimaryKeyField(tablename) {
+    let sql = config.find(db => db.database == 'sql')
+    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
+    let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
+    if (col) {
+        return col.sqlName
+    }
+    return false
+}
+
+function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
+    let primarykey = getPrimaryKeyField(tablename)
+    if (primarykey) {
+        let where = {}
+        where[primarykey] = id
+        return { tablename, columns: fields, where }
+    }
+    return false
+}
+
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField, getObjectWithFeildNameForPrimaryKey };
