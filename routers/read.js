@@ -15,7 +15,7 @@ router.get('/auto_complete/:table/:column/:word', async (req, res) => {
     if(primarykey){
         obj.columns+=`,${primarykey}`
     }
-    obj.condition =`${req.params.column} LIKE '${req.params.word}%'`
+    obj.condition =`${req.params.column} LIKE N'${req.params.word}%'`
     obj.n=10
     const result = await getDetailsSql(obj);
     console.log(result,"result");
@@ -64,6 +64,7 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
 
 router.post('/find', async (req, res) => {
     const response = await getDetailsMng(req.body);
+    // console.log(response);
     res.status(200).send(response);
 });
 
