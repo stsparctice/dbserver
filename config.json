@@ -138,7 +138,7 @@
                                 "sqlName": "tbl_FinishProducts"
                             },
                             "description": "a table of finish products ",
-                            "default":"Name"
+                            "defaultColumn":"Name"
                         },
                         "columns": [
                             {
@@ -231,7 +231,7 @@
                                 "sqlName": "tbl_Pumps"
                             },
                             "description": "a table of pumps and additions to the pumps ",
-                            "default":"Name"
+                            "defaultColumn":"Name"
                         },
                         "columns": [
                             {
@@ -695,7 +695,7 @@
                                 "sqlName": "tbl_Clients"
                             },
                             "description": "Table that contain all the details of the clients",
-                            "default":"ClientName"
+                            "defaultColumn":"ClientName"
                         },
                         "columns": [
                             {
@@ -1094,7 +1094,7 @@
                                 "sqlName": "tbl_PouringsTypes"
                             },
                             "description": "type of pourings ",
-                            "default":"PouringName"
+                            "defaultColumn":"PouringName"
                         },
                         "columns": [
                             {
@@ -1131,7 +1131,7 @@
                                 "sqlName": "tbl_Orderers"
                             },
                             "description": "table of orderers details",
-                            "default":"OrdererName"
+                            "defaultColumn":"OrdererName"
                         },
                         "columns": [
                             {
@@ -1174,7 +1174,7 @@
                                 "sqlName": "tbl_StatusesLead"
                             },
                             "description": "table of statuses leads option",
-                            "default":"StatusName"
+                            "defaultColumn":"StatusName"
                         },
                         "columns": [
                             {
@@ -1207,7 +1207,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "leads",
+                                "name": "Leads",
                                 "sqlName": "tbl_Leads"
                             },
                             "description": "table of leads details"

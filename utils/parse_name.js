@@ -1,4 +1,4 @@
-const config = require('../../config.json')
+const config = require('../config.json')
 
 function parseTableName(req, res, next) {
     let sql = config.find(db => db.database == 'sql')

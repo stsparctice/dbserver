@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng, readWithJoin, connectTables,getDetailsWithDistinct } = require('../modules/read');
-const {getPrimaryKeyField} = require('../modules/config/config')
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
+     getDetailsWithAggregateMng, getCountDocumentsMng, 
+     readWithJoin, connectTables,getDetailsWithDistinct } = require('../modules/read');
+const {getPrimaryKeyField, getForeignTableAndColumn} = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
@@ -40,6 +42,27 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
         res.status(404).send(error);
     }
 });
+
+// router.get('/foreignkeyvalue/:tablename/:fields/:value', (req, res)=>{
+// const response =getObjectWithFeildNameForPrimaryKey()
+
+// })
+
+router.get('/foreignkeyvalue/:tablename/:field/:id',async (req, res)=>{
+   const { foreignTableName, defaultColumn }= getForeignTableAndColumn(req.params.tablename, req.params.field)
+   let obj = {}
+   obj.tableName = foreignTableName
+   obj.columns = `${defaultColumn}`
+   const primarykey = getPrimaryKeyField(foreignTableName)
+   if(primarykey){
+       obj.columns+=`,${primarykey}`
+   }
+   obj.condition =`${primarykey} = ${req.params.id}`
+   obj.n=1
+   const result = await getDetailsSql(obj);
+   console.log(result,"result");
+   res.status(200).send(result);
+})
 
 router.get('/connectTables/:tableName/:condition', async (req, res) => {
     try {
