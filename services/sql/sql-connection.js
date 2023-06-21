@@ -22,7 +22,7 @@ const connectSql = async () => {
     if (!pool) {
 
         pool = new sql.ConnectionPool(poolConfig());
-        console.log("pool to sql" ,pool);
+        console.log("pool" );
     }
     if (!pool.connected) {
         console.log(new Date().toISOString())

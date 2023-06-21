@@ -11,6 +11,8 @@ const update_router = require('./routers/update');
 
 app.set('view engine', 'ejs');
 
+
+
 app.use(cors());
 app.use(session({
     secret: 'any',

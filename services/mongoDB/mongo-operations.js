@@ -12,7 +12,7 @@ class MongoDBOperations {
     };
 
     async setCollection(collection) {
-        this.collectionName = this.collections[collection];
+        this.collectionName = collection
     };
 
     async insertOne(obj = null) {
@@ -20,19 +20,19 @@ class MongoDBOperations {
         if (obj) {
             result = await getClient().db(this.dbName).collection(this.collectionName).insertOne(obj);
             result = result.insertedId;
+            console.log(result.toString())
         }
         else {
-            result = false;
+            return false
         }
-        console.log('insrted');
-        return result;
+        return result.toString();
     };
 
     async find(obj = {}) {
-        // console.log('client', await getClient().db(this.dbName).collection(this.collectionName).find().toArray());
+        console.log("im here");
         let sort = {};
         sort[obj.sort] = 1;
-        const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter, obj.project).sort(sort).toArray();
+        const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter).sort(sort).toArray();
         return result;
     };
 
@@ -51,6 +51,13 @@ class MongoDBOperations {
         return result;
     };
 
+    async distinct(filter = '') {
+        console.log('filter----------',filter);
+        const result = await getClient().db(this.dbName).collection(this.collectionName).distinct(filter)
+        console.log('result----------',result);
+        return result;
+    }
+
     async dropCollection() {
         const result = await getClient().db(this.dbName).collection(this.collectionName).drop((err, delOK) => {
             if (err) throw err;
@@ -58,6 +65,11 @@ class MongoDBOperations {
         });
         return result;
     };
+
+    async complete(obj){
+        const result = await getClient().db(this.dbName).collection(this.collectionName).find().toArray();
+        return result;
+    }
 
 };
 
