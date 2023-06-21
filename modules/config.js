@@ -33,4 +33,4 @@ function parseSQLType(obj, tabledata) {
     return str
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType }
+// module.exports = { getSqlTableColumnsType, parseSQLType }

@@ -1649,7 +1649,7 @@
                             {
                                 "name": "ItemCode",
                                 "sqlName": "ItemCode",
-                                "type": "nvarchar(20) NOT NULL"
+                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
                             },
                             {
                                 "name": "ItemDescribe",
@@ -1690,7 +1690,7 @@
                             {
                                 "name": "SomechCode",
                                 "sqlName": "SomechCode",
-                                "type": "nvarchar(20) NOT NULL"
+                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
                             },
                             {
                                 "name": "SomechDescribe",
@@ -2161,7 +2161,7 @@
         "database": "mongoDB",
         "mongodb": {
             "leads": "leads",
-            "products": "products",
+            "products": "Products",
             "areas": "areas",
             "users": "users",
             "rand_password": "rand_password"

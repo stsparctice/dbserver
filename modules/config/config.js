@@ -83,4 +83,15 @@ const readJoin = async (baseTableName, baseColumn) => {
     console.log(result);
     return result;
 };
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin };
+
+function getPrimaryKeyField(tablename){
+    let sql = config.find(db => db.database == 'sql')
+    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
+    let col = x.columns.find(col => ( col.type.toLowerCase().indexOf('primary')!==-1))
+    if(col){
+        return col.sqlName
+    }
+    return false
+}
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField };

@@ -17,14 +17,14 @@ async function deleteSQLData() {
 async function dropSQLTables() {
 
 //old config
-    let tables = config[0]['sql'][1]['Tables']
-    console.log({ tables })
+    // let tables = config[0]['sql'][1]['Tables']
+    // console.log({ tables })
    
 //new config
-    // let sql = config.find(db => db.database == 'sql')
-    // let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    // let count = tables.length
-    // console.log({ tables })
+    let sql = config.find(db => db.database == 'sql')
+    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    let count = tables.length
+    console.log({ tables })
     let tablenames = tables.map((t,i)=>({name:t.MTDTable.name.sqlName, index:i, drop:false}))
     while (tablenames.some(t=>t.drop===false)) {
         console.log({count});
