@@ -1,20 +1,23 @@
-
 require('dotenv').config();
 
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 
-
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     // console.log({ tableName, columns, values });
-     // let object =await buildcolumns({columns,values})
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('columns', columns)
-          .input('values', values)
-          .execute(`pro_BasicCreate`);
-     return result;
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('values', values)
+     //      .execute(`pro_BasicCreate`);
+
+     //      console.log({result})
+     
+     const query = `use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`;
+     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY Id`)
+     console.log(result);
+      return result;
+
 };
 
 
@@ -102,31 +105,44 @@ const createNewTable = async function (obj) {
 
 const read = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
+          obj.condition = '1=1';
      };
      if (!Object.keys(obj).includes("n")) {
-          obj["n"] = 100;
+          obj.n = 100;
      }
      const { tableName, columns, condition, n } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('columns', columns)
-          .input('condition', condition)
-          .input('n', n)
-          .execute(`pro_BasicRead`);
+     console.log({ tableName, columns, condition, n })
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('condition', condition)
+     //      .input('n', n)
+     //      .execute(`pro_BasicRead`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+     console.log({ result })
      return result.recordset;
 };
+
 
 const readAll = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {
           obj["condition"] = '1=1';
      };
      const { tableName, condition } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('condition', condition)
-          .execute(`pro_ReadAll`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('condition', condition)
+     //      .execute(`pro_ReadAll`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
      return result.recordset;
+};
+
+const join = async (query = "") => {
+     const result = await getPool().request().query(query.trim());
+     if (result.recordset) {
+          return result.recordset;
+     }
+     return false;
 };
 
 const update = async function (obj) {
@@ -135,11 +151,15 @@ const update = async function (obj) {
      };
      const { tableName, values, condition } = obj;
      const value = setValues(values);
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('values', value)
-          .input('condition', condition)
-          .execute(`pro_BasicUpdate`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('values', value)
+     //      .input('condition', condition)
+     //      .execute(`pro_BasicUpdate`);
+
+     const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
+     console.log({query})
+     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
      return result;
 };
 
@@ -153,9 +173,10 @@ const updateQuotation = async function (obj) {
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode } = obj;
+     const { name, supplierCode, id } = obj;
      const result = await getPool().request()
           .input('name', name)
+          .input('id', id)
           .input('supplierCode', supplierCode)
           .execute(`pro_UpdateSuppliersBranches`);
      return result;
@@ -163,10 +184,11 @@ const updateSuppliersBranches = async function (obj) {
 
 const countRows = async function (obj) {
      const { tableName, condition } = obj;
-     const result = await getPool().request()
-          .input('tableName', tableName)
-          .input('condition', condition)
-          .execute(`pro_CountRows`);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('condition', condition)
+     //      .execute(`pro_CountRows`);
+     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
      return result;
 };
 
@@ -174,11 +196,14 @@ function setValues(obj) {
      let values = "";
      for (let key in obj) {
           values += `${key} = `;
-          if (typeof (obj[key]) === 'string' || typeof (obj[key]) === 'boolean') {
-               values += `'${obj[key]}'`;
+          if (typeof (obj[key]) === 'string') {
+               values += `N'${obj[key]}'`;
           }
           else {
-               values += obj[key];
+               if (typeof (obj[key]) === 'boolean')
+                    values += `'${obj[key]}'`;
+               else
+                    values += obj[key];
           };
           values += ' , ';
      };
@@ -191,7 +216,7 @@ async function buildcolumns(obj) {
      let columns = "";
      for (let key = 0; key < obj['values'].length; key++) {
           if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `'${obj['values'][key]}'`;
+               values += `N'${obj['values'][key]}'`;
           }
           else {
                values += obj['values'][key];
@@ -215,6 +240,7 @@ module.exports = {
      updateQuotation,
      updateSuppliersBranches,
      countRows,
+     join,
      createNewTable,
      insertColumn
 };

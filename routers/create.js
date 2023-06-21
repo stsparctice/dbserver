@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { createSql, createMng, creatSqlTable, creatNewColumn,creatSqlNameTable,creatSqlNameColumn } = require('../modules/create');
+const { createSql, createMng, creatSqlTable, creatNewColumn,creatSqlNameTable,creatSqlNameColumn,insertManySql } = require('../modules/create');
 const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
-router.use(express.json());
+const { routerLogger } = require('../utils/logger');
 
-router.post('/create', async (req, res) => {
+const { parseColumnName, parseTableName } = require('../utils/parse_name')
+
+router.use(express.json());
+router.use(routerLogger())
+
+router.post('/create', parseTableName, parseColumnName, async (req, res) => {
     const result = await createSql(req.body);
     res.status(200).send(result);
 });
 
-router.post('/insertone', async (req, res) => {
-    const result = await createMng(req.body);
+router.post('/createManySql', parseTableName, parseColumnName, async (req, res) => {
+    const result = await insertManySql(req.body);
     res.status(200).send(result);
 });
 
@@ -43,5 +48,10 @@ router.post('/insertTable', async (req, res) => {
 
     // the result is({ message: '' //, data: {} })
 })
+
+router.post('/insertone', async (req, res) => {
+    const result = await createMng(req.body);
+    res.status(200).send(result);
+});
 
 module.exports = router
