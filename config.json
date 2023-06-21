@@ -113,15 +113,37 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "finishProducts",
-                                "sqlName": "tbl_finishProducts"
+                                "name": "unitOfMeasure",
+                                "sqlName": "tbl_UnitOfMeasure"
                             },
-                            "description": "a table of finish products "
+                            "description": "a normalization table of unitsOfMeasure"
                         },
                         "columns": [
                             {
-                                "name": "ordinalNumber",
-                                "sqlName": "OrdinalNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "measure",
+                                "sqlName": "Measure",
+                                "type": "NVARCHAR(20) NOT NULL "
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "finishProducts",
+                                "sqlName": "tbl_FinishProducts"
+                            },
+                            "description": "a table of finish products ",
+                            "defaultColumn":"Name"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -160,14 +182,14 @@
                         "MTDTable": {
                             "name": {
                                 "name": "additions",
-                                "sqlName": "tbl_additions"
+                                "sqlName": "tbl_Additions"
                             },
                             "description": "a table of additions to the byton "
                         },
                         "columns": [
                             {
-                                "name": "ordinalNumber",
-                                "sqlName": "OrdinalNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -206,14 +228,15 @@
                         "MTDTable": {
                             "name": {
                                 "name": "pumps",
-                                "sqlName": "tbl_pumps"
+                                "sqlName": "tbl_Pumps"
                             },
-                            "description": "a table of pumps and additions to the pumps "
+                            "description": "a table of pumps and additions to the pumps ",
+                            "defaultColumn":"Name"
                         },
                         "columns": [
                             {
-                                "name": "ordinalNumber",
-                                "sqlName": "OrdinalNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -256,27 +279,6 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "unitOfMeasure",
-                                "sqlName": "tbl_unitOfMeasure"
-                            },
-                            "description": "a normalization table of unitsOfMeasure"
-                        },
-                        "columns": [
-                            {
-                                "name": "id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "measure",
-                                "sqlName": "Measure",
-                                "type": "NVARCHAR(20) NOT NULL "
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
                                 "name": "BasicDetails",
                                 "sqlName": "tbl_BasicDetails"
                             },
@@ -284,8 +286,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY NOT NULL"
                             },
                             {
@@ -345,8 +347,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -385,8 +387,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -411,8 +413,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -447,8 +449,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
                             },
                             {
@@ -508,8 +510,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
                             },
                             {
@@ -584,8 +586,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -640,8 +642,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -686,159 +688,159 @@
                             }
                         ]
                     },
-                    
                     {
                         "MTDTable": {
                             "name": {
                                 "name": "Clients",
                                 "sqlName": "tbl_Clients"
                             },
-                            "description": "Table that contain all the details of the clients"
+                            "description": "Table that contain all the details of the clients",
+                            "defaultColumn":"ClientName"
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName":"SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
                                 "name": "ClientCode",
-                                "sqlName":"ClientCode",
+                                "sqlName": "ClientCode",
                                 "type": "nvarchar(50) NOT NULL"
                             },
                             {
                                 "name": "ClientName",
-                                "sqlName":"ClientName",
+                                "sqlName": "ClientName",
                                 "type": "nvarchar(50) NOT NULL"
                             },
                             {
                                 "name": "PrivateCompanyNumber",
-                                "sqlName":"PrivateCompanyNumber",
+                                "sqlName": "PrivateCompanyNumber",
                                 "type": "nvarchar(50) NOT NULL"
                             },
                             {
                                 "name": "BookkeepingNumber",
-                                "sqlName":"BookkeepingNumber",
+                                "sqlName": "BookkeepingNumber",
                                 "type": "nvarchar(50) "
                             },
                             {
                                 "name": "DestinationBank",
-                                "sqlName":"DestinationBank",
+                                "sqlName": "DestinationBank",
                                 "type": "nvarchar(50) "
                             },
                             {
                                 "name": "PaymentTermsFluent",
-                                "sqlName":"PaymentTermsFluent",
+                                "sqlName": "PaymentTermsFluent",
                                 "type": "nvarchar(50)"
                             },
                             {
                                 "name": "PreferredPaymentDate",
-                                "sqlName":"PreferredPaymentDate",
+                                "sqlName": "PreferredPaymentDate",
                                 "type": "int"
                             },
                             {
                                 "name": "Ovligo",
-                                "sqlName":"Ovligo",
+                                "sqlName": "Ovligo",
                                 "type": "int"
                             },
                             {
                                 "name": "ReceiptIssueTerm",
-                                "sqlName":"ReceiptIssueTerm",
+                                "sqlName": "ReceiptIssueTerm",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "ReceiptCentralism",
-                                "sqlName":"ReceiptCentralism",
+                                "sqlName": "ReceiptCentralism",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "AccountantClassifiedCode",
-                                "sqlName":"AccountantClassifiedCode",
+                                "sqlName": "AccountantClassifiedCode",
                                 "type": "int"
                             },
                             {
                                 "name": "Status",
-                                "sqlName":"Status",
+                                "sqlName": "Status",
                                 "type": "int NOT NULL"
                             },
                             {
                                 "name": "Description",
-                                "sqlName":"Description",
+                                "sqlName": "Description",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "Street",
-                                "sqlName":"Street",
+                                "sqlName": "Street",
                                 "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "House",
-                                "sqlName":"House",
+                                "sqlName": "House",
                                 "type": "int NOT NULL"
                             },
                             {
                                 "name": "City",
-                                "sqlName":"City",
+                                "sqlName": "City",
                                 "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "ZipCode",
-                                "sqlName":"ZipCode",
+                                "sqlName": "ZipCode",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "Telephone1",
-                                "sqlName":"Telephone1",
+                                "sqlName": "Telephone1",
                                 "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "Telephone2",
-                                "sqlName":"Telephone2",
+                                "sqlName": "Telephone2",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "MobilePhone",
-                                "sqlName":"MobilePhone",
+                                "sqlName": "MobilePhone",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "Fax",
-                                "sqlName":"Fax",
+                                "sqlName": "Fax",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "Email",
-                                "sqlName":"Email",
+                                "sqlName": "Email",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "Comments",
-                                "sqlName":"Comments",
+                                "sqlName": "Comments",
                                 "type": "nvarchar(20)"
                             },
                             {
                                 "name": "CreationDate",
-                                "sqlName":"CreationDate",
+                                "sqlName": "CreationDate",
                                 "type": "nvarchar(50) NOT NULL"
                             },
                             {
                                 "name": "UserThatAdd",
-                                "sqlName":"UserThatAdd",
+                                "sqlName": "UserThatAdd",
                                 "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "Disabled",
-                                "sqlName":"Disabled",
+                                "sqlName": "Disabled",
                                 "type": "bit NOT NULL"
                             },
                             {
                                 "name": "DeletionDate",
-                                "sqlName":"DeletionDate",
+                                "sqlName": "DeletionDate",
                                 "type": "nvarchar(50)"
                             },
                             {
                                 "name": "UserThatDelete",
-                                "sqlName":"UserThatDelete",
+                                "sqlName": "UserThatDelete",
                                 "type": "nvarchar(20)"
                             }
                         ]
@@ -861,7 +863,6 @@
                                 "name": "SupplierCode",
                                 "sqlName": "SupplierCode",
                                 "type": "NVARCHAR(50) NOT NULL "
-
                             },
                             {
                                 "name": "SupplierName",
@@ -1086,20 +1087,19 @@
                             }
                         ]
                     },
-                   
                     {
                         "MTDTable": {
                             "name": {
                                 "name": "PouringsTypes",
                                 "sqlName": "tbl_PouringsTypes"
-
                             },
-                            "description": "type of pourings "
+                            "description": "type of pourings ",
+                            "defaultColumn":"PouringName"
                         },
                         "columns": [
                             {
-                                "name": "serialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -1130,18 +1130,20 @@
                                 "name": "Orderers",
                                 "sqlName": "tbl_Orderers"
                             },
-                            "description": "table of orderers details"
+                            "description": "table of orderers details",
+                            "defaultColumn":"OrdererName"
                         },
                         "columns": [
                             {
-                                "name": "serialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
                                 "name": "ordererName",
                                 "sqlName": "OrdererName",
                                 "type": "NVARCHAR(20) NOT NULL"
+                                
                             },
                             {
                                 "name": "ordererPhone",
@@ -1158,7 +1160,7 @@
                                 "sqlName": "Disable",
                                 "type": "BIT NOT NULL"
                             },
-                            { 
+                            {
                                 "name": "deletingDate",
                                 "sqlName": "DeletingDate",
                                 "type": "DATETIME NULL"
@@ -1171,12 +1173,13 @@
                                 "name": "StatusesLead",
                                 "sqlName": "tbl_StatusesLead"
                             },
-                            "description": "table of statuses leads option"
+                            "description": "table of statuses leads option",
+                            "defaultColumn":"StatusName"
                         },
                         "columns": [
                             {
-                                "name": "serialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -1204,15 +1207,15 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "leads",
+                                "name": "Leads",
                                 "sqlName": "tbl_Leads"
                             },
                             "description": "table of leads details"
                         },
                         "columns": [
                             {
-                                "name": "serialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
@@ -1228,7 +1231,7 @@
                             {
                                 "name": "ordererCode",
                                 "sqlName": "OrdererCode",
-                                "type": "INT FOREIGN KEY(OrdererCode) REFERENCES tbl_Orderers(SerialNumber) NOT NULL"
+                                "type": "INT FOREIGN KEY(OrdererCode) REFERENCES tbl_Orderers(Id) NOT NULL"
                             },
                             {
                                 "name": "address",
@@ -1238,7 +1241,7 @@
                             {
                                 "name": "clientCode",
                                 "sqlName": "ClientCode",
-                                "type": "INT FOREIGN KEY(ClientCode) REFERENCES tbl_Clients(SerialNumber) NULL"
+                                "type": "INT FOREIGN KEY(ClientCode) REFERENCES tbl_Clients(Id) NULL"
                             },
                             {
                                 "name": "mapReferenceLongitude",
@@ -1253,7 +1256,13 @@
                             {
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
-                                "type": " INT NULL"
+                                "type": "INT NULL",
+                                "referenceTable": "Tablname"
+                            },
+                            {
+                                "name": "tablename",
+                                "sqlName": "Tablename",
+                                "type": "NVARCHAR(MAX) NULL"
                             },
                             {
                                 "name": "concretAmount",
@@ -1263,7 +1272,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",
@@ -1273,7 +1282,7 @@
                             {
                                 "name": "pouringType",
                                 "sqlName": "PouringType",
-                                "type": "INT FOREIGN KEY(PouringType) REFERENCES tbl_PouringsTypes(SerialNumber) NULL"
+                                "type": "INT FOREIGN KEY(PouringType) REFERENCES tbl_PouringsTypes(Id) NULL"
                             },
                             {
                                 "name": "pouringTypesComments",
@@ -1288,7 +1297,7 @@
                             {
                                 "name": "statusLead",
                                 "sqlName": "StatusLead",
-                                "type": "INT FOREIGN KEY(StatusLead) REFERENCES tbl_StatusesLead(SerialNumber) NULL"
+                                "type": "INT FOREIGN KEY(StatusLead) REFERENCES tbl_StatusesLead(Id) NULL"
                             },
                             {
                                 "name": "orderNumber",
@@ -1312,7 +1321,6 @@
                             }
                         ]
                     },
-
                     {
                         "MTDTable": {
                             "name": {
@@ -1323,19 +1331,19 @@
                         },
                         "columns": [
                             {
-                                "name": "serialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
                                 "name": "leadNumber",
                                 "sqlName": "LeadNumber",
-                                "type": "INT NOT NULL FOREIGN KEY(LeadNumber) REFERENCES tbl_Leads(SerialNumber)"
+                                "type": "INT NOT NULL FOREIGN KEY(LeadNumber) REFERENCES tbl_Leads(Id)"
                             },
                             {
                                 "name": "product",
                                 "sqlName": "Product",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Product) REFERENCES tbl_Additions(Id)"
                             },
                             {
                                 "name": "amount",
@@ -1349,8 +1357,6 @@
                             }
                         ]
                     },
-                  
-                  
                     {
                         "MTDTable": {
                             "name": {
@@ -1361,8 +1367,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL",
                                 "values": [
                                     1,
@@ -1392,8 +1398,8 @@
                         },
                         "columns": [
                             {
-                                "name": "SerialNumber",
-                                "sqlName": "SerialNumber",
+                                "name": "Id",
+                                "sqlName": "Id",
                                 "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
                             },
                             {
@@ -1486,53 +1492,6 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "ProductPrices",
-                                "sqlName": "tbl_ProductPrices"
-                            },
-                            "description": "table of prices by product"
-                        },
-                        "columns": [
-                            {
-                                "name": "PriceListId",
-                                "sqlName": "PriceList",
-                                "type": "INT NOT NULL"
-                            },
-                            {
-                                "name": "ProductId",
-                                "sqlName": "ProductId",
-                                "type": "INT NOT NULL"
-                            },
-                            {
-                                "name": "Price",
-                                "sqlName": "Price",
-                                "type": "FLOAT NOT NULL"
-                            },
-                            {
-                                "name": "Discount",
-                                "sqlName": "Discount",
-                                "type": "FLOAT NULL"
-                            },
-                            {
-                                "name": "AddedDate",
-                                "sqlName": "AddedDate",
-                                "type": "DATETIME NULL"
-                            },
-                            {
-                                "name": "UserName",
-                                "sqlName": "UserName",
-                                "type": "NVARCHAR(20) NOT NULL"
-                            },
-                            {
-                                "name": "Disabled",
-                                "sqlName":"Disabled",
-                                "type": "BIT NOT NULL"
-                            }
-                        ]
-                    },
-                    
-                    {
-                        "MTDTable": {
-                            "name": {
                                 "name": "DistanceAdditions",
                                 "sqlName": "tbl_DistanceAdditions"
                             },
@@ -1566,7 +1525,6 @@
                             }
                         ]
                     },
-
                     {
                         "MTDTable": {
                             "name": {
@@ -1578,37 +1536,36 @@
                         "columns": [
                             {
                                 "name": "PriceListId",
-                                "sqlName":"PriceListId",
+                                "sqlName": "PriceListId",
                                 "type": "INT NOT NULL"
                             },
                             {
                                 "name": "ProductId",
-                                "sqlName":"ProductId",
+                                "sqlName": "ProductId",
                                 "type": "INT NOT NULL"
                             },
                             {
                                 "name": "AmountTransportDiff",
-                                "sqlName":"AmountTransportDiff",
+                                "sqlName": "AmountTransportDiff",
                                 "type": "float NOT NULL"
                             },
                             {
                                 "name": "MaxTransportDiff",
-                                "sqlName":"MaxTransportDiff",
+                                "sqlName": "MaxTransportDiff",
                                 "type": "float NOT NULL"
                             },
                             {
                                 "name": "Price",
-                                "sqlName":"Price",
+                                "sqlName": "Price",
                                 "type": "float NOT NULL"
                             },
                             {
                                 "name": "Disabled",
-                                "sqlName":"Disabled",
+                                "sqlName": "Disabled",
                                 "type": "BIT NOT NULL"
                             }
                         ]
                     },
-                    
                     {
                         "MTDTable": {
                             "name": {
@@ -1699,7 +1656,7 @@
                             {
                                 "name": "ItemCode",
                                 "sqlName": "ItemCode",
-                                "type": "nvarchar(20) NOT NULL"
+                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
                             },
                             {
                                 "name": "ItemDescribe",
@@ -1740,7 +1697,7 @@
                             {
                                 "name": "SomechCode",
                                 "sqlName": "SomechCode",
-                                "type": "nvarchar(20) NOT NULL"
+                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
                             },
                             {
                                 "name": "SomechDescribe",
@@ -1757,8 +1714,8 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "PriceList2",
-                                "sqlName": "tbl_PriceList2"
+                                "name": "PriceList",
+                                "sqlName": "tbl_PriceList"
                             },
                             "description": {
                                 "description": "table that contains all the priceList of the products"
@@ -1805,6 +1762,65 @@
                     {
                         "MTDTable": {
                             "name": {
+                                "name": "PricelistForProducts",
+                                "sqlName": "tbl_PricelistForProducts"
+                            },
+                            "description": {
+                                "description": "table that contacts  between products to their priclist"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "sqlName": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "sqlName": "ProductId",
+                                "type": "INT NOT NULL",
+                                "reference": "TableName"
+                            },
+                            {
+                                "name": "tableName",
+                                "sqlName": "TableName",
+                                "type": "NVARCHAR(50)"
+                            },
+                            {
+                                "name": "Price",
+                                "sqlName": "Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Discount",
+                                "sqlName": "Discount",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "sqlName": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "sqlName": "UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
                                 "name": "CitiesAdditions",
                                 "sqlName": "tbl_CitiesAdditions"
                             },
@@ -1821,12 +1837,12 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id) NOT NULL"
                             },
                             {
                                 "name": "AreaId",
@@ -1867,28 +1883,28 @@
                         },
                         "columns": [
                             {
-                                "name": "id",
+                                "name": "Id",
                                 "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
                                 "name": "PriceListId",
-                                "sqlName":"PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                                "sqlName": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber)"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id)"
                             },
                             {
                                 "name": "Price",
-                                "sqlName":"Price",
+                                "sqlName": "Price",
                                 "type": "Float NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
-                                "sqlName":"CountPrecent",
+                                "sqlName": "CountPrecent",
                                 "type": "Float NOT NULL"
                             },
                             {
@@ -1937,16 +1953,16 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id) NOT NULL"
                             },
                             {
                                 "name": "Distance",
-                                "sqlName":"Distance",
+                                "sqlName": "Distance",
                                 "type": "FLOAT NOT NULL"
                             },
                             {
@@ -1990,12 +2006,12 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id) NOT NULL"
                             },
                             {
                                 "name": "TransportDiff",
@@ -2038,7 +2054,7 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
                             },
                             {
                                 "name": "SupplierOrClient",
@@ -2085,54 +2101,6 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "PricelistForProducts",
-                                "sqlName": "tbl_PricelistForProducts"
-                            },
-                            "description": {
-                                "description": "table that contacts  between products to them priclist"
-                            }
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName":"Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "PriceListId",
-                                "sqlName":"PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
-                            },
-                            {
-                                "name": "ProductId",
-                                "sqlName":"ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(OrdinalNumber) NOT NULL"
-                            },
-                            {
-                                "name": "Price",
-                                "sqlName":"Price",
-                                "type": "FLOAT NOT NULL"
-                            },
-                            {
-                                "name": "Discount",
-                                "sqlName":"Discount",
-                                "type": "FLOAT NOT NULL"
-                            },
-                            {
-                                "name": "AddedDate",
-                                "sqlName":"AddedDate",
-                                "type": "DATETIME NOT NULL"
-                            },
-                            {
-                                "name": "UserName",
-                                "sqlName":"UserName",
-                                "type": "NVARCHAR (50) NOT NULL"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
                                 "name": "ProductsCombinations",
                                 "sqlName": "tbl_ProductsCombinations"
                             },
@@ -2143,21 +2111,53 @@
                         "columns": [
                             {
                                 "name": "Id",
-                                "sqlName":"Id",
+                                "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
                                 "name": "parentId",
-                                "sqlName":"ParentId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(OrdinalNumber) NOT NULL"
+                                "sqlName": "ParentId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
                             },
-                            
                             {
                                 "name": "childId",
-                                "sqlName":"ChildId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(OrdinalNumber) NOT NULL"
+                                "sqlName": "ChildId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
                             }
-                        
+                            ,
+                            {
+                                "name": "disable",
+                                "sqlName": "Disable",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Areas",
+                                "sqlName": "tbl_Areas"
+                            },
+                            "description": {
+                                "description": "Table that contain all areas"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY (1000,1) PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "areaIdFromMongo",
+                                "sqlName": "AreaIdFromMongo",
+                                "type": "NVARCHAR(MAX) NOT NULL"
+                            },
+                            {
+                                "name": "areaName",
+                                "sqlName": "AreaName",
+                                "type": "NVARCHAR(MAX) NOT NULL"
+                            }
                         ]
                     }
                 ]
@@ -2168,7 +2168,7 @@
         "database": "mongoDB",
         "mongodb": {
             "leads": "leads",
-            "products": "products",
+            "products": "Products",
             "areas": "areas",
             "users": "users",
             "rand_password": "rand_password"

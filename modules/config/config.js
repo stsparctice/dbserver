@@ -3,15 +3,24 @@ const types = require('./config-objects')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
 
-function getSqlTableColumnsType(tablename) {
+
+function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let x = tables.find(table => table.MTDTable.name.sqlName == tablename)
-    let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
+    console.log({ tables })
+    let table = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase())
+    return table
+
+}
+
+function getSqlTableColumnsType(tablename) {
+    const table = getTableFromConfig(tablename)
+    let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 };
 
 function parseSQLType(obj, tabledata) {
+    console.log({ obj });
     const keys = Object.keys(obj)
     let str = []
     for (let i = 0; i < keys.length; i++) {
@@ -70,4 +79,70 @@ const readJoin = async (baseTableName, baseColumn) => {
     return result;
 };
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin };
+const viewConnectionsTables = (tableName, condition = "") => {
+    const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
+    const myTable = tables.find(({ MTDTable }) => MTDTable.name.name === tableName);
+    const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
+    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => { return sqlName })] }];
+    let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
+    columns.forEach(column => {
+        const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
+        const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
+        const thisTable = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableToJoin);
+        const alias = thisTable.MTDTable.name.name;
+        columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [thisTable.MTDTable.default] }];
+        join = `${join} JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
+    });
+    if (condition.length > 0 && condition.includes('=')) {
+        join = `${join} WHERE ${condition}`;
+    }
+    let select = ``;
+    columnsSelect.forEach(cs => {
+        cs.columnsName.forEach(cn => {
+            select = `${select} ${cs.tableName}.${cn},`;
+        })
+    })
+    select = select.slice(0, select.length - 1);
+    return `SELECT ${select} FROM ${join}`;
+}
+
+function getPrimaryKeyField(tablename) {
+    let sql = config.find(db => db.database == 'sql')
+    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
+    let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
+    if (col) {
+        return col.sqlName
+    }
+    return false
+}
+
+function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
+    let primarykey = getPrimaryKeyField(tablename)
+    if (primarykey) {
+        let where = {}
+        where[primarykey] = id
+        return { tablename, columns: fields, where }
+    }
+    return false
+}
+
+function getForeignTableAndColumn(tablename, field) {
+    const table = getTableFromConfig(tablename)
+    if (table) {
+        const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
+        const { type } = column;
+        let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
+        let index = foreignTableName.indexOf('(')
+        foreignTableName=foreignTableName.slice(0, index)
+        const foreignTable = getTableFromConfig(foreignTableName)
+
+        const { defaultColumn } = foreignTable.MTDTable
+        return { foreignTableName, defaultColumn }
+
+    }
+    return false
+
+}
+
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField,viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };

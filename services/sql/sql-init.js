@@ -145,7 +145,7 @@ async function createSpecialProcedures() {
     
     UPDATE  tbl_Quotation 
     SET disabled= 1
-    WHERE serialNumber=@serialNumber
+    WHERE id=@serialNumber
     
     UPDATE tbl_QuotationItems
     SET disabled= 1
