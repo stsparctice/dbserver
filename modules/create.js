@@ -36,10 +36,13 @@ async function createSql(obj) {
 // },
 
 async function creatNewColumn(obj) {
+    console.log("creatNewColumn module");
     const result = await insertColumn(obj)
+    return result
 }
 
 async function creatSqlTable(obj) {
+    console.log("creatSqlTable module");
     const result = await createNewTable(obj)
     return result
 }

@@ -1,11 +1,11 @@
-const config = require('../configCreate.json');
+const config = require('../config2.json');
 const fs = require('fs');
 
 async function updateConfigInFiled(tableName, columnObj) {
     let n = config
     n.find(m => {
         if (m.database.includes('sql')) {
-            const index = m.dbobjects[1].list.findIndex(item => item.MTDTable.name.name == tableName)
+            const index = m.dbobjects[1].list.findIndex(item => item.MTDTable.name.sqlName == tableName)
             m.dbobjects[1].list[index].columns.push(columnObj)
             fs.writeFileSync('config2.json', JSON.stringify(n));
         }
@@ -15,21 +15,17 @@ async function updateConfigInFiled(tableName, columnObj) {
 
 async function updateConfig2(object) {
     let n = config
-    let i = n.find(m => {
+    n.find(m => {
         if (m.database.includes('sql')) {
-            console.log(m);
             m.dbobjects[1].list.push(object)
-            console.log(m.dbobjects[1].list);
         }
     })
-
-    fs.writeFileSync('configCreate.json', JSON.stringify(n))
-
+    fs.writeFileSync('config2.json', JSON.stringify(n))
 };
 
 
 
-
+//not good
 async function updateConfig(object) {
     if (object.db === 'sql') {
         let db = config.find(db => db[object.db] !== undefined)
@@ -55,8 +51,8 @@ async function updateConfig(object) {
                 };
             };
         };
-        fs.writeFileSync('configCreate.json', JSON.stringify(config));
+        fs.writeFileSync('config2.json', JSON.stringify(config));
     }
 };
 
-module.exports = { updateConfig ,updateConfigInFiled,updateConfig2};
+module.exports = { updateConfig, updateConfigInFiled, updateConfig2 };

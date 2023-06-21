@@ -32,12 +32,22 @@ const create = async function (obj) {
 // WHERE  TABLE_NAME = 'Employees'
 //  AND COLUMN_NAME = 'FirstName'
 const insertColumn = async function (obj) {
-     console.log(obj);
-     _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
-     (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName} AND COLUMN_NAME=${OBJ.columns.name}') 
-     ALTER TABLE ${obj.tableName} ADD ${obj.column.name} ${obj.column.type}
-     ELSE PRINT('NO')`)
-     return 'success_column'
+     console.log(obj, "obj");
+     const findTable = await getPool().request().query(`use ${SQL_DBNAME} 
+     SELECT * FROM sys.tables WHERE name = '${obj.tableName}'`)
+     if (findTable.recordset.length == 0) {
+          return ({ message: 'the table is not exists', data: findTable })
+     }
+     const findColumn = await getPool().request().query(`use ${SQL_DBNAME} 
+     SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName}' AND COLUMN_NAME='${obj.column.sqlName}'`)
+     if (findColumn.recordset.length == 0) {
+          _ = await getPool().request().query(`use ${SQL_DBNAME}  
+     ALTER TABLE ${obj.tableName} ADD ${obj.column.sqlName} ${obj.column.type}`)
+          return ({ message: "sucsses insert column", findColumn: findColumn, len: findColumn.recordset.length })
+     }
+     else {
+          return ({ message: "the column was exists", data: findColumn })
+     }
 }
 
 
@@ -62,18 +72,38 @@ const insertColumn = async function (obj) {
 //          }
 //      ]
 //  },
+// const funcSql=async function(obj){
+// console.log("funcSql");
+// answer=await.getPool().request().query(`CREATE FUNCTION INSERT_TABLE(@NAME NVARCHAR)`)
+
+// }
+
+
 
 const createNewTable = async function (obj) {
+     console.log("createNewTable sql");
      console.log(obj);
      let str = ''
      obj.columns.forEach(element => {
-          str += `${element.name} ${element.type},`
+          str += `${element.sqlName} ${element.type},`
      });
-     _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
-      (SELECT * FROM sys.tables WHERE name = '${obj.MTDTable.name.sqlName}') 
-      CREATE TABLE [dbo].[${obj.MTDTable.name.sqlName}](${str})
-      ELSE PRINT('NO')`)
-     return 'success'
+     console.log("str",str);
+     const findTable = await getPool().request().query(`use ${SQL_DBNAME} 
+      SELECT * FROM sys.tables WHERE name = '${obj.MTDTable.name.sqlName}'`)
+     if (findTable.recordset.length > 0) {
+          return ({ message: 'the table was exists', data: findTable.recordset })
+     }
+     else {
+          _ = await getPool().request().query(`use ${SQL_DBNAME} CREATE TABLE [dbo].[${obj.MTDTable.name.sqlName}](${str})`)
+          return ({ message: 'insert sucsses', data: findTable.recordset })
+     }
+     // const ans = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
+     //  (SELECT * FROM sys.tables WHERE name = '${obj.MTDTable.name.sqlName}') 
+     //  CREATE TABLE [dbo].[${obj.MTDTable.name.sqlName}](${str})
+     //  ELSE PRINT 'THE_COLOMN_EXISTS'
+     //  `)
+     //  console.log(findColumn.recordset["name"]);
+     // return ({ message: 'sucsses table', ans: ans.output, findColumn: findColumn.recordset,len:findColumn.recordset.length })
 }
 
 const read = async function (obj) {

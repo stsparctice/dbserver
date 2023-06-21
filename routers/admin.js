@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const config = require('../configCreate.json');
+const config = require('../config2.json');
 const { checkUserRole } = require('../modules/authorization');
 const { updateConfig } = require('../modules/admin');
 
