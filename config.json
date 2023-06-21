@@ -137,7 +137,8 @@
                                 "name": "finishProducts",
                                 "sqlName": "tbl_FinishProducts"
                             },
-                            "description": "a table of finish products "
+                            "description": "a table of finish products ",
+                            "defaultColumn":"Name"
                         },
                         "columns": [
                             {
@@ -229,7 +230,8 @@
                                 "name": "pumps",
                                 "sqlName": "tbl_Pumps"
                             },
-                            "description": "a table of pumps and additions to the pumps "
+                            "description": "a table of pumps and additions to the pumps ",
+                            "defaultColumn":"Name"
                         },
                         "columns": [
                             {
@@ -692,7 +694,8 @@
                                 "name": "Clients",
                                 "sqlName": "tbl_Clients"
                             },
-                            "description": "Table that contain all the details of the clients"
+                            "description": "Table that contain all the details of the clients",
+                            "defaultColumn":"ClientName"
                         },
                         "columns": [
                             {
@@ -1090,7 +1093,8 @@
                                 "name": "PouringsTypes",
                                 "sqlName": "tbl_PouringsTypes"
                             },
-                            "description": "type of pourings "
+                            "description": "type of pourings ",
+                            "defaultColumn":"PouringName"
                         },
                         "columns": [
                             {
@@ -1126,7 +1130,8 @@
                                 "name": "Orderers",
                                 "sqlName": "tbl_Orderers"
                             },
-                            "description": "table of orderers details"
+                            "description": "table of orderers details",
+                            "defaultColumn":"OrdererName"
                         },
                         "columns": [
                             {
@@ -1138,6 +1143,7 @@
                                 "name": "ordererName",
                                 "sqlName": "OrdererName",
                                 "type": "NVARCHAR(20) NOT NULL"
+                                
                             },
                             {
                                 "name": "ordererPhone",
@@ -1167,7 +1173,8 @@
                                 "name": "StatusesLead",
                                 "sqlName": "tbl_StatusesLead"
                             },
-                            "description": "table of statuses leads option"
+                            "description": "table of statuses leads option",
+                            "defaultColumn":"StatusName"
                         },
                         "columns": [
                             {
@@ -1200,7 +1207,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "leads",
+                                "name": "Leads",
                                 "sqlName": "tbl_Leads"
                             },
                             "description": "table of leads details"
@@ -1249,7 +1256,13 @@
                             {
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
-                                "type": " INT NULL"
+                                "type": "INT NULL",
+                                "referenceTable": "Tablname"
+                            },
+                            {
+                                "name": "tablename",
+                                "sqlName": "Tablename",
+                                "type": "NVARCHAR(MAX) NULL"
                             },
                             {
                                 "name": "concretAmount",
@@ -1259,7 +1272,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",
@@ -1330,7 +1343,7 @@
                             {
                                 "name": "product",
                                 "sqlName": "Product",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Product) REFERENCES tbl_Additions(Id)"
                             },
                             {
                                 "name": "amount",
@@ -1643,7 +1656,7 @@
                             {
                                 "name": "ItemCode",
                                 "sqlName": "ItemCode",
-                                "type": "nvarchar(20) NOT NULL"
+                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
                             },
                             {
                                 "name": "ItemDescribe",
@@ -1684,7 +1697,7 @@
                             {
                                 "name": "SomechCode",
                                 "sqlName": "SomechCode",
-                                "type": "nvarchar(20) NOT NULL"
+                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
                             },
                             {
                                 "name": "SomechDescribe",
@@ -2085,7 +2098,6 @@
                             }
                         ]
                     },
-                  
                     {
                         "MTDTable": {
                             "name": {
@@ -2112,6 +2124,12 @@
                                 "sqlName": "ChildId",
                                 "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
                             }
+                            ,
+                            {
+                                "name": "disable",
+                                "sqlName": "Disable",
+                                "type": "BIT NOT NULL"
+                            }
                         ]
                     },
                     {
@@ -2130,15 +2148,13 @@
                                 "sqlName": "Id",
                                 "type": "INT IDENTITY (1000,1) PRIMARY KEY NOT NULL"
                             },
-
                             {
-                                "name": "AreaIdFromMongo",
+                                "name": "areaIdFromMongo",
                                 "sqlName": "AreaIdFromMongo",
                                 "type": "NVARCHAR(MAX) NOT NULL"
                             },
-
                             {
-                                "name": "AreaName",
+                                "name": "areaName",
                                 "sqlName": "AreaName",
                                 "type": "NVARCHAR(MAX) NOT NULL"
                             }

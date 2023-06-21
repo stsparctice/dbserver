@@ -10,7 +10,7 @@ async function findSubDirectoriesSync(url) {
     let keys = arr2[0].split(',');
     keys[keys.length - 1] = keys[keys.length - 1].split('\r')[0]
     arr2 = arr2.splice(1)
-    arr2 = arr2.splice(0, arr2.length - 1)
+    arr2 = arr2.splice(0, arr2.length)
     arr2.forEach(a => {
         a = a.split('\r')[0]
         let ar = a.split(',')
