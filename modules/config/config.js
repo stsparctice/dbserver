@@ -5,20 +5,20 @@ const { SQL_DBNAME } = process.env;
 function getSqlTableColumnsType(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({tables})
+    console.log({ tables })
     let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
     let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 };
 
 function parseSQLType(obj, tabledata) {
-    console.log({obj});
+    console.log({ obj });
     const keys = Object.keys(obj)
     console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
-        if (obj[keys[i]]&& !type.toLowerCase().includes('bit')|| type.toLowerCase().includes('bit')) {
+        if (obj[keys[i]] && !type.toLowerCase().includes('bit') || type.toLowerCase().includes('bit')) {
             console.log(type, obj[keys[i]])
             if (type.toLowerCase().includes('nvarchar')) {
 
@@ -84,14 +84,25 @@ const readJoin = async (baseTableName, baseColumn) => {
     return result;
 };
 
-function getPrimaryKeyField(tablename){
+function getPrimaryKeyField(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
-    let col = x.columns.find(col => ( col.type.toLowerCase().indexOf('primary')!==-1))
-    if(col){
+    let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
+    if (col) {
         return col.sqlName
     }
     return false
 }
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField };
+
+function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
+    let primarykey = getPrimaryKeyField(tablename)
+    if (primarykey) {
+        let where = {}
+        where[primarykey] = id
+        return { tablename, columns: fields, where }
+    }
+    return false
+}
+
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField, getObjectWithFeildNameForPrimaryKey };
