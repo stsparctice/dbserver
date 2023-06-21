@@ -19,6 +19,7 @@ async function createTables() {
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
     let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
+    
     for (let j = 0; j < tables.length; j++) {
         let table = tables[j];
         _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](
