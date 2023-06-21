@@ -28,7 +28,6 @@ function parseColumnName(req, res, next) {
         }
     }
     req.body.values = columns
-    console.log({ columns });
     next()
 }
 
