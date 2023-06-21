@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng, readWithJoin } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
-const { parseColumnName, parseTableName } = require('../modules/config/config')
+const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
 router.use(express.json());
 router.use(routerLogger())

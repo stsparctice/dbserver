@@ -3,7 +3,7 @@ const types = {
     NVARCHAR: {
         typeNodeName: 'string',
         parseNodeTypeToSqlType: (string) => {
-            return `'${string}'`
+            return `N'${string}'`
         }
     },
 

@@ -1,5 +1,5 @@
 const express = require('express');
-const { parseTableName, parseColumnName } = require('../modules/config/config');
+const { parseTableName, parseColumnName } = require('../utils/parse_name');
 const router = express.Router();
 const { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng} = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
