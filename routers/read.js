@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin, getDetailsWithDistinct} = require('../modules/read');
+const {getPrimaryKeyField} = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -9,7 +10,11 @@ router.use(routerLogger())
 router.get('/auto_complete/:table/:column/:word', async (req, res) => {
     let obj = {}
     obj.tableName = req.params.table
-    obj.columns = req.params.column
+    obj.columns = `${req.params.column}`
+    const primarykey = getPrimaryKeyField(obj.tableName)
+    if(primarykey){
+        obj.columns+=`,${primarykey}`
+    }
     obj.condition =`${req.params.column} LIKE '${req.params.word}%'`
     obj.n=10
     const result = await getDetailsSql(obj);
