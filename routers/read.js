@@ -1,19 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin} = require('../modules/read');
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng, readWithJoin } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
 router.use(routerLogger())
 
-router.get('/auto_complete/:table/:column/:word', async (req, res) => {
+router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) => {
     let obj = {}
     obj.tableName = req.params.table
-    obj.columns = req.params.column
-    obj.condition =`${req.params.column} LIKE '${req.params.word}%'`
-    obj.n=10
+    obj.columns = `${req.params.column},Id`
+    obj.condition = `${req.params.column} LIKE '${req.params.word}%'`
+    if(req.params.condition){
+        obj.condition+=req.params.condition
+        console.log(obj.condition);
+    }
+    obj.n = 10
+    console.log(obj, req.params, "obj");
     const result = await getDetailsSql(obj);
-    console.log(result,"result");
+    console.log(result, "result");
     res.status(200).send(result);
 
 })
@@ -23,13 +28,13 @@ router.post('/readTopN', async (req, res) => {
     res.status(200).send(table);
 });
 
-router.get('/readjoin/:tableName/:column',async(req,res)=>{
-    try{
-        const response =await readWithJoin (req.params.tableName,req.params.column);
+router.get('/readjoin/:tableName/:column', async (req, res) => {
+    try {
+        const response = await readWithJoin(req.params.tableName, req.params.column);
         res.status(200).send(response);
     }
-    
-    catch(error){
+
+    catch (error) {
         console.log(error);
         res.status(404).send(error);
     }
