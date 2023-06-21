@@ -13,22 +13,26 @@ function getSqlTableColumnsType(tablename) {
 
 function parseSQLType(obj, tabledata) {
     const keys = Object.keys(obj)
-    console.log({ keys });
+    // console.log({ keys });
     let str = []
     for (let i = 0; i < keys.length; i++) {
         //לבדוק מקרים שמכניסים null
-        // console.log({ tabledata });
-        let type = tabledata.find(td => td.name.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-        let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-        str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
+        if (obj[keys[i]]) {
+            let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+            str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
 
-        // console.log(types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]);
-        // if (type.toLowerCase().includes('nvarchar') || type.toLowerCase().includes('date') || type.toLowerCase().includes('bit')) {
-        //     str.push(`'${obj[keys[i]]}'`)
-        // }
-        // else {
-        //     str.push(obj[keys[i]])
-        // }
+            // console.log(types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]);
+            // if (type.toLowerCase().includes('nvarchar') || type.toLowerCase().includes('date') || type.toLowerCase().includes('bit')) {
+            //     str.push(`'${obj[keys[i]]}'`)
+            // }
+            // else {
+            //     str.push(obj[keys[i]])
+            // }
+        }
+        else {
+            str.push('NULL')
+        }
     }
     return str
 }
@@ -48,9 +52,9 @@ function parseSQLType(obj, tabledata) {
 function parseTableName(req, res, next) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let table = tables.find(table => table.name.name == req.body.tablename)
+    let table = tables.find(table => table.MTDTable.name.name == req.body.tableName)
     if (table) {
-        req.body.tablename = table
+        req.body.tableName = table.MTDTable.name.sqlName
         next()
     }
     else {
@@ -74,7 +78,7 @@ function parseTableName(req, res, next) {
 function parseColumnName(req, res, next) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let table = tables.find(table => table.name.sqlName == tablename)
+    let table = tables.find(table => table.MTDTable.name.sqlName == req.body.tableName)
     let columns = {}
     for (let name of Object.keys(req.body.values)) {
         let column = table.columns.find(column => column.name == name)
@@ -86,6 +90,7 @@ function parseColumnName(req, res, next) {
         }
     }
     req.body.values = columns
+    console.log({ columns });
     next()
 }
 
