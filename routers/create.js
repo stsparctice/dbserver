@@ -20,7 +20,6 @@ router.post('/createManySql', parseTableName, parseColumnName, async (req, res) 
 });
 
 router.post('/insertColumn', async (req, res) => {
-    console.log(req.body);
     try {
         req.body.column.sqlName=await creatSqlNameColumn(req.body.column.name)
         const result = await creatNewColumn(req.body)
@@ -35,7 +34,6 @@ router.post('/insertColumn', async (req, res) => {
 
 router.post('/insertTable', async (req, res) => {
     try {
-        // (creatSqlNameTable(req.body.MTDTable.name) ,"upper case" );
         req.body.MTDTable.name.sqlName=await creatSqlNameTable(req.body.MTDTable.name.name)
         const result = await creatSqlTable(req.body);
         if (result.message == 'insert sucsses') {

@@ -61,7 +61,6 @@ async function insertManySql(obj) {
 async function creatNewColumn(obj) {
     try {
         const result = await insertColumn(obj)
-        console.log("sssssssss");
         return result
     } catch (error) {
         console.log("error modul");
