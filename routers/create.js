@@ -4,8 +4,10 @@ const { createSql,insertManySql, createMng, creatSqlTable} = require('../modules
 const { routerLogger } = require('../utils/logger');
 
 const {updateConfig,updateConfigInFiled,updateConfig2}=require('../modules/admin')
+
 router.use(express.json());
 router.use(routerLogger())
+
 router.post('/create', async (req, res) => {
     const result = await createSql(req.body);
     if(result)

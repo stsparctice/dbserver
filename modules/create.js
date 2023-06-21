@@ -21,7 +21,6 @@ async function createSql(obj) {
 };
 
 
-
 async function insertManySql(obj) {
     let tabledata
     let arr
@@ -70,9 +69,6 @@ async function creatSqlTable(obj) {
     const result = await createNewTable(obj)
     return result
 }
-
-
-
 
 async function createMng(obj) {
     mongoCollection.setCollection(obj.collection);

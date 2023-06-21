@@ -96,7 +96,7 @@ const read = async function (obj) {
      //      .execute(`pro_BasicRead`);
      const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
      console.log({ result })
-     return result.recordset;
+     return result;
 };
 
 
@@ -122,6 +122,7 @@ const join = async (query = "") => {
 };
 
 const update = async function (obj) {
+     console.log(obj, "                               obj");
      if (!Object.keys(obj).includes("condition")) {
           obj["condition"] = '1=1';
      };
