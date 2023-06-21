@@ -3,6 +3,7 @@ const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng ,readWithJoin, getDetailsWithDistinct} = require('../modules/read');
 const {getPrimaryKeyField} = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
+const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
 router.use(express.json());
 router.use(routerLogger())
@@ -28,19 +29,19 @@ router.post('/readTopN', async (req, res) => {
     res.status(200).send(table);
 });
 
-router.get('/readjoin/:tableName/:column',async(req,res)=>{
-    try{
-        const response =await readWithJoin (req.params.tableName,req.params.column);
+router.get('/readjoin/:tableName/:column', async (req, res) => {
+    try {
+        const response = await readWithJoin(req.params.tableName, req.params.column);
         res.status(200).send(response);
     }
-    
-    catch(error){
+
+    catch (error) {
         console.log(error);
         res.status(404).send(error);
     }
 });
 
-router.post('/countRows', async (req, res) => {
+router.post('/countRows', parseTableName, parseColumnName, async (req, res) => {
     const count = await countRowsSql(req.body);
     res.status(200).send(count);
 });
