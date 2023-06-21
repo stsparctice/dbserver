@@ -1,6 +1,35 @@
 const config = require('../config.json');
 const fs = require('fs');
 
+async function updateConfigInFiled(tableName, columnObj) {
+    let n = config
+    n.find(m => {
+        if (m.database.includes('sql')) {
+            const index = m.dbobjects[1].list.findIndex(item => item.MTDTable.name.name == tableName)
+            m.dbobjects[1].list[index].columns.push(columnObj)
+            fs.writeFileSync('config2.json', JSON.stringify(n));
+        }
+    })
+}
+
+
+async function updateConfig2(object) {
+    let n = config
+    let i = n.find(m => {
+        if (m.database.includes('sql')) {
+            console.log(m);
+            m.dbobjects[1].list.push(object)
+            console.log(m.dbobjects[1].list);
+        }
+    })
+
+    fs.writeFileSync('configCreate.json', JSON.stringify(n))
+
+};
+
+
+
+
 async function updateConfig(object) {
     if (object.db === 'sql') {
         let db = config.find(db => db[object.db] !== undefined)
@@ -26,8 +55,8 @@ async function updateConfig(object) {
                 };
             };
         };
-        fs.writeFileSync('config.json', JSON.stringify(config));
+        fs.writeFileSync('configCreate.json', JSON.stringify(config));
     }
 };
 
-module.exports = { updateConfig };
+module.exports = { updateConfig ,updateConfigInFiled,updateConfig2};

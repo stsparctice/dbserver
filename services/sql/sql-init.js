@@ -2,8 +2,7 @@ require('dotenv').config();
 const path = require('path')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection');
-const config = require('../../config.json');
-
+const config=require('../../config.json');
 
 
 function buildColumns(details) {
