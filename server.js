@@ -14,7 +14,7 @@ const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers')
 connectMng().then(_ => {
     console.log('connect to mongo')
     connectSql().then(_ => {
-        createTables().then(_ => {
+        // createTables().then(_ => {
             createProcedures().then(_ => {
                 createSpecialProcedures().then(_ => {
                     insertDataToSql()
@@ -23,11 +23,11 @@ connectMng().then(_ => {
                     });
                 })
             });
-        });
-        // deleteSQLData()
-        // dropSQLTables()
+        // });
+    //     deleteSQLData()
+    //     dropSQLTables()
 
     });
 });
 
-const server = http.createServer(app);
+const server = http.createServer(app)

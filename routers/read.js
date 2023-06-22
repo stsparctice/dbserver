@@ -17,7 +17,9 @@ router.get('/auto_complete/:table/:column/:word', async (req, res) => {
     }
     obj.condition =`${req.params.column} LIKE '${req.params.word}%'`
     obj.n=10
+    console.log("+++++++++++++++");
     const result = await getDetailsSql(obj);
+    console.log("+++++++++++++++");
     console.log(result,"result");
     res.status(200).send(result);
 
