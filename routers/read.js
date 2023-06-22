@@ -20,7 +20,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         console.log(obj.condition);
     }
     const primarykey = getPrimaryKeyField(obj.tableName)
-    if (primarykey) {
+    if (primarykey && (primarykey != "Id")) {
         obj.columns += `,${primarykey}`
     }
     obj.n = 10
