@@ -2116,8 +2116,7 @@
                                 "name": "childId",
                                 "sqlName": "ChildId",
                                 "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
-                            }
-                            ,
+                            },
                             {
                                 "name": "disable",
                                 "sqlName": "Disable",
