@@ -1,6 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin } = require('./config/config');
+const { readJoin, viewConnectionsTables } = require('./config/config');
 const config = require('../config.json');
 const mongoCollection = MongoDBOperations;
 
@@ -25,11 +25,21 @@ async function readWithJoin(tableName, column) {
             const temp = {}
             for (let key of keys) {
                 temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
-            }       
-             result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length==0? [...result, temp]:[...result];
+            }
+            result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
         });
     }
     return result;
+}
+async function connectTables(tableName = "",condition="") {
+    const query = viewConnectionsTables(tableName,condition);
+    const values = await join(query);
+    if (values) {
+        return values;
+    }
+    else {
+        return false;
+    }
 }
 
 async function countRowsSql(obj) {
@@ -47,11 +57,12 @@ async function getDetailsWithAggregateMng(obj) {
     mongoCollection.setCollection(obj.collection);
     const response = await mongoCollection.aggregate(obj.aggregate);
     return response;
-}; 
+};
 
 async function getDetailsWithDistinct(collection,filter) {
     mongoCollection.setCollection(collection);
     const response = await mongoCollection.distinct(filter);
+    // console.log(response);
     return response;
 };
 
@@ -61,4 +72,4 @@ async function getCountDocumentsMng(collection) {
     return response;
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct };
+module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };

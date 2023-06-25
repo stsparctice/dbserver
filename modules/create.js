@@ -10,14 +10,13 @@ async function createSql(obj) {
 
     let tabledata = getSqlTableColumnsType(obj.tableName)
     let arr = parseSQLType(obj.values, tabledata)
+    
+    console.log({obj})
+    const result = await create({tableName:obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values:arr.join()});
+    
+    // console.log("result: "+result);
 
-    console.log({ obj })
-    const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
-    console.log({result})
-    if (result.recordset[0])
-        return result.recordset[0];
-    else
-        return false
+    return result;
 };
 
 

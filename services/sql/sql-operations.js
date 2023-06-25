@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
+const {getPrimaryKeyField} = require('../../modules/config/config')
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
@@ -13,10 +14,9 @@ const create = async function (obj) {
 
      //      console.log({result})
      console.log({ tableName, columns, values })
-     const query = `use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`;
-     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY Id`)
-     console.log(result);
-      return result;
+     const primarykey = getPrimaryKeyField(tableName)
+     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
+      return result.recordset;
 
 };
 
@@ -95,8 +95,7 @@ const read = async function (obj) {
      //      .input('n', n)
      //      .execute(`pro_BasicRead`);
      const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-     console.log({ result })
-     return result;
+     return result.recordset;
 };
 
 
@@ -128,6 +127,7 @@ const update = async function (obj) {
      };
      const { tableName, values, condition } = obj;
      const value = setValues(values);
+     
      // const result = await getPool().request()
      //      .input('tableName', tableName)
      //      .input('values', value)

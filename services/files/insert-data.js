@@ -3,7 +3,7 @@ const path = require('path')
 const { readAll, create } = require('../sql/sql-operations')
 const { findSubDirectoriesSync } = require('../files/readFiles')
 const { getSqlTableColumnsType, parseSQLType } = require('../../modules/config/config');
-const productTables = ["BuytonGrain", "BuytonItems", "SomechBuyton", "BuytonStrength", "BuytonDegree"]
+const productTables = ["BuytonGrain", "BuytonItems", "BuytonSomech", "BuytonStrength", "BuytonDegree"]
 
 async function insertDataToSql() {
 
@@ -14,6 +14,7 @@ async function insertDataToSql() {
             let tabledata = getSqlTableColumnsType(`tbl_${productTables[i]}`)
 
             for (let item of productData) {
+                console.log(item, "iitteenmmnmmmmmmmmmmmmmmmmmmmmmmmmm");
                 let arr = parseSQLType(item, tabledata)
                 arr = arr.join()
                 const obj = { tableName: `tbl_${productTables[i]}`, columns: (Object.keys(item).join()).trim(), values: arr }
