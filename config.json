@@ -1690,8 +1690,8 @@
                                 "type": "int NOT NULL"
                             },
                             {
-                                "name": "SomechBuyton",
-                                "sqlName": "SomechBuyton",
+                                "name": "BuytonSomech",
+                                "sqlName": "BuytonSomech",
                                 "type": "int NOT NULL"
                             }
                         ]
@@ -1699,10 +1699,10 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "SomechBuyton",
-                                "sqlName": "tbl_SomechBuyton"
+                                "name": "BuytonSomech",
+                                "sqlName": "tbl_BuytonSomech"
                             },
-                            "description": "Table that contain SomechBuyton"
+                            "description": "Table that contain BuytonSomech"
                         },
                         "columns": [
                             {
