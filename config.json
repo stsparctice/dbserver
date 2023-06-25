@@ -130,7 +130,7 @@
                                 "type": "NVARCHAR(20) NOT NULL "
                             }
                         ]
-                    },
+                    },                    
                     {
                         "MTDTable": {
                             "name": {
@@ -154,7 +154,7 @@
                             {
                                 "name": "unitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },
                             {
                                 "name": "bookkeepingCode",
@@ -200,7 +200,7 @@
                             {
                                 "name": "unitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },
                             {
                                 "name": "bookkeepingCode",
@@ -247,7 +247,7 @@
                             {
                                 "name": "unitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
-                                "type": "INT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },
                             {
                                 "name": "addition",
@@ -276,6 +276,7 @@
                             }
                         ]
                     },
+                    
                     {
                         "MTDTable": {
                             "name": {
@@ -908,7 +909,7 @@
                             {
                                 "name": "Street",
                                 "sqlName": "Street",
-                                "type": "nvarchar(20)NOT NULL"
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "HomeNumber",

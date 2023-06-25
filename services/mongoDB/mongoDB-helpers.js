@@ -1,7 +1,7 @@
 const mongo = require('./mongo-operations')
 const mongoCollection = mongo;
 async function dropMongoDBCollection() {
-    mongoCollection.setCollection('areas');
+    mongoCollection.setCollection('Areas');
     _ = await mongoCollection.dropCollection();
 }
 

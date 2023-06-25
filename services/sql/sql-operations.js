@@ -94,10 +94,7 @@ const read = async function (obj) {
      //      .input('condition', condition)
      //      .input('n', n)
      //      .execute(`pro_BasicRead`);
-
-     console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
      const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-     console.log({ result })
      return result.recordset;
 };
 
@@ -129,6 +126,7 @@ const update = async function (obj) {
      };
      const { tableName, values, condition } = obj;
      const value = setValues(values);
+     
      // const result = await getPool().request()
      //      .input('tableName', tableName)
      //      .input('values', value)

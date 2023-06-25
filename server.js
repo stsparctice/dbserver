@@ -29,9 +29,7 @@ connectMng().then(_ => {
         // dropSQLTables();
         // dropMongoDBCollection();
     });
-    // deleteSQLData()
-    // dropSQLTables()
-
+ 
 });
 // });
 

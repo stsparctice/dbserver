@@ -2,6 +2,7 @@ const config = require('../config.json')
 
 function parseTableName() {
     return (req, res, next) => {
+        console.log({body:req.body})
         let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
         let table = tables.find(table => table.MTDTable.name.name == req.body.tableName || table.MTDTable.name.sqlName == req.body.tableName)
@@ -17,6 +18,7 @@ function parseTableName() {
 
 function parseColumnName() {
     return (req, res, next) => {
+        console.log({body:req.body})
         let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
         let table = tables.find(table => table.MTDTable.name.sqlName == req.body.tableName || table.MTDTable.name.sqlName == req.body.tableName)
