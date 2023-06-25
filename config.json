@@ -2144,9 +2144,11 @@
                             },
 
                             {
-                                "name": "areaName",
+
+                                "name": "AreaName",
                                 "sqlName": "AreaName",
-                                "type": "NVARCHAR(MAX) NOT NULL"
+                                "type": "nvarchar(MAX) NOT NULL"
+                                
                             }
                         ]
                     }

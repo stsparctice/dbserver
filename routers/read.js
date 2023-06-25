@@ -50,7 +50,7 @@ router.get('/readAll/:tbname/', async (req, res) => {
     let obj = {};
     obj['tableName'] = req.params.tbname;
     const table = await getAllSql(obj);
-    console.log(table);
+    // console.log(table);
     res.status(200).send(table);
 });
 
