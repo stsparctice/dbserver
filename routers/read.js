@@ -63,8 +63,8 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
 });
 
 router.post('/find', async (req, res) => {
+    console.log('rrrrrrrrrrrrrrrrrrrrrrqqqqqqqqqqqqqqqqqqqq',req.body);
     const response = await getDetailsMng(req.body);
-    // console.log(response);
     res.status(200).send(response);
 });
 
