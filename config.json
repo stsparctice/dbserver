@@ -1764,6 +1764,11 @@
                                 "type": "NVARCHAR(50) NOT NULL"
                             },
                             {
+                                "name": "Finish",
+                                "sqlName": "Finish",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
                                 "type": "BIT NOT NULL"
