@@ -14,10 +14,6 @@ async function createSql(obj) {
         console.log({ obj })
         const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
         console.log({ result })
-        if (result.recordset[0])
-            return result.recordset[0];
-        else
-            return false
     }
     catch (error){
         throw error

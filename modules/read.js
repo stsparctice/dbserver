@@ -1,6 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin } = require('./config/config');
+const { readJoin, viewConnectionsTables } = require('./config/config');
 const config = require('../config.json');
 const mongoCollection = MongoDBOperations;
 
@@ -25,25 +25,30 @@ async function getAllSql(obj) {
 };
 
 async function readWithJoin(tableName, column) {
-    try {
-        const query = await readJoin(tableName, column);
-        const values = await join(query);
-        let result = [];
-        if (values) {
-            values.forEach(val => {
-                const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
-                const keys = Object.keys(sameRecord[0]);
-                const temp = {}
-                for (let key of keys) {
-                    temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
-                }
-                result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
-            });
-        }
-        return result;
+    const query = await readJoin(tableName, column);
+    const values = await join(query);
+    let result = [];
+    if (values) {
+        values.forEach(val => {
+            const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
+            const keys = Object.keys(sameRecord[0]);
+            const temp = {}
+            for (let key of keys) {
+                temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
+            }
+            result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
+        });
     }
-    catch {
-        throw new Error('Join faild')
+    return result;
+}
+async function connectTables(tableName = "",condition="") {
+    const query = viewConnectionsTables(tableName,condition);
+    const values = await join(query);
+    if (values) {
+        return values;
+    }
+    else {
+        return false;
     }
 }
 
@@ -101,4 +106,4 @@ async function getCountDocumentsMng(collection) {
     }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct };
+module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };

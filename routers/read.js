@@ -1,31 +1,54 @@
 const express = require('express');
 const router = express.Router();
-const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng, getDetailsWithAggregateMng, getCountDocumentsMng, readWithJoin, getDetailsWithDistinct } = require('../modules/read');
-const { getPrimaryKeyField } = require('../modules/config/config')
+const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
+    getDetailsWithAggregateMng, getCountDocumentsMng,
+    readWithJoin, connectTables, getDetailsWithDistinct } = require('../modules/read');
+const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
 router.use(express.json());
 router.use(routerLogger())
 
-router.get('/auto_complete/:table/:column/:word', async (req, res) => {
+router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) => {
+    let obj = {}
+    obj.tableName = req.params.table
+    obj.columns = `${req.params.column}`
+    obj.condition = `${req.params.column} LIKE '%${req.params.word}%'`
+    if (req.params.condition != "AND 1=1") {
+        obj.condition += "AND " + req.params.condition
+        console.log(obj.condition);
+    }
+    const primarykey = getPrimaryKeyField(obj.tableName)
+    if (primarykey && (primarykey != "Id")) {
+        obj.columns += `,${primarykey}`
+    }
+    obj.n = 10
+    const result = await getDetailsSql(obj);
+    res.status(200).send(result);
+
+})
+
+router.get('/exist/:tablename/:field/:value', async (req, res) => {
+
     try {
-        let obj = {}
-        obj.tableName = req.params.table
-        obj.columns = `${req.params.column}`
-        const primarykey = getPrimaryKeyField(obj.tableName)
-        if (primarykey) {
-            obj.columns += `,${primarykey}`
+        const { tablename, field, value } = req.params
+        let val = convertFieldType(tablename, field, value)
+        const result = await getDetailsSql({ tableName: tablename, columns: field, condition: `${field} = ${val}` })
+        console.log({ result })
+        if (result.length > 0) {
+            res.status(200).send(true)
+
         }
-        obj.condition = `${req.params.column} LIKE '${req.params.word}%'`
-        obj.n = 10
-        const result = await getDetailsSql(obj);
-        console.log(result, "result");
-        res.status(200).send(result);
+        else {
+            res.status(200).send(false)
+        }
+
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(500).send(error.message)
     }
+
 })
 
 router.post('/readTopN', async (req, res) => {
@@ -46,6 +69,36 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
 
     catch (error) {
         console.log(error);
+        res.status(404).send(error);
+    }
+});
+
+// router.get('/foreignkeyvalue/:tablename/:fields/:value', (req, res)=>{
+// const response =getObjectWithFeildNameForPrimaryKey()
+
+// })
+
+router.get('/foreignkeyvalue/:tablename/:field/:id', async (req, res) => {
+    const { foreignTableName, defaultColumn } = getForeignTableAndColumn(req.params.tablename, req.params.field)
+    let obj = {}
+    obj.tableName = foreignTableName
+    obj.columns = `${defaultColumn}`
+    const primarykey = getPrimaryKeyField(foreignTableName)
+    if (primarykey) {
+        obj.columns += `,${primarykey}`
+    }
+    obj.condition = `${primarykey} = ${req.params.id}`
+    obj.n = 1
+    const result = await getDetailsSql(obj);
+    res.status(200).send(result);
+})
+
+router.get('/connectTables/:tableName/:condition', async (req, res) => {
+    try {
+        const response = await connectTables(req.params.tableName, req.params.condition);
+        res.status(200).send(response);
+    }
+    catch (error) {
         res.status(404).send(error);
     }
 });
