@@ -15,8 +15,13 @@ const create = async function (obj) {
      //      console.log({result})
      console.log({ tableName, columns, values })
      const primarykey = getPrimaryKeyField(tableName)
+     try{
      const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
       return result.recordset;
+     }
+     catch(error){
+          throw error
+     }
 
 };
 

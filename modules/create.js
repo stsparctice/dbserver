@@ -9,14 +9,20 @@ const { getSqlTableColumnsType, parseSQLType } = require('../modules/config/conf
 async function createSql(obj) {
 
     let tabledata = getSqlTableColumnsType(obj.tableName)
+    console.log({tabledata})
     let arr = parseSQLType(obj.values, tabledata)
     
     console.log({obj})
+    try{
     const result = await create({tableName:obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values:arr.join()});
     
     // console.log("result: "+result);
 
     return result;
+    }
+    catch (error){
+        throw error
+    }
 };
 
 
