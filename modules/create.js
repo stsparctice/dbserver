@@ -19,8 +19,8 @@ async function createSql(obj) {
         else
             return false
     }
-    catch {
-        throw new Error('Create sql faild.')
+    catch (error){
+        throw error
     }
 };
 
@@ -85,8 +85,8 @@ async function createMng(obj) {
         const response = await mongoCollection.insertOne(obj.data);
         return response;
     }
-    catch {
-        throw new Error('Create mongo faild.')
+    catch (error){
+        throw error
     }
 };
 

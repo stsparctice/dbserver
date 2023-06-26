@@ -18,7 +18,7 @@ router.post('/create', parseTableName, parseColumnName, async (req, res) => {
             res.status(500).send(false)
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.send(error.message)
     }
 });
 
@@ -28,7 +28,7 @@ router.post('/createManySql', parseTableName, parseColumnName, async (req, res) 
         res.status(200).send(result);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.send(error.message)
     }
 });
 
@@ -39,7 +39,7 @@ router.post('/insertone', async (req, res) => {
         res.status(200).send(result);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.send(error.message)
     }
 });
 

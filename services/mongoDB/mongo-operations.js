@@ -23,7 +23,7 @@ class MongoDBOperations {
             console.log(result.toString())
         }
         else {
-            return false
+            throw new Error('Object is not valid.')
         }
         return result.toString();
     };

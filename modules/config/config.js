@@ -4,30 +4,44 @@ require('dotenv');
 const { SQL_DBNAME } = process.env;
 
 function getSqlTableColumnsType(tablename) {
-    let sql = config.find(db => db.database == 'sql')
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({ tables })
-    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
-    let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
-    return col
+    try {
+        let sql = config.find(db => db.database == 'sql')
+        let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+        let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
+        let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
+        return col
+    }
+    catch {
+        throw new Error('Have mistake in config.json')
+    }
 };
 
 function parseSQLType(obj, tabledata) {
     console.log({ obj });
-    const keys = Object.keys(obj)
-    let str = []
-    for (let i = 0; i < keys.length; i++) {
-        if (obj[keys[i]]) {
-            let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-            str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
-
+    try {
+        const keys = Object.keys(obj)
+        let str = []
+        for (let i = 0; i < keys.length; i++) {
+            if (obj[keys[i]]) {
+                let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+                let parse
+                try {
+                     parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+                } 
+                catch  {
+                    throw new Error(`Type: ${type} is not exsist.`)
+                }
+                str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
+            }
+            else {
+                str.push('NULL')
+            }
         }
-        else {
-            str.push('NULL')
-        }
+        return str
+    } 
+    catch  {
+        throw new Error('Object is not valid')
     }
-    return str
 }
 
 const readJoin = async (baseTableName, baseColumn) => {
