@@ -13,26 +13,22 @@ async function createSql(obj) {
 
     console.log({ obj })
     const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
-    console.log({result})
-    if (result.recordset[0])
-        return result.recordset[0];
-    else
-        return false
+
+    return result;
 };
 
 
 
 async function insertManySql(obj) {
-    let tabledata
-    let arr
-    let values = obj.values
-
-    let result = []
+    let tabledata;
+    let arr;
+    let { values } = obj;
+    let result = [];
     for (let o of values) {
-        tabledata = getSqlTableColumnsType(obj.tableName)
+        tabledata = await getSqlTableColumnsType(obj.tableName);
         arr = parseSQLType(o, tabledata);
         let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-        result = [...result, res.recordset[0]]
+        result = [...result, ...res];
     }
     if (result)
         return result;
@@ -40,27 +36,6 @@ async function insertManySql(obj) {
         return false;
 
 }
-
-
-// {
-//     "MTDTable": {
-//         "name": {
-//             "name": "unitOfMeasure",
-//             "sqlName": "tbl_unitOfMeasure"
-//         },
-//         "description": "a normalization table of unitsOfMeasure"
-//     },
-//     "columns": [
-//         {
-//             "name": "id",
-//             "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-//         },
-//         {
-//             "name": "measure",
-//             "type": "NVARCHAR(20) NOT NULL "
-//         }
-//     ]
-// },
 
 async function creatNewColumn(obj) {
     const result = await insertColumn(obj)

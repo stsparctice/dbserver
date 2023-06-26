@@ -7,8 +7,9 @@ const { SQL_DBNAME } = process.env;
 function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({ tables })
-    let table = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase())
+    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
+        tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+    console.log({ table })
     return table
 
 }
@@ -23,15 +24,18 @@ function parseSQLType(obj, tabledata) {
     console.log({ obj });
     const keys = Object.keys(obj)
     let str = []
+    console.log({tabledata});
     for (let i = 0; i < keys.length; i++) {
-        if (obj[keys[i]]) {
-            let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-            str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
-
+        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
+        if (obj[keys[i]] !== null) {
+            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')];
+            console.log({ parse });
+            const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
+            console.log({ val });
+            str.push(val);
         }
         else {
-            str.push('NULL')
+            str.push('NULL');
         }
     }
     return str
@@ -134,7 +138,7 @@ function getForeignTableAndColumn(tablename, field) {
         const { type } = column;
         let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
         let index = foreignTableName.indexOf('(')
-        foreignTableName=foreignTableName.slice(0, index)
+        foreignTableName = foreignTableName.slice(0, index)
         const foreignTable = getTableFromConfig(foreignTableName)
 
         const { defaultColumn } = foreignTable.MTDTable
@@ -145,4 +149,15 @@ function getForeignTableAndColumn(tablename, field) {
 
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField,viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+function convertFieldType(tablename, field, value) {
+
+    const columns = getSqlTableColumnsType(tablename)
+    let col = columns.find(c => c.sqlName.toLowerCase() === field)
+    let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
+    const ans = parse.parseNodeTypeToSqlType(value)
+    console.log({ ans })
+    return ans
+
+}
+
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
