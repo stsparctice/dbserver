@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng} = require('../modules/update');
+const { updateSql, updateQuotationSql,dropDocumentMng, updateSuppliersBranchesSql, updateMng ,dropCollectionMng} = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -31,6 +31,12 @@ router.post('/updateone', async (req, res) => {
 
 router.post('/dropCollection', async (req, res) => {
     const result = await dropCollectionMng(req.body);
+    res.status(200).send(result);
+});
+
+router.post('/dropDocument', async (req, res) => {
+    console.log("req.body",req.body);
+    const result = await dropDocumentMng(req.body);
     res.status(200).send(result);
 });
 

@@ -66,11 +66,16 @@ class MongoDBOperations {
         return result;
     };
 
+    async dropDocument(filter='') {
+        console.log("filter in oper***********",filter);
+        const result = await getClient().db(this.dbName).collection(this.collectionName).deleteOne(filter);
+        return result;
+    };
+
     async complete(obj){
         const result = await getClient().db(this.dbName).collection(this.collectionName).find().toArray();
         return result;
     }
-
 };
 
 const mongo = new MongoDBOperations();
