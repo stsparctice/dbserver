@@ -22,22 +22,6 @@ function getSqlTableColumnsType(tablename) {
 };
 
 function parseSQLType(obj, tabledata) {
-<<<<<<< HEAD
-=======
-    console.log({ obj });
-    const keys = Object.keys(obj)
-    let str = []
-    for (let i = 0; i < keys.length; i++) {
-        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-        
-        if (obj[keys[i]]!==null) {
-            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-            console.log({parse})
-            const val =parse.parseNodeTypeToSqlType(obj[keys[i]])
-            console.log({val})
-            str.push(val)
->>>>>>> pricelist3
-
     console.log({ obj });
     try {
         const keys = Object.keys(obj)
