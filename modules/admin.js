@@ -17,13 +17,12 @@ async function updateConfig2(object) {
     let n = config
     let i = n.find(m => {
         if (m.database.includes('sql')) {
-            console.log(m);
             m.dbobjects[1].list.push(object)
-            console.log(m.dbobjects[1].list);
         }
     })
 
-    fs.writeFileSync('configCreate.json', JSON.stringify(n))
+    // fs.writeFileSync('configCreate.json', JSON.stringify(n))
+    fs.writeFileSync('config.json', JSON.stringify(n))
 
 };
 
@@ -55,7 +54,9 @@ async function updateConfig(object) {
                 };
             };
         };
-        fs.writeFileSync('configCreate.json', JSON.stringify(config));
+        // fs.writeFileSync('configCreate.json', JSON.stringify(config));
+        fs.writeFileSync('config.json', JSON.stringify(config));
+
     }
 };
 

@@ -15,7 +15,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
     obj.tableName = req.params.table
     obj.columns = `${req.params.column}`
     obj.condition = `${req.params.column} LIKE '%${req.params.word}%'`
-    if (req.params.condition != "1=1") {
+    if (req.params.condition.trim() != "1=1") {
         obj.condition += "AND " + req.params.condition
         console.log(obj.condition);
     }
@@ -34,16 +34,9 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
     try {
         const { tablename, field, value } = req.params
         let val = convertFieldType(tablename, field, value)
-        const result = await getDetailsSql({ tableName: tablename, columns: field, condition: `${field} = ${val}` })
+        const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
         console.log({ result })
-        if (result.length > 0) {
-            res.status(200).send(true)
-
-        }
-        else {
-            res.status(200).send(false)
-        }
-
+            res.status(200).send(result)
     }
     catch (error) {
         res.status(500).send(error.message)
@@ -52,9 +45,25 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
 })
 
 router.post('/readTopN', async (req, res) => {
-    const table = await getDetailsSql(req.body);
-    res.status(200).send(table);
+    try {
+        const table = await getDetailsSql(req.body);
+        res.status(200).send(table);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
+
+router.get('/findById/:tableName/:id', async (req, res) => {
+//primaryKey value have to be int type
+    try {
+        const primaryKeyFiels = getPrimaryKeyField(req.params.tableName)
+        const res = await getDetailsSql({ tableName: tableName, columns: '*', condition: `${primaryKeyFiels}=${req.paras.id}` })
+    }
+    catch (error) {
+        res.status(500).send(error.message)
+    }
+})
 
 router.get('/readjoin/:tableName/:column', async (req, res) => {
     try {
@@ -99,44 +108,82 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
 });
 
 router.post('/countRows', parseTableName, parseColumnName, async (req, res) => {
-    const count = await countRowsSql(req.body);
-    res.status(200).send(count);
+    try {
+        const count = await countRowsSql(req.body);
+        res.status(200).send(count);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
-router.get('/readAll/:tbname', async (req, res) => {
-    let obj = {};
-    obj['tableName'] = req.params.tbname;
-    const table = await getAllSql(obj);
-    res.status(200).send(table);
+router.get('/readAll/:tbname/', async (req, res) => {
+    try {
+        console.log("im here");
+        let obj = {};
+        obj['tableName'] = req.params.tbname;
+        const table = await getAllSql(obj);
+        console.log(table);
+        res.status(200).send(table);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
-    let obj = {};
-    console.log(req.params.condition, "condition");
-    obj['tableName'] = req.params.tbname;
-    obj['condition'] = req.params.condition;
-    const table = await getAllSql(obj);
-    res.status(200).send(table);
+    try {
+        let obj = {};
+        obj['tableName'] = req.params.tbname;
+        obj['condition'] = req.params.condition;
+        const table = await getAllSql(obj);
+        res.status(200).send(table);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 router.post('/find', async (req, res) => {
-    const response = await getDetailsMng(req.body);
-    res.status(200).send(response);
+    try {
+        const response = await getDetailsMng(req.body);
+        res.status(200).send(response);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 router.get('/distinct/:collection/:filter', async (req, res) => {
-    const response = await getDetailsWithDistinct(req.params.collection, req.params.filter);
-    res.status(200).send({ response });
+    try {
+        console.log('distinct---------', req.params.collection, req.params.filter);
+        const response = await getDetailsWithDistinct(req.params.collection, req.params.filter);
+        console.log({ response });
+        res.status(200).send({ response });
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 router.post('/aggregate', async (req, res) => {
-    const response = await getDetailsWithAggregateMng(req.body);
-    res.status(200).send(response);
+    try {
+        const response = await getDetailsWithAggregateMng(req.body);
+        res.status(200).send(response);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 router.get('/countdocuments/:collection', async (req, res) => {
-    const response = await getCountDocumentsMng(req.params.collection);
-    res.status(200).send({ response });
+    try {
+        const response = await getCountDocumentsMng(req.params.collection);
+        res.status(200).send({ response });
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 module.exports = router;

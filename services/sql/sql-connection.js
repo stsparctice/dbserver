@@ -16,6 +16,7 @@ const poolConfig = () => ({
     }
 });
 
+
 let pool;
 const connectSql = async () => {
     if (!pool) {
