@@ -29,7 +29,7 @@ class MongoDBOperations {
     };
 
     async find(obj = {}) {
-        console.log("im here");
+        console.log("im here");      
         let sort = {};
         sort[obj.sort] = 1;
         const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter).sort(sort).toArray();

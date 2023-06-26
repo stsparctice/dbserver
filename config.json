@@ -2136,19 +2136,21 @@
                                 "sqlName": "Id",
                                 "type": "INT IDENTITY (1000,1) PRIMARY KEY NOT NULL"
                             },
-
                             {
                                 "name": "areaIdFromMongo",
                                 "sqlName": "AreaIdFromMongo",
                                 "type": "NVARCHAR(MAX) NOT NULL"
                             },
-
                             {
 
                                 "name": "AreaName",
                                 "sqlName": "AreaName",
-                                "type": "nvarchar(MAX) NOT NULL"
-                                
+                                "type": "NVARCHAR(MAX) NOT NULL"
+                            },
+                            {
+                                "name": "disabled",
+                                "sqlName": "Disabled",
+                                "type": "bit NOT NULL"
                             }
                         ]
                     }

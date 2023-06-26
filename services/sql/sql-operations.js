@@ -126,7 +126,9 @@ const update = async function (obj) {
           obj["condition"] = '1=1';
      };
      const { tableName, values, condition } = obj;
+     console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',{ tableName, values, condition});
      const value = setValues(values);
+     console.log('pppppppppppppppppppp',{value});
      // const result = await getPool().request()
      //      .input('tableName', tableName)
      //      .input('values', value)
