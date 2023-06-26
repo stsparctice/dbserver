@@ -21,7 +21,6 @@ async function createSql(obj) {
 };
 
 
-
 async function insertManySql(obj) {
     try {
         let tabledata
@@ -71,9 +70,6 @@ async function creatSqlTable(obj) {
     const result = await createNewTable(obj)
     return result
 }
-
-
-
 
 async function createMng(obj) {
     try {

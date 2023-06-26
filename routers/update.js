@@ -28,8 +28,6 @@ router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res
 });
 
 
-
-
 router.post('/updateSuppliersBranches', parseTableName, parseColumnName, async (req, res) => {
     try {
         const result = await updateSuppliersBranchesSql(req.body);

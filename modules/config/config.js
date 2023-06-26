@@ -21,6 +21,8 @@ function getSqlTableColumnsType(tablename) {
 };
 
 function parseSQLType(obj, tabledata) {
+console.log("functionb");
+
     console.log({ obj });
     try {
         const keys = Object.keys(obj)

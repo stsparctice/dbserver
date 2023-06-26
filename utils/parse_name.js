@@ -5,7 +5,7 @@ function parseTableName() {
         console.log({body:req.body})
         let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        let table = tables.find(table => table.MTDTable.name.name == req.body.tableName || table.MTDTable.name.sqlName == req.body.tableName)
+        let table = tables.find(table => table.MTDTable.name.sqlName == req.body.tableName || table.MTDTable.name.sqlName == req.body.tableName)
         if (table) {
             req.body.tableName = table.MTDTable.name.sqlName
             next()
@@ -32,7 +32,7 @@ function parseColumnName() {
                 res.status(404).send(`This column: ${name} does not exsist.`)
             }
         }
-        req.body.values = columns
+        // req.body.values = columns
         next()
     }
 }

@@ -126,6 +126,7 @@ const join = async (query = "") => {
 };
 
 const update = async function (obj) {
+     console.log(obj, "                               obj");
      if (!Object.keys(obj).includes("condition")) {
           obj["condition"] = '1=1';
      };
