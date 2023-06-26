@@ -7,9 +7,9 @@ const { SQL_DBNAME } = process.env;
 function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase()|| 
-    tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
-    console.log({table})
+    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
+        tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+    console.log({ table })
     return table
 
 }
@@ -26,12 +26,12 @@ function parseSQLType(obj, tabledata) {
     let str = []
     for (let i = 0; i < keys.length; i++) {
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-        
-        if (obj[keys[i]]!==undefined) {
+
+        if (obj[keys[i]] !== null) {
             let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-            console.log({parse})
-            const val =parse.parseNodeTypeToSqlType(obj[keys[i]])
-            console.log({val})
+            console.log({ parse })
+            const val = parse.parseNodeTypeToSqlType(obj[keys[i]])
+            console.log({ val })
             str.push(val)
 
         }
@@ -156,9 +156,9 @@ function convertFieldType(tablename, field, value) {
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
     let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
     const ans = parse.parseNodeTypeToSqlType(value)
-    console.log({ans})
-return ans
+    console.log({ ans })
+    return ans
 
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType,getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };

@@ -26,6 +26,18 @@ const types = {
         parseNodeTypeToSqlType: (number) => {
             return number
         }
+    }, 
+    REAL:{
+        typeNodeName: 'number',
+        parseNodeTypeToSqlType: (number) => {
+            return number
+        }
+    }, 
+    FLOAT:{
+        typeNodeName: 'number',
+        parseNodeTypeToSqlType: (number) => {
+            return number
+        }
     }
 }
 

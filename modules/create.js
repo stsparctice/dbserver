@@ -24,14 +24,14 @@ async function createSql(obj) {
 async function insertManySql(obj) {
     let tabledata
     let arr
-    let values = obj.values
+    let {values} = obj
 
     let result = []
     for (let o of values) {
-        tabledata = getSqlTableColumnsType(obj.tableName)
+        tabledata =await getSqlTableColumnsType(obj.tableName)
         arr = parseSQLType(o, tabledata);
         let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-        result = [...result, res.recordset[0]]
+        result = [...result, res]
     }
     if (result)
         return result;

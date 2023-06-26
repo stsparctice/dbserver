@@ -11,15 +11,22 @@ router.use(routerLogger())
 
 router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
     const result = await createSql(req.body);
-    if(result)
-    res.status(201).send(result);
+    if (result)
+        res.status(201).send(result);
     else
-    res.status(500).send(false)
+        res.status(500).send(false)
 });
 
-router.post('/createManySql', parseTableName(), parseColumnName(), async (req, res) => {
-    const result = await insertManySql(req.body);
-    res.status(200).send(result);
+router.post('/createManySql', parseTableName(), async (req, res) => {
+    try {
+        const result = await insertManySql(req.body);
+        res.status(201).send(result);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send(error.message);
+
+    }
 });
 
 
