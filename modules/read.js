@@ -10,7 +10,6 @@ async function getDetailsSql(obj) {
 };
 
 async function getAllSql(obj) {
-    console.log("555555555555555555");
     const list = await readAll(obj);
     return list;
 };
@@ -63,6 +62,7 @@ async function getDetailsWithAggregateMng(obj) {
 async function getDetailsWithDistinct(collection,filter) {
     mongoCollection.setCollection(collection);
     const response = await mongoCollection.distinct(filter);
+    // console.log(response);
     return response;
 };
 

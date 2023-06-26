@@ -16,19 +16,19 @@ const poolConfig = () => ({
     }
 });
 
+
 let pool;
-// console.log(poolConfig());
 const connectSql = async () => {
     if (!pool) {
 
         pool = new sql.ConnectionPool(poolConfig());
-        console.log("pool" );
+        // console.log("pool" );
     }
     if (!pool.connected) {
-        console.log(new Date().toISOString())
-        console.log({connected: pool.connected})
+        // console.log(new Date().toISOString())
+        // console.log({connected: pool.connected})
         _ = await pool.connect();
-        console.log({connected: pool.connected})
+        // console.log({connected: pool.connected})
     }
 }
 
