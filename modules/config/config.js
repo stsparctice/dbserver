@@ -1,46 +1,54 @@
-const config = require('../../config.json');
+const config = require('../../config.json')
+const types = require('./config-objects')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
 
-function getSqlTableColumnsType(tablename) {
+
+function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({tables})
-    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
-    let col = x.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
+    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
+        tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+    return table
+
+}
+
+function getSqlTableColumnsType(tablename) {
+   
+    const table = getTableFromConfig(tablename)
+    let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 };
 
 function parseSQLType(obj, tabledata) {
-    console.log({obj});
-    const keys = Object.keys(obj)
-    console.log({ keys });
-    let str = []
-    for (let i = 0; i < keys.length; i++) {
-        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
-        if (obj[keys[i]]&& !type.toLowerCase().includes('bit')|| type.toLowerCase().includes('bit')) {
-            console.log(type, obj[keys[i]])
-            if (type.toLowerCase().includes('nvarchar')) {
-
-                str.push(`N'${obj[keys[i]]}'`);
+    console.log({ obj });
+    try {
+        const keys = Object.keys(obj)
+        let str = []
+        for (let i = 0; i < keys.length; i++) {
+            if (obj[keys[i]] != null) {
+                let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+                let parse
+                try {
+                    parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+                }
+                catch {
+                    throw new Error(`Type: ${type} does not exist.`)
+                }
+                const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
+                console.log({ val });
+                str.push(val);
             }
             else {
-                if (type.toLowerCase().includes('date') && obj[keys[i]] || type.toLowerCase().includes('bit')) {
-                    str.push(`'${obj[keys[i]]}'`);
-
-                }
-                else {
-                    str.push(obj[keys[i]]);
-                }
+                str.push('NULL')
             }
         }
-        else {
-            str.push(`NULL`);
-        }
+        return str
     }
-
-    return str;
-};
+    catch {
+        throw new Error('Object is not valid')
+    }
+}
 
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
@@ -80,18 +88,87 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    console.log(result);
+    // console.log(result);
     return result;
 };
 
-function getPrimaryKeyField(tablename){
+const viewConnectionsTables = (tableName, condition = "") => {
+    const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
+    const myTable = tables.find(({ MTDTable }) => MTDTable.name.name === tableName);
+    const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
+    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => { return sqlName })] }];
+    let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
+    columns.forEach(column => {
+        const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
+        const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
+        const thisTable = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableToJoin);
+        const alias = thisTable.MTDTable.name.name;
+        columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [thisTable.MTDTable.default] }];
+        join = `${join} JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
+    });
+    if (condition.length > 0 && condition.includes('=')) {
+        join = `${join} WHERE ${condition}`;
+    }
+    let select = ``;
+    columnsSelect.forEach(cs => {
+        cs.columnsName.forEach(cn => {
+            select = `${select} ${cs.tableName}.${cn},`;
+        })
+    })
+    select = select.slice(0, select.length - 1);
+    return `SELECT ${select} FROM ${join}`;
+}
+
+function getPrimaryKeyField(tablename) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
-    let col = x.columns.find(col => ( col.type.toLowerCase().indexOf('primary')!==-1))
-    if(col){
+    let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
+    if (col) {
         return col.sqlName
     }
     return false
 }
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField };
+
+function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
+    let primarykey = getPrimaryKeyField(tablename)
+    if (primarykey) {
+        let where = {}
+        where[primarykey] = id
+        return { tablename, columns: fields, where }
+    }
+    return false
+}
+
+function getForeignTableAndColumn(tablename, field) {
+    const table = getTableFromConfig(tablename)
+    if (table) {
+        const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
+
+        const { type } = column;
+
+        let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
+        let index = foreignTableName.indexOf('(')
+        foreignTableName = foreignTableName.slice(0, index)
+        const foreignTable = getTableFromConfig(foreignTableName)
+        if (foreignTable) {
+
+            const { defaultColumn } = foreignTable.MTDTable
+
+            return { foreignTableName, defaultColumn }
+        }
+    }
+    return false
+
+}
+
+function convertFieldType(tablename, field, value) {
+
+    const columns = getSqlTableColumnsType(tablename)
+    let col = columns.find(c => c.sqlName.toLowerCase() === field)
+    let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
+    const ans = parse.parseNodeTypeToSqlType(value)
+    return ans
+}
+
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };

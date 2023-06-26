@@ -16,7 +16,7 @@ const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
 >>>>>>> 0c4d3f37ac5f8c3431b9fd164581ac1183c1ec5f
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 
-connectMng().then(_ => {
+// connectMng().then(_ => {
     console.log('connect to mongo')
     connectSql().then(_ => {
         createTables().then(_ => {
@@ -40,6 +40,8 @@ connectMng().then(_ => {
         // dropMongoDBCollection();
 >>>>>>> 0c4d3f37ac5f8c3431b9fd164581ac1183c1ec5f
     });
-});
+ 
+// });
+// });
 
-const server = http.createServer(app);
+const server = http.createServer(app)

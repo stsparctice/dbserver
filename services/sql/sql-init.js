@@ -28,8 +28,6 @@ async function createTables() {
             `);
     };
     _ = await createNormalizationTable();
-
-
 };
 
 
