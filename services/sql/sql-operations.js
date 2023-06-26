@@ -20,8 +20,8 @@ const create = async function (obj) {
           return result.recordset;
      }
 
-     catch {
-          throw new Error('Object is not valid.')
+     catch (error){
+          throw error
      }
 };
 
