@@ -10,15 +10,11 @@ router.use(express.json());
 router.use(routerLogger())
 
 router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
-    try{
-    const result = await createSql(req.body);
-    if (result)
-        res.status(201).send(result);
-    else
-
-    res.status(500).send(false)
+    try {
+        const result = await createSql(req.body);
+        res.status(result.status).send(result.data);
     }
-    catch(error){
+    catch (error) {
         res.status(500).send(error.message)
     }
 });
