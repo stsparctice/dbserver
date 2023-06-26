@@ -1,7 +1,7 @@
 const express = require('express');
 const { parseTableName, parseColumnName } = require('../utils/parse_name');
 const router = express.Router();
-const { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng } = require('../modules/update');
+const { updateSql,updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng} = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
 
 router.use(express.json());
@@ -15,6 +15,11 @@ router.post('/update', parseTableName, parseColumnName, async (req, res) => {
     catch (error) {
         res.status(404).send(error.message)
     }
+});
+
+router.post('/updateOne', async (req, res) => {    
+    const result = await updateOneSql(req.body);
+    res.status(200).send(result);
 });
 
 router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res) => {

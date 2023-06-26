@@ -17,7 +17,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
     obj.condition = `${req.params.column} LIKE '%${req.params.word}%'`
     if (req.params.condition.trim() != "1=1") {
         obj.condition += "AND " + req.params.condition
-        console.log(obj.condition);
+        // console.log(obj.condition);
     }
     const primarykey = getPrimaryKeyField(obj.tableName)
     if (primarykey) {
@@ -44,6 +44,7 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
     }
 
 })
+    // 'read/readTopN', obj
 
 router.post('/readTopN', async (req, res) => {
     try {
@@ -73,7 +74,7 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
     }
 
     catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(404).send(error);
     }
 });
