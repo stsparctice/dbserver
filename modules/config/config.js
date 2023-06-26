@@ -21,11 +21,13 @@ function getSqlTableColumnsType(tablename) {
 };
 
 function parseSQLType(obj, tabledata) {
+console.log("functionb");
+
     console.log({ obj });
     const keys = Object.keys(obj)
     let str = []
     for (let i = 0; i < keys.length; i++) {
-        console.log(tabledata, "tabledata------------------------------------------------------------------------");
+
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
         
         if (obj[keys[i]]!==undefined) {
