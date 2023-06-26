@@ -43,25 +43,6 @@ async function insertManySql(obj) {
         throw new Error('Insert failed.')
     }
 }
-// {
-//     "MTDTable": {
-//         "name": {
-//             "name": "unitOfMeasure",
-//             "sqlName": "tbl_unitOfMeasure"
-//         },
-//         "description": "a normalization table of unitsOfMeasure"
-//     },
-//     "columns": [
-//         {
-//             "name": "id",
-//             "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-//         },
-//         {
-//             "name": "measure",
-//             "type": "NVARCHAR(20) NOT NULL "
-//         }
-//     ]
-// },
 async function creatNewColumn(obj) {
     const result = await insertColumn(obj)
 }

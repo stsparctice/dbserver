@@ -1262,8 +1262,8 @@
                             {
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
-                                "type": "INT NULL",
-                                "referenceTable": "Tablname"
+                                "type": "NVARCHAR (20) NULL",
+                                "referenceTable": "Tablename"
                             },
                             {
                                 "name": "tablename",
@@ -1278,7 +1278,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "INT NOT NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
+                                "type": "NVARCHAR(50) NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",

@@ -24,6 +24,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.columns += `,${primarykey}`
     }
     obj.n = 10
+    
     const result = await getDetailsSql(obj);
     res.status(200).send(result);
 
