@@ -22,7 +22,7 @@ class MongoDBOperations {
             result = result.insertedId;
         }
         else {
-            return false
+            throw new Error('Object is not valid.')
         }
         return result.toString();
     };

@@ -7,9 +7,9 @@ const { SQL_DBNAME } = process.env;
 function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase()|| 
-    tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
-    console.log({table})
+    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
+        tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+    console.log({ table })
     return table
 
 }
@@ -24,26 +24,30 @@ function parseSQLType(obj, tabledata) {
 console.log("functionb");
 
     console.log({ obj });
-    const keys = Object.keys(obj)
-    let str = []
-    for (let i = 0; i < keys.length; i++) {
-
-        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-        
-        if (obj[keys[i]]!==undefined) {
-           
-            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-            console.log({parse})
-            const val =parse.parseNodeTypeToSqlType(obj[keys[i]])
-            console.log({val})
-            str.push(val)
-
+    try {
+        const keys = Object.keys(obj)
+        let str = []
+        for (let i = 0; i < keys.length; i++) {
+            if (obj[keys[i]] != null) {
+                let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+                let parse
+                try {
+                    parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+                }
+                catch {
+                    throw new Error(`Type: ${type} is not exsist.`)
+                }
+                str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
+            }
+            else {
+                str.push('NULL')
+            }
         }
-        else {
-            str.push('NULL')
-        }
+        return str
     }
-    return str
+    catch {
+        throw new Error('Object is not valid')
+    }
 }
 
 const readJoin = async (baseTableName, baseColumn) => {
@@ -160,9 +164,9 @@ function convertFieldType(tablename, field, value) {
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
     let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
     const ans = parse.parseNodeTypeToSqlType(value)
-    console.log({ans})
-return ans
+    console.log({ ans })
+    return ans
 
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType,getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
