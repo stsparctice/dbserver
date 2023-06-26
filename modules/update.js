@@ -57,5 +57,13 @@ async function dropCollectionMng(obj) {
     }
 };
 
+async function dropDocumentMng(obj) {
+    const {data,collection}=obj;
+    console.log("data in dropDocumentMng",data);
+    mongoCollection.setCollection(collection);
+    const response = await mongoCollection.dropDocument(data);
+    return response;
+};
+
 
 module.exports = { updateSql,updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng};

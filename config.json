@@ -2176,7 +2176,12 @@
                             {
                                 "name": "AreaName",
                                 "sqlName": "AreaName",
-                                "type": "nvarchar(MAX) NOT NULL"
+                                "type": "NVARCHAR(MAX) NOT NULL"
+                            },
+                            {
+                                "name": "disabled",
+                                "sqlName": "Disabled",
+                                "type": "bit NOT NULL"
                             }
                         ]
                     }

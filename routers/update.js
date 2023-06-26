@@ -63,4 +63,10 @@ router.post('/dropCollection', async (req, res) => {
     }
 });
 
+router.post('/dropDocument', async (req, res) => {
+    console.log("req.body",req.body);
+    const result = await dropDocumentMng(req.body);
+    res.status(200).send(result);
+});
+
 module.exports = router;
