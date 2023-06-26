@@ -29,7 +29,7 @@ class MongoDBOperations {
     };
 
     async find(obj = {}) {
-        console.log("im here");
+        console.log("im here");      
         let sort = {};
         sort[obj.sort] = 1;
         const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter).sort(sort).toArray();
@@ -61,7 +61,7 @@ class MongoDBOperations {
     async dropCollection() {
         const result = await getClient().db(this.dbName).collection(this.collectionName).drop((err, delOK) => {
             if (err) throw err;
-            if (delOK) return "collection deleted";
+            if (delOK) return "c v nollection deleted";
         });
         return result;
     };

@@ -7,6 +7,7 @@ const {updateConfig,updateConfigInFiled,updateConfig2}=require('../modules/admin
 router.use(express.json());
 router.use(routerLogger())
 router.post('/create', async (req, res) => {
+    console.log('body-------------',req.body);
     const result = await createSql(req.body);
     if(result)
     res.status(201).send(result);
