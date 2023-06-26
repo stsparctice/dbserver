@@ -10,6 +10,7 @@ async function getDetailsSql(obj) {
 };
 
 async function getAllSql(obj) {
+    console.log("555555555555555555");
     const list = await readAll(obj);
     return list;
 };

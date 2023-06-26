@@ -7,7 +7,7 @@ const { SQL_DBNAME } = process.env;
 function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({ tables })
+    // console.log({ tables })
     let table = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase())
     return table
 
@@ -129,20 +129,31 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
 
 function getForeignTableAndColumn(tablename, field) {
     const table = getTableFromConfig(tablename)
+    console.log("tableeeeeeeeeeeeeeeeeeeee",table);
     if (table) {
         const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
+        console.log("columnnnnnnnnnnnnnnnnnn",column);
+
         const { type } = column;
+        console.log("{ type2222222222222 }",{ type });
+
         let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
         let index = foreignTableName.indexOf('(')
-        foreignTableName=foreignTableName.slice(0, index)
+        foreignTableName = foreignTableName.slice(0, index)
+        console.log("foreignTableNameeeeeeeeeeeeeeeeeeeeeeee",foreignTableName);
         const foreignTable = getTableFromConfig(foreignTableName)
+        if (foreignTable) {
+            console.log("foreignTableeeeeeeeeeeeeeeeeeeeeeeee",foreignTable.MTDTable);
 
-        const { defaultColumn } = foreignTable.MTDTable
-        return { foreignTableName, defaultColumn }
+            const { defaultColumn } = foreignTable.MTDTable
+            console.log("{ foreignTableName,  }",foreignTableName);
+            console.log("{ defaultColumn }",defaultColumn);
 
+            return { foreignTableName, defaultColumn }
+        }
     }
     return false
 
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField,viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };

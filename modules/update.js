@@ -1,4 +1,4 @@
-const { update, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
+const { update,updateOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
@@ -6,7 +6,10 @@ async function updateSql(obj) {
     const result = await update(obj);
     return result;
 };
-
+async function updateOneSql(obj) {
+    const result = await updateOne(obj);
+    return result;
+};
 async function updateMng(obj) {
     mongoCollection.setCollection(obj.collection);
     const response = await mongoCollection.updateOne(obj);
@@ -30,4 +33,4 @@ async function dropCollectionMng(obj) {
 };
 
 
-module.exports = { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng};
+module.exports = { updateSql,updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng};

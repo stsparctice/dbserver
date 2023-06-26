@@ -89,6 +89,7 @@ router.get('/readAll/:tbname/', async (req, res) => {
 });
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
+    console.log("444444444444444444444444444");
     let obj = {};
     console.log(req.params.condition,"condition");
     obj['tableName'] = req.params.tbname;
