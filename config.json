@@ -1534,52 +1534,6 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "TruckFill",
-                                "sqlName": "tbl_TruckFill"
-                            },
-                            "description": "table that contains the fill count of truck"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "int IDENTITY (1000,1) NOT NULL PRIMARY KEY"
-                            },
-                            {
-                                "name": "PriceListId",
-                                "sqlName": "PriceListId",
-                                "type": "INT NOT NULL"
-                            },
-                            {
-                                "name": "ProductId",
-                                "sqlName": "ProductId",
-                                "type": "INT NOT NULL"
-                            },
-                            {
-                                "name": "AmountTransportDiff",
-                                "sqlName": "AmountTransportDiff",
-                                "type": "float NOT NULL"
-                            },
-                            {
-                                "name": "MaxTransportDiff",
-                                "sqlName": "MaxTransportDiff",
-                                "type": "float NOT NULL"
-                            },
-                            {
-                                "name": "Price",
-                                "sqlName": "Price",
-                                "type": "float NOT NULL"
-                            },
-                            {
-                                "name": "Disabled",
-                                "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
                                 "name": "BuytonStrength",
                                 "sqlName": "tbl_BuytonStrength"
                             },
@@ -1810,12 +1764,12 @@
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "FLOAT NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "Discount",
                                 "sqlName": "Discount",
-                                "type": "FLOAT NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
@@ -1868,12 +1822,12 @@
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "Float NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName": "CountPrecent",
-                                "type": "Float NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
@@ -1916,12 +1870,12 @@
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "Float NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName": "CountPrecent",
-                                "type": "Float NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "DayOfWeek",
@@ -1979,17 +1933,17 @@
                             {
                                 "name": "Distance",
                                 "sqlName": "Distance",
-                                "type": "FLOAT NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "FLOAT NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName": "CountPrecent",
-                                "type": "FLOAT NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
@@ -2032,12 +1986,12 @@
                             {
                                 "name": "TransportDiff",
                                 "sqlName": "TransportDiff",
-                                "type": "FLOAT NOT NULL"
+                                "type": "INT  NOT NULL"
                             },
                             {
                                 "name": "MaxTransportDiff",
                                 "sqlName": "MaxTransportDiff",
-                                "type": "Float NOT NULL"
+                                "type": "INT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
