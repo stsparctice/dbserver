@@ -1,9 +1,44 @@
+const convertToSQLString = (value) => {
+    console.log({ value })
+    let special = ["'", "&", "%", "#", "$"]
+    const sqlStrings = []
+    const split = value.split('')
+    if (split.some(ch => special.includes(ch))) {
+        console.log({ split })
+        for (let i = 0; i < split.length; i++) {
+        let word=''
+            console.log({ i })
+            while (i < split.length && special.indexOf(split[i]) == -1) {
+                console.log({i, val:split[i]})
+                word += split[i]
+                i++
+            }
+            sqlStrings.push(`N'${word}'`)
+            console.log(`N'${word}'`)
+            if (i < split.length && special.indexOf(split[i]) != -1) {
+                sqlStrings.push(`char(${split[i].charCodeAt()})`)
+            }
+        }
+
+        const concat = `concat(${sqlStrings.join(',')})`
+
+        return concat
+
+
+
+    }
+
+    return `N'${value}'`
+}
+
+
 const types = {
 
     NVARCHAR: {
+
         typeNodeName: 'string',
-        parseNodeTypeToSqlType: (string) => {
-            return `N'${string}'`
+        parseNodeTypeToSqlType: (value) => {
+            return convertToSQLString(value)
         }
     },
 
@@ -26,14 +61,14 @@ const types = {
         parseNodeTypeToSqlType: (number) => {
             return number
         }
-    }, 
-    REAL:{
+    },
+    REAL: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
             return number
         }
-    }, 
-    FLOAT:{
+    },
+    FLOAT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
             return number

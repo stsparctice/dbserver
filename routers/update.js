@@ -7,13 +7,13 @@ const { routerLogger } = require('../utils/logger');
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/update', parseTableName, parseColumnName, async (req, res) => {
+router.post('/update', parseTableName(), parseColumnName(), async (req, res) => {
     try {
         const result = await updateSql(req.body);
-        res.status(200).send(result);
+        res.status(204).send(result);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(500).send(error.message)
     }
 });
 

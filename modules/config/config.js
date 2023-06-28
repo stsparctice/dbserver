@@ -167,6 +167,7 @@ function convertFieldType(tablename, field, value) {
     const columns = getSqlTableColumnsType(tablename)
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
     let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
+    console.log({columns})
     const ans = parse.parseNodeTypeToSqlType(value)
     return ans
 }

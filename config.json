@@ -1252,12 +1252,12 @@
                             {
                                 "name": "mapReferenceLongitude",
                                 "sqlName": "MapReferenceLongitude",
-                                "type": "NVARCHAR (20) NULL"
+                                "type": "REAL NULL"
                             },
                             {
                                 "name": "mapReferenceLatitude",
                                 "sqlName": "MapReferenceLatitude",
-                                "type": "NVARCHAR (20) NULL"
+                                "type": "REAL NULL"
                             },
                             {
                                 "name": "baseConcretProduct",
@@ -1278,7 +1278,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "NVARCHAR(50) NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
+                                "type": "INT NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",
@@ -1804,7 +1804,7 @@
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT NOT NULL",
+                                "type": "NVARCHAR NOT NULL",
                                 "reference": "TableName"
                             },
                             {

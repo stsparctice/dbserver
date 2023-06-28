@@ -35,6 +35,7 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
     try {
         const { tablename, field, value } = req.params
         let val = convertFieldType(tablename, field, value)
+        console.log({val})
         const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
         console.log({ result })
             res.status(200).send(result)
@@ -109,19 +110,18 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
     }
 });
 
-router.post('/countRows', parseTableName, parseColumnName, async (req, res) => {
+router.post('/countRows', parseTableName(),  async (req, res) => {
     try {
         const count = await countRowsSql(req.body);
         res.status(200).send(count);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(500).send(error.message)
     }
 });
 
 router.get('/readAll/:tbname/', async (req, res) => {
     try {
-        console.log("im here");
         let obj = {};
         obj['tableName'] = req.params.tbname;
         const table = await getAllSql(obj);
