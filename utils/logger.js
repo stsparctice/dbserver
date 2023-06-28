@@ -2,8 +2,8 @@
 
 function routerLogger(){
     return (req, res, next)=>{
-        const {baseUrl, url, body} = req
-        console.log({baseUrl,url, body})
+        const {host,port,baseUrl, url, body} = req
+        console.log({host,port,baseUrl,url, body})
         next()
     }
 }
