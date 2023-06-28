@@ -14,7 +14,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
     let obj = {}
     obj.tableName = req.params.table
     obj.columns = `${req.params.column}`
-    obj.condition = `${req.params.column} LIKE '%${req.params.word}%'`
+  obj.condition =`${req.params.column} LIKE N'%${req.params.word}%'`
     if (req.params.condition.trim() != "1=1") {
         obj.condition += "AND " + req.params.condition
         // console.log(obj.condition);
@@ -25,6 +25,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
     }
     obj.n = 10
     
+  
     const result = await getDetailsSql(obj);
     res.status(200).send(result);
 
