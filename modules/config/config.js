@@ -50,6 +50,20 @@ function parseSQLType(obj, tabledata) {
     }
 }
 
+function parseSQLTypeForColumn(col, tabledata){
+    console.log({col})
+    let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
+    let parse
+    try {
+        parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+    }
+    catch {
+        throw new Error(`Type: ${type} does not exist.`)
+    }
+    const val = parse.parseNodeTypeToSqlType(col.value);
+   return val
+}
+
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
     const myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
@@ -172,4 +186,4 @@ function convertFieldType(tablename, field, value) {
     return ans
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = { getSqlTableColumnsType, parseSQLType, parseSQLTypeForColumn, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };

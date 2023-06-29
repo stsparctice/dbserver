@@ -41,8 +41,8 @@ async function readWithJoin(tableName, column) {
     }
     return result;
 }
-async function connectTables(tableName = "",condition="") {
-    const query = viewConnectionsTables(tableName,condition);
+async function connectTables(tableName = "", condition = "") {
+    const query = viewConnectionsTables(tableName, condition);
     const values = await join(query);
     if (values) {
         return values;
@@ -68,10 +68,35 @@ async function getDetailsMng(obj) {
         const response = await mongoCollection.find(obj);
         return response;
     }
-    catch {
+    catch (error) {
+        console.log(error.message)
         throw new Error('Read faild.')
     }
 };
+
+async function getPolygon(obj) {
+    try {
+        console.log({ obj })
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.find({ filter: obj.filter });
+        // console.log(/)
+        let areas = []
+        for (let i = 0; i < response.length; i++) {
+            const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
+            console.log({response2})
+            if(response2.length>0){
+                areas.push(response[i])
+            }
+        }
+        console.log('areas')
+        console.log(areas)
+        return areas;
+    }
+    catch (error) {
+        console.log(error.message)
+        throw new Error('Read faild.')
+    }
+}
 
 async function getDetailsWithAggregateMng(obj) {
     try {
@@ -106,4 +131,9 @@ async function getCountDocumentsMng(collection) {
     }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };
+module.exports = {
+    getDetailsSql,
+    getAllSql, readJoin, countRowsSql,
+    getDetailsMng, readWithJoin,
+    getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
+};
