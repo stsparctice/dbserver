@@ -7,42 +7,64 @@ const mongoCollection = MongoDBOperations;
 const { getSqlTableColumnsType, parseSQLType } = require('../modules/config/config')
 
 async function createSql(obj) {
+    console.log("i am in modules");
 
     let tabledata = getSqlTableColumnsType(obj.tableName)
     console.log({tabledata})
+    console.log(obj,"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
     let arr = parseSQLType(obj.values, tabledata)
     
     console.log({obj})
-    try{
-    const result = await create({tableName:obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values:arr.join()});
-    
-    // console.log("result: "+result);
+    const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() })
 
     return result;
-    }
-    catch (error){
-        throw error
-    }
-};
+}
+    // try{
+    // const result = await create({tableName:obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values:arr.join()});
+    
+    // // console.log("result: "+result);
+
+    // return result;
+    // }
+    // catch (error){
+    //     throw error
+    // }
+// };
 
 
 
 async function insertManySql(obj) {
-    let tabledata
-    let arr
-    let values = obj.values
+    // let tabledata
+    // let arr
+    // let values = obj.values
 
-    let result = []
+    // let result = []
+    // for (let o of values) {
+    //     tabledata = getSqlTableColumnsType(obj.tableName)
+    //     arr = parseSQLType(o, tabledata);
+    //     let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
+    //     console.log({res})
+    //     result = [...result, res.recordset[0]]
+    // }
+    // if (result)
+    //     return result;
+    // else
+    //     return false;
+    let tabledata;
+    let arr;
+    let { values } = obj;
+    let result = [];
     for (let o of values) {
-        tabledata = getSqlTableColumnsType(obj.tableName)
+        tabledata = await getSqlTableColumnsType(obj.tableName);
         arr = parseSQLType(o, tabledata);
         let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-        result = [...result, res.recordset[0]]
+        result = [...result, ...res];
     }
     if (result)
         return result;
     else
         return false;
+
 
 }
 

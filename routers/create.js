@@ -10,22 +10,42 @@ router.use(express.json());
 router.use(routerLogger())
 
 router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
-    try {
-        const result = await createSql(req.body);
-        if (result.status === 201)
-            res.status(201).send(result);
-        else
-            res.status(500).send(false)
+    // try {
+    //     const result = await createSql(req.body);
+    //     if (result)
+    //         res.status(201).send(result);
+    //     else
+    //         res.status(500).send(false)
+    // }
+    // catch(error){
+    //     res.status(500).send(error.message)
+    // }
+    console.log("i am in roter");
+    console.log(req.body);
+    const result = await createSql(req.body);
+    if (result) {
+        res.status(201).send(result);
     }
-    catch(error){
-        res.status(500).send(error.message)
+    else {
+        res.status(500).send(false)
     }
+
 
 });
 
-router.post('/createManySql', parseTableName(), parseColumnName(), async (req, res) => {
-    const result = await insertManySql(req.body);
-    res.status(200).send(result);
+router.post('/createManySql', parseTableName(),  async (req, res) => {
+    // const result = await insertManySql(req.body);
+    // res.status(200).send(result);
+    
+    try {
+        const result = await insertManySql(req.body);
+        res.status(201).send(result);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send(error.message);
+
+    }
 });
 
 
