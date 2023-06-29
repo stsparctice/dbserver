@@ -29,6 +29,8 @@ connectMng().then(_ => {
         // dropSQLTables();
         // dropMongoDBCollection();
     });
-});
 
-const server = http.createServer(app);
+});
+// });
+
+const server = http.createServer(app)
