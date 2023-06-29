@@ -128,6 +128,11 @@
                                 "name": "measure",
                                 "sqlName": "Measure",
                                 "type": "NVARCHAR(20) NOT NULL "
+                            },
+                            {
+                                "name": "disable",
+                                "sqlName": "Disable",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },                    
@@ -1257,8 +1262,8 @@
                             {
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
-                                "type": "INT NULL",
-                                "referenceTable": "Tablname"
+                                "type": "NVARCHAR (20) NULL",
+                                "referenceTable": "Tablename"
                             },
                             {
                                 "name": "tablename",
@@ -1273,7 +1278,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "INT NOT NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
+                                "type": "NVARCHAR(50) NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",
@@ -1762,6 +1767,11 @@
                                 "name": "UserName",
                                 "sqlName": "UserName",
                                 "type": "NVARCHAR(50) NOT NULL"
+                            },
+                            {
+                                "name": "Finish",
+                                "sqlName": "Finish",
+                                "type": "BIT NOT NULL"
                             },
                             {
                                 "name": "Disabled",
