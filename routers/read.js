@@ -53,10 +53,8 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
     // 'read/readTopN', obj
 
 router.post('/readTopN', async (req, res) => {
-    console.log("66666666666666666655555555566666666666666");
     console.log(req.body);
     const table = await getDetailsSql(req.body);
-    console.log("tableewwwwwwwwwwwerw",table);
     res.status(200).send(table);
 });
 
@@ -102,7 +100,7 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
     }
 });
 
-router.post('/countRows', parseTableName, parseColumnName, async (req, res) => {
+router.post('/countRows', parseTableName(), parseColumnName(), async (req, res) => {
     const count = await countRowsSql(req.body);
     res.status(200).send(count);
 });
