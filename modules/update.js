@@ -8,8 +8,10 @@ async function updateSql(obj) {
 };
 
 async function updateMng(obj) {
+    console.log('updatemngggggggggggg');
     mongoCollection.setCollection(obj.collection);
     const response = await mongoCollection.updateOne(obj);
+    console.log('r22222222222222',response);
     return response;
 };
 

@@ -16,7 +16,7 @@ const create = async function (obj) {
      const query = `use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values})`;
      const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY Id`)
      console.log(result);
-      return result;
+     return result;
 
 };
 
@@ -122,10 +122,15 @@ const join = async (query = "") => {
 };
 
 const update = async function (obj) {
-     if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
-     };
-     const { tableName, values, condition } = obj;
+
+     // console.log("obj-=-=-=-=++++++++++++",obj);
+     // if (!Object.keys(obj).includes("condition")) {
+     //      obj["condition"] = '1=1';
+     // };
+     // const { tableName, values, condition } = obj;
+     const tableName = "tbl_Leads"
+
+     const { values, condition } = obj;
      const value = setValues(values);
      // const result = await getPool().request()
      //      .input('tableName', tableName)
@@ -134,9 +139,26 @@ const update = async function (obj) {
      //      .execute(`pro_BasicUpdate`);
 
      const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-     console.log({query})
+     // console.log({query})
      const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
      return result;
+
+
+     // if (!Object.keys(obj).includes("condition")) {
+     //      obj["condition"] = '1=1';
+     // };
+     // const { tableName, values, condition } = obj;
+     // const value = setValues(values);
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('values', value)
+     //      .input('condition', condition)
+     //      .execute(`pro_BasicUpdate`);
+
+     // const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
+     // console.log({query})
+     // const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+     // return result;
 };
 
 // 

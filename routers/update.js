@@ -25,7 +25,10 @@ router.post('/updateSuppliersBranches', async (req, res) => {
 });
 
 router.post('/updateone', async (req, res) => {
+    console.log('updateoneeeeeeeeee');
     const result = await updateMng(req.body);
+    console.log(result);
+
     res.status(200).send(result);
 });
 

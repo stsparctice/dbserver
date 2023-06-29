@@ -38,6 +38,7 @@ class MongoDBOperations {
 
     async updateOne(obj) {
         const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
+        console.log('rrrrrrrrrrrrrrrrrrrrrrrrrrr',result);
         return result;
     };
 
