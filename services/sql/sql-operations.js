@@ -17,7 +17,7 @@ const create = async function (obj) {
      const primarykey = getPrimaryKeyField(tableName)
      try{
      const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-      return result.recordset;
+     return result.recordset;
      }
      catch(error){
           throw error
@@ -109,6 +109,7 @@ const readAll = async function (obj) {
           obj["condition"] = '1=1';
      };
      const { tableName, condition } = obj;
+     console.log({obj});
      // const result = await getPool().request()
      //      .input('tableName', tableName)
      //      .input('condition', condition)
@@ -124,6 +125,7 @@ const join = async (query = "") => {
      }
      return false;
 };
+
 
 const update = async function (obj) {
      if (!Object.keys(obj).includes("condition")) {

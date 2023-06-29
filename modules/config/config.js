@@ -15,6 +15,10 @@ function getTableFromConfig(tableName) {
 }
 
 function getSqlTableColumnsType(tablename) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b7b4ef0e0dbfcad4df9906faf9cc8f9b986f8643
     const table = getTableFromConfig(tablename)
     let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
@@ -26,6 +30,7 @@ function parseSQLType(obj, tabledata) {
     let str = []
     console.log({tabledata});
     for (let i = 0; i < keys.length; i++) {
+<<<<<<< HEAD
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
         if (obj[keys[i]] !== null) {
             let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')];
@@ -33,6 +38,17 @@ function parseSQLType(obj, tabledata) {
             const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
             console.log({ val });
             str.push(val);
+=======
+        let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+        console.log({type});
+        if (obj[keys[i]] !== null) {
+            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+            console.log({ parse })
+            const val = parse.parseNodeTypeToSqlType(obj[keys[i]])
+            console.log({ val })
+            str.push(val)
+
+>>>>>>> b7b4ef0e0dbfcad4df9906faf9cc8f9b986f8643
         }
         else {
             str.push('NULL');
