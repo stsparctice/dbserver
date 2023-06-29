@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
     getDetailsWithAggregateMng, getCountDocumentsMng,
-    readWithJoin, connectTables, getDetailsWithDistinct } = require('../modules/read');
+    readWithJoin, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
 const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
@@ -24,7 +24,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.columns += `,${primarykey}`
     }
     obj.n = 10
-    
+
     const result = await getDetailsSql(obj);
     res.status(200).send(result);
 
@@ -35,17 +35,17 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
     try {
         const { tablename, field, value } = req.params
         let val = convertFieldType(tablename, field, value)
-        console.log({val})
+        console.log({ val })
         const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
         console.log({ result })
-            res.status(200).send(result)
+        res.status(200).send(result)
     }
     catch (error) {
         res.status(500).send(error.message)
     }
 
 })
-    // 'read/readTopN', obj
+// 'read/readTopN', obj
 
 router.post('/readTopN', async (req, res) => {
     try {
@@ -58,7 +58,7 @@ router.post('/readTopN', async (req, res) => {
 });
 
 router.get('/findById/:tableName/:id', async (req, res) => {
-//primaryKey value have to be int type
+    //primaryKey value have to be int type
     try {
         const primaryKeyFiels = getPrimaryKeyField(req.params.tableName)
         const res = await getDetailsSql({ tableName: tableName, columns: '*', condition: `${primaryKeyFiels}=${req.paras.id}` })
@@ -86,6 +86,7 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
 // })
 
 router.get('/foreignkeyvalue/:tablename/:field/:id', async (req, res) => {
+    try{
     const { foreignTableName, defaultColumn } = getForeignTableAndColumn(req.params.tablename, req.params.field)
     let obj = {}
     obj.tableName = foreignTableName
@@ -98,6 +99,10 @@ router.get('/foreignkeyvalue/:tablename/:field/:id', async (req, res) => {
     obj.n = 1
     const result = await getDetailsSql(obj);
     res.status(200).send(result);
+}
+catch(error){
+    res.status(500).send(error.message)
+}
 })
 
 router.get('/connectTables/:tableName/:condition', async (req, res) => {
@@ -110,7 +115,7 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
     }
 });
 
-router.post('/countRows', parseTableName(),  async (req, res) => {
+router.post('/countRows', parseTableName(), async (req, res) => {
     try {
         const count = await countRowsSql(req.body);
         res.status(200).send(count);
@@ -156,12 +161,29 @@ router.post('/find', async (req, res) => {
     }
 });
 
+router.post('/findpolygon', async (req, res) => {
+    try {
+        const response =await getPolygon(req.body)
+        console.log({ response })
+        console.log(response.length)
+        if (response)
+            res.status(200).send(response)
+        else {
+            res.status(404).send(response)
+        }
+    }
+    catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+
 router.get('/distinct/:collection/:filter', async (req, res) => {
     try {
         console.log('distinct---------', req.params.collection, req.params.filter);
         const response = await getDetailsWithDistinct(req.params.collection, req.params.filter);
         console.log({ response });
-        res.status(200).send({ response });
+        res.status(200).send(response);
     }
     catch (error) {
         res.status(404).send(error.message)
