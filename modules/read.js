@@ -9,8 +9,8 @@ async function getDetailsSql(obj) {
         const list = await read(obj);
         return list;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -19,8 +19,8 @@ async function getAllSql(obj) {
         const list = await readAll(obj);
         return list;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error){
+        throw error
     }
 };
 
@@ -41,8 +41,8 @@ async function readWithJoin(tableName, column) {
     }
     return result;
 }
-async function connectTables(tableName = "",condition="") {
-    const query = viewConnectionsTables(tableName,condition);
+async function connectTables(tableName = "", condition = "") {
+    const query = viewConnectionsTables(tableName, condition);
     const values = await join(query);
     if (values) {
         return values;
@@ -106,4 +106,4 @@ async function getCountDocumentsMng(collection) {
     }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };
+module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables };

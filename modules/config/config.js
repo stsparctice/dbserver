@@ -153,31 +153,49 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
 }
 
 function getForeignTableAndColumn(tablename, field) {
-    const table = getTableFromConfig(tablename)
-    if (table) {
-        const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
-        const { type } = column;
-        let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
-        let index = foreignTableName.indexOf('(')
-        foreignTableName = foreignTableName.slice(0, index)
-        const foreignTable = getTableFromConfig(foreignTableName)
+    try{
 
-        const { defaultColumn } = foreignTable.MTDTable
-        return { foreignTableName, defaultColumn }
+        const table = getTableFromConfig(tablename)
+        if (table) {
+            let foreignTableName
+            try{
 
+                const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
+                const { type } = column;
+                foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
+                let index = foreignTableName.indexOf('(')
+                foreignTableName = foreignTableName.slice(0, index)
+            }
+            catch{
+                throw new Error(`Field: ${field} is not exsist in table: ${tablename}.`)
+            }
+                const foreignTable = getTableFromConfig(foreignTableName)
+            
+            const { defaultColumn } = foreignTable.MTDTable
+            return { foreignTableName, defaultColumn }
+            
+        }
+        return false
     }
-    return false
+    catch(error){
+        throw error
+    }
 
 }
 
 function convertFieldType(tablename, field, value) {
+    try {
 
-    const columns = getSqlTableColumnsType(tablename)
-    let col = columns.find(c => c.sqlName.toLowerCase() === field)
-    let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
-    const ans = parse.parseNodeTypeToSqlType(value)
-    console.log({ ans })
-    return ans
+        const columns = getSqlTableColumnsType(tablename)
+        let col = columns.find(c => c.sqlName.toLowerCase() === field)
+        let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
+        const ans = parse.parseNodeTypeToSqlType(value)
+        console.log({ ans })
+        return ans
+    }
+    catch (error) {
+        throw error
+    }
 
 }
 

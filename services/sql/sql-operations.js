@@ -20,7 +20,7 @@ const create = async function (obj) {
           return result.recordset;
      }
 
-     catch (error){
+     catch (error) {
           throw error
      }
 };
@@ -85,36 +85,48 @@ const createNewTable = async function (obj) {
 }
 
 const read = async function (obj) {
-     if (!Object.keys(obj).includes("condition")) {
-          obj.condition = '1=1';
-     };
-     if (!Object.keys(obj).includes("n")) {
-          obj.n = 100;
+     try {
+
+          if (!Object.keys(obj).includes("condition")) {
+               obj.condition = '1=1';
+          };
+          if (!Object.keys(obj).includes("n")) {
+               obj.n = 100;
+          }
+          const { tableName, columns, condition, n } = obj;
+          console.log({ tableName, columns, condition, n })
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('columns', columns)
+          //      .input('condition', condition)
+          //      .input('n', n)
+          //      .execute(`pro_BasicRead`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          return result.recordset;
      }
-     const { tableName, columns, condition, n } = obj;
-     console.log({ tableName, columns, condition, n })
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('columns', columns)
-     //      .input('condition', condition)
-     //      .input('n', n)
-     //      .execute(`pro_BasicRead`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-     return result.recordset;
+     catch {
+          throw new Error('Object is not valid.')
+     }
 };
 
 
 const readAll = async function (obj) {
-     if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
-     };
-     const { tableName, condition } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('condition', condition)
-     //      .execute(`pro_ReadAll`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-     return result.recordset;
+     try {
+
+          if (!Object.keys(obj).includes("condition")) {
+               obj["condition"] = '1=1';
+          };
+          const { tableName, condition } = obj;
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('condition', condition)
+          //      .execute(`pro_ReadAll`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
+          return result.recordset;
+     }
+     catch {
+          throw new Error('Object is not valid.')
+     }
 };
 
 const join = async (query = "") => {
@@ -164,13 +176,19 @@ const updateSuppliersBranches = async function (obj) {
 };
 
 const countRows = async function (obj) {
-     const { tableName, condition } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('condition', condition)
-     //      .execute(`pro_CountRows`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
-     return result;
+     try {
+
+          const { tableName, condition } = obj;
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('condition', condition)
+          //      .execute(`pro_CountRows`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
+          return result;
+     }
+     catch {
+          throw new Error('Object is not valid.')
+     }
 };
 
 function setValues(obj) {
