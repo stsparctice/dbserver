@@ -39,8 +39,8 @@ async function insertManySql(obj) {
         else
             return false;
     }
-    catch {
-        throw new Error('Insert faild.')
+    catch (error){
+        throw error
     }
 }
 // {

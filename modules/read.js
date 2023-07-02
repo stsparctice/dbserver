@@ -9,8 +9,8 @@ async function getDetailsSql(obj) {
         const list = await read(obj);
         return list;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -19,36 +19,48 @@ async function getAllSql(obj) {
         const list = await readAll(obj);
         return list;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error) {
+        throw error
     }
 };
 
 async function readWithJoin(tableName, column) {
-    const query = await readJoin(tableName, column);
-    const values = await join(query);
-    let result = [];
-    if (values) {
-        values.forEach(val => {
-            const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
-            const keys = Object.keys(sameRecord[0]);
-            const temp = {}
-            for (let key of keys) {
-                temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
-            }
-            result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
-        });
+    try {
+
+        const query = await readJoin(tableName, column);
+        const values = await join(query);
+        let result = [];
+        if (values) {
+            values.forEach(val => {
+                const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
+                const keys = Object.keys(sameRecord[0]);
+                const temp = {}
+                for (let key of keys) {
+                    temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
+                }
+                result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
+            });
+        }
+        return result;
     }
-    return result;
+    catch (error) {
+        throw error
+    }
 }
-async function connectTables(tableName = "",condition="") {
-    const query = viewConnectionsTables(tableName,condition);
-    const values = await join(query);
-    if (values) {
-        return values;
+async function connectTables(tableName = "", condition = "") {
+    try {
+
+        const query = viewConnectionsTables(tableName, condition);
+        const values = await join(query);
+        if (values) {
+            return values;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-        return false;
+    catch (error) {
+        throw error
     }
 }
 
@@ -57,8 +69,8 @@ async function countRowsSql(obj) {
         const list = await countRows(obj);
         return list;
     }
-    catch {
-        throw new Error('Count faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -68,8 +80,8 @@ async function getDetailsMng(obj) {
         const response = await mongoCollection.find(obj);
         return response;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -79,8 +91,8 @@ async function getDetailsWithAggregateMng(obj) {
         const response = await mongoCollection.aggregate(obj.aggregate);
         return response;
     }
-    catch {
-        throw new Error('Read with Aggregate faild.')
+    catch (error){
+        throw error
     }
 };
 
@@ -90,8 +102,8 @@ async function getDetailsWithDistinct(collection, filter) {
         const response = await mongoCollection.distinct(filter);
         return response;
     }
-    catch {
-        throw new Error('Read with distinct faild.')
+    catch (error){
+        throw error
     }
 };
 
@@ -101,9 +113,9 @@ async function getCountDocumentsMng(collection) {
         const response = await mongoCollection.countDocuments();
         return response;
     }
-    catch {
-        throw new Error('Count faild.')
+    catch (error){
+        throw error
     }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };
+module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables };

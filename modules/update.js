@@ -7,8 +7,8 @@ async function updateSql(obj) {
         const result = await update(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -18,8 +18,8 @@ async function updateMng(obj) {
         const response = await mongoCollection.updateOne(obj);
         return response;
     }
-    catch {
-        throw new Error('Update falid.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -28,8 +28,8 @@ async function updateQuotationSql(obj) {
         const result = await updateQuotation(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -38,8 +38,8 @@ async function updateSuppliersBranchesSql(obj) {
         const result = await updateSuppliersBranches(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -49,8 +49,8 @@ async function dropCollectionMng(obj) {
         const response = await mongoCollection.dropCollection(obj);
         return response;
     }
-    catch {
-        throw new Error('Drop faild.')
+    catch (error) {
+        throw error
     }
 };
 

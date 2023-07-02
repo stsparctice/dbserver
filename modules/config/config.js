@@ -5,19 +5,29 @@ const { SQL_DBNAME } = process.env;
 
 
 function getTableFromConfig(tableName) {
-    let sql = config.find(db => db.database == 'sql')
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
-        tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
-    console.log({ table })
-    return table
+    try {
+        let sql = config.find(db => db.database == 'sql')
+        let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+        let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
+            tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+        console.log({ table })
+        return table
+    }
+    catch {
+        throw new Error(`Table: ${tableName} is not exsist.`)
+    }
 
 }
 
 function getSqlTableColumnsType(tablename) {
-    const table = getTableFromConfig(tablename)
-    let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
-    return col
+    try {
+        const table = getTableFromConfig(tablename)
+        let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
+        return col
+    }
+    catch (error) {
+        throw error
+    }
 };
 
 function parseSQLType(obj, tabledata) {
@@ -45,15 +55,29 @@ console.log("functionb");
         }
         return str
     }
-    catch {
+    catch (error) {
+        if (error.message.includes('Type:')) {
+            throw error
+        }
         throw new Error('Object is not valid')
     }
 }
 
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
-    const myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
-    baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
+    let myTableNameSQL
+    try {
+        myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
+    }
+    catch {
+        throw new Error(`BaseTableName: ${baseTableName} is not exsist.`)
+    }
+    try {
+        baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
+    }
+    catch {
+        throw new Error(`BaseColumn: ${baseColumn} is not exsist in table ${baseTableName}.`)
+    }
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
@@ -120,52 +144,80 @@ const viewConnectionsTables = (tableName, condition = "") => {
 }
 
 function getPrimaryKeyField(tablename) {
-    let sql = config.find(db => db.database == 'sql')
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
-    let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
-    if (col) {
-        return col.sqlName
+    try {
+
+        let x = getTableFromConfig(tablename)
+        let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
+        if (col) {
+            return col.sqlName
+        }
+        return false
     }
-    return false
+    catch (error) {
+        throw error
+    }
 }
 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
-    let primarykey = getPrimaryKeyField(tablename)
-    if (primarykey) {
-        let where = {}
-        where[primarykey] = id
-        return { tablename, columns: fields, where }
+    try {
+
+        let primarykey = getPrimaryKeyField(tablename)
+        if (primarykey) {
+            let where = {}
+            where[primarykey] = id
+            return { tablename, columns: fields, where }
+        }
+        return false
     }
-    return false
+    catch (error) {
+        throw error
+    }
 }
 
 function getForeignTableAndColumn(tablename, field) {
-    const table = getTableFromConfig(tablename)
-    if (table) {
-        const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
-        const { type } = column;
-        let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
-        let index = foreignTableName.indexOf('(')
-        foreignTableName = foreignTableName.slice(0, index)
-        const foreignTable = getTableFromConfig(foreignTableName)
+    try {
 
-        const { defaultColumn } = foreignTable.MTDTable
-        return { foreignTableName, defaultColumn }
+        const table = getTableFromConfig(tablename)
+        if (table) {
+            let foreignTableName
+            try {
 
+                const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
+                const { type } = column;
+                foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
+                let index = foreignTableName.indexOf('(')
+                foreignTableName = foreignTableName.slice(0, index)
+            }
+            catch {
+                throw new Error(`Field: ${field} is not exsist in table: ${tablename}.`)
+            }
+            const foreignTable = getTableFromConfig(foreignTableName)
+
+            const { defaultColumn } = foreignTable.MTDTable
+            return { foreignTableName, defaultColumn }
+
+        }
+        return false
     }
-    return false
+    catch (error) {
+        throw error
+    }
 
 }
 
 function convertFieldType(tablename, field, value) {
+    try {
 
-    const columns = getSqlTableColumnsType(tablename)
-    let col = columns.find(c => c.sqlName.toLowerCase() === field)
-    let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
-    const ans = parse.parseNodeTypeToSqlType(value)
-    console.log({ ans })
-    return ans
+        const columns = getSqlTableColumnsType(tablename)
+        let col = columns.find(c => c.sqlName.toLowerCase() === field)
+        let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
+        const ans = parse.parseNodeTypeToSqlType(value)
+        console.log({ ans })
+        return ans
+    }
+    catch (error) {
+        throw error
+    }
 
 }
 
