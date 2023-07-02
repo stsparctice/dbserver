@@ -9,11 +9,7 @@ const http = require('http');
 const { app } = require('./app');
 const { HOST, PORT } = process.env;
 
-<<<<<<< HEAD
-const {deleteSQLData, dropSQLTables} = require('./services/sql/sql-helpers');
-=======
 const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
->>>>>>> 0c4d3f37ac5f8c3431b9fd164581ac1183c1ec5f
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 
 connectMng().then(_ => {
@@ -29,16 +25,11 @@ connectMng().then(_ => {
                 })
             });
         });
-<<<<<<< HEAD
-        // // deleteSQLData()
-        // dropSQLTables()
-        // dropMongoDBCollection()
 
-=======
+
         // deleteData();
         // dropSQLTables();
         // dropMongoDBCollection();
->>>>>>> 0c4d3f37ac5f8c3431b9fd164581ac1183c1ec5f
     });
 });
 
