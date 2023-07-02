@@ -53,15 +53,29 @@ function parseSQLType(obj, tabledata) {
         }
         return str
     }
-    catch {
+    catch (error) {
+        if (error.message.includes('Type:')) {
+            throw error
+        }
         throw new Error('Object is not valid')
     }
 }
 
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
-    const myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
-    baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
+    let myTableNameSQL
+    try {
+        myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
+    }
+    catch {
+        throw new Error(`BaseTableName: ${baseTableName} is not exsist.`)
+    }
+    try {
+        baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
+    }
+    catch {
+        throw new Error(`BaseColumn: ${baseColumn} is not exsist in table ${baseTableName}.`)
+    }
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
@@ -143,22 +157,28 @@ function getPrimaryKeyField(tablename) {
 }
 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
-    let primarykey = getPrimaryKeyField(tablename)
-    if (primarykey) {
-        let where = {}
-        where[primarykey] = id
-        return { tablename, columns: fields, where }
+    try {
+
+        let primarykey = getPrimaryKeyField(tablename)
+        if (primarykey) {
+            let where = {}
+            where[primarykey] = id
+            return { tablename, columns: fields, where }
+        }
+        return false
     }
-    return false
+    catch (error) {
+        throw error
+    }
 }
 
 function getForeignTableAndColumn(tablename, field) {
-    try{
+    try {
 
         const table = getTableFromConfig(tablename)
         if (table) {
             let foreignTableName
-            try{
+            try {
 
                 const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
                 const { type } = column;
@@ -166,18 +186,18 @@ function getForeignTableAndColumn(tablename, field) {
                 let index = foreignTableName.indexOf('(')
                 foreignTableName = foreignTableName.slice(0, index)
             }
-            catch{
+            catch {
                 throw new Error(`Field: ${field} is not exsist in table: ${tablename}.`)
             }
-                const foreignTable = getTableFromConfig(foreignTableName)
-            
+            const foreignTable = getTableFromConfig(foreignTableName)
+
             const { defaultColumn } = foreignTable.MTDTable
             return { foreignTableName, defaultColumn }
-            
+
         }
         return false
     }
-    catch(error){
+    catch (error) {
         throw error
     }
 

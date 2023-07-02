@@ -95,17 +95,23 @@ const read = async function (obj) {
           }
           const { tableName, columns, condition, n } = obj;
           console.log({ tableName, columns, condition, n })
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('condition', condition)
-          //      .input('n', n)
-          //      .execute(`pro_BasicRead`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-          return result.recordset;
      }
      catch {
           throw new Error('Object is not valid.')
+     }
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('condition', condition)
+     //      .input('n', n)
+     //      .execute(`pro_BasicRead`);
+     try {
+
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          return result.recordset;
+     }
+     catch (error) {
+          throw error
      }
 };
 
@@ -130,49 +136,72 @@ const readAll = async function (obj) {
 };
 
 const join = async (query = "") => {
-     const result = await getPool().request().query(query.trim());
-     if (result.recordset) {
-          return result.recordset;
+     try {
+
+          const result = await getPool().request().query(query.trim());
+          if (result.recordset) {
+               return result.recordset;
+          }
+          return false;
      }
-     return false;
+     catch (error) {
+          throw error
+     }
 };
 
 const update = async function (obj) {
-     if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
-     };
-     const { tableName, values, condition } = obj;
-     const value = setValues(values);
+     try {
 
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('values', value)
-     //      .input('condition', condition)
-     //      .execute(`pro_BasicUpdate`);
+          if (!Object.keys(obj).includes("condition")) {
+               obj["condition"] = '1=1';
+          };
+          const { tableName, values, condition } = obj;
+          const value = setValues(values);
 
-     const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-     console.log({ query })
-     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
-     return result;
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('values', value)
+          //      .input('condition', condition)
+          //      .execute(`pro_BasicUpdate`);
+
+          const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
+          console.log({ query })
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+          return result;
+     }
+     catch (error) {
+          throw error
+     }
 };
 
 // 
 const updateQuotation = async function (obj) {
-     const { Id } = obj;
-     const result = await getPool().request()
+     try{
+          const { Id } = obj;
+          const result = await getPool().request()
           .input('serialNumber', Id)
           .execute(`pro_UpdateQuotation`);
-     return result;
+          return result;
+     }
+     catch{
+          throw new Error('Object is not valid.')
+     }
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode, id } = obj;
-     const result = await getPool().request()
+     try{
+
+          const { name, supplierCode, id } = obj;
+          const result = await getPool().request()
           .input('name', name)
           .input('id', id)
           .input('supplierCode', supplierCode)
           .execute(`pro_UpdateSuppliersBranches`);
-     return result;
+          return result;
+     }
+     catch{
+          throw new Error('Object is not valid.')
+     }
 };
 
 const countRows = async function (obj) {
@@ -192,22 +221,28 @@ const countRows = async function (obj) {
 };
 
 function setValues(obj) {
-     let values = "";
-     for (let key in obj) {
-          values += `${key} = `;
-          if (typeof (obj[key]) === 'string') {
-               values += `N'${obj[key]}'`;
-          }
-          else {
-               if (typeof (obj[key]) === 'boolean')
-                    values += `'${obj[key]}'`;
-               else
-                    values += obj[key];
+     try {
+
+          let values = "";
+          for (let key in obj) {
+               values += `${key} = `;
+               if (typeof (obj[key]) === 'string') {
+                    values += `N'${obj[key]}'`;
+               }
+               else {
+                    if (typeof (obj[key]) === 'boolean')
+                         values += `'${obj[key]}'`;
+                    else
+                         values += obj[key];
+               };
+               values += ' , ';
           };
-          values += ' , ';
-     };
-     values = values.substring(0, values.length - 2);
-     return values;
+          values = values.substring(0, values.length - 2);
+          return values;
+     }
+     catch {
+          throw new Error('Object is not valid.')
+     }
 };
 
 async function buildcolumns(obj) {

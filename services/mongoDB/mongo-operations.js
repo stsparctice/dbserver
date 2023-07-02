@@ -35,8 +35,13 @@ class MongoDBOperations {
     };
 
     async updateOne(obj) {
-        const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
-        return result;
+        try {
+            const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
+            return result;
+        }
+        catch {
+            throw new Error('Object is not valid.')
+        }
     };
 
     async countDocuments() {
@@ -54,7 +59,7 @@ class MongoDBOperations {
         return result;
     }
 
-    async dropCollection() {
+    async  dropCollection() {
         const result = await getClient().db(this.dbName).collection(this.collectionName).drop((err, delOK) => {
             if (err) throw err;
             if (delOK) return "c v nollection deleted";
@@ -62,7 +67,7 @@ class MongoDBOperations {
         return result;
     };
 
-    async complete(obj){
+    async complete(obj) {
         const result = await getClient().db(this.dbName).collection(this.collectionName).find().toArray();
         return result;
     }
