@@ -14,7 +14,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
     let obj = {}
     obj.tableName = req.params.table
     obj.columns = `${req.params.column}`
-  obj.condition =`${req.params.column} LIKE N'%${req.params.word}%'`
+    obj.condition = `${req.params.column} LIKE N'%${req.params.word}%'`
     if (req.params.condition.trim() != "1=1") {
         obj.condition += "AND " + req.params.condition
         // console.log(obj.condition);
@@ -85,23 +85,23 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
 // })
 
 router.get('/foreignkeyvalue/:tablename/:field/:id', async (req, res) => {
-    try{
-    const { foreignTableName, defaultColumn } = getForeignTableAndColumn(req.params.tablename, req.params.field)
-    let obj = {}
-    obj.tableName = foreignTableName
-    obj.columns = `${defaultColumn}`
-    const primarykey = getPrimaryKeyField(foreignTableName)
-    if (primarykey) {
-        obj.columns += `,${primarykey}`
+    try {
+        const { foreignTableName, defaultColumn } = getForeignTableAndColumn(req.params.tablename, req.params.field)
+        let obj = {}
+        obj.tableName = foreignTableName
+        obj.columns = `${defaultColumn}`
+        const primarykey = getPrimaryKeyField(foreignTableName)
+        if (primarykey) {
+            obj.columns += `,${primarykey}`
+        }
+        obj.condition = `${primarykey} = ${req.params.id}`
+        obj.n = 1
+        const result = await getDetailsSql(obj);
+        res.status(200).send(result);
     }
-    obj.condition = `${primarykey} = ${req.params.id}`
-    obj.n = 1
-    const result = await getDetailsSql(obj);
-    res.status(200).send(result);
-}
-catch(error){
-    res.status(500).send(error.message)
-}
+    catch (error) {
+        res.status(500).send(error.message)
+    }
 })
 
 router.get('/connectTables/:tableName/:condition', async (req, res) => {
@@ -162,13 +162,11 @@ router.post('/find', async (req, res) => {
 
 router.post('/findpolygon', async (req, res) => {
     try {
-        const response =await getPolygon(req.body)
-        console.log({ response })
-        console.log(response.length)
+        const response = await getPolygon(req.body)
         if (response)
-            res.status(200).send(response)
+            res.status(200).send(response);
         else {
-            res.status(404).send(response)
+            res.status(404).send(response);
         }
     }
     catch (error) {

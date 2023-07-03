@@ -79,17 +79,19 @@ async function getPolygon(obj) {
         console.log({ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.find({ filter: obj.filter });
-        // console.log(/)
         let areas = []
         for (let i = 0; i < response.length; i++) {
-            const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
-            console.log({response2})
-            if(response2.length>0){
-                areas.push(response[i])
-            }
+            console.log("response[i].points", response[response.length - 1]);
+            // if (!response[i].points.every((a) => a === undefined) && !response[i].places_id.every((a) => a === undefined)) {
+                const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
+                // console.log({ response2 })
+                if (response2.length > 0) {
+                    areas.push(response[i])
+                }
+            // }
         }
-        console.log('areas')
-        console.log(areas)
+        // console.log('areas')
+        // console.log(areas)
         return areas;
     }
     catch (error) {
