@@ -24,15 +24,15 @@ async function dropSQLTables() {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     let count = tables.length
-    console.log({ tables })
+    // console.log({ tables })
     let tablenames = tables.map((t,i)=>({name:t.MTDTable.name.sqlName, index:i, drop:false}))
     while (tablenames.some(t=>t.drop===false)) {
-        console.log({count});
+        // console.log({count});
         for (let tbname of tablenames) {
             try {
                 _ = await getPool().request().query(`use ${SQL_DBNAME}  drop  table IF EXISTS dbo.${tbname.name} `);
                tbname.drop = true
-               console.log({tbname});
+            //    console.log({tbname});
             }
             catch (error) {
 

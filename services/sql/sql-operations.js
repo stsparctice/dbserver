@@ -4,6 +4,10 @@ const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 const { getPrimaryKeyField } = require('../../modules/config/config')
 
+if (!SQL_DBNAME) {
+     throw new Error('.env file is not valid or is not exsist.')
+}
+
 const create = async function (obj) {
      try {
           const { tableName, columns, values } = obj;
@@ -16,9 +20,10 @@ const create = async function (obj) {
           //      console.log({result})
           // console.log({ tableName, columns, values })
           const primarykey = getPrimaryKeyField(tableName)
+          console.log(primarykey);
 
           const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-          console.log({ result })
+          // console.log({ result })
           return result.recordset;
      }
      catch (error) {
@@ -107,7 +112,7 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
-          console.log({ tableName, columns, condition, n })
+          // console.log({ tableName, columns, condition, n })
           // console.log({ tableName, columns, condition, n })
           // const result = await getPool().request()
           //      .input('tableName', tableName)
@@ -115,7 +120,7 @@ const read = async function (obj) {
           //      .input('condition', condition)
           //      .input('n', n)
           //      .execute(`pro_BasicRead`);
-          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
           return result.recordset;
      }
@@ -126,6 +131,8 @@ const read = async function (obj) {
 
 const readAll = async function (obj) {
      try {
+          // console.log('readAll');
+          // console.log(obj,'readAll');
           if (!Object.keys(obj).includes("condition")) {
                obj["condition"] = '1=1';
           };
@@ -135,7 +142,7 @@ const readAll = async function (obj) {
           //      .input('condition', condition)
           //      .execute(`pro_ReadAll`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-          console.log({ result })
+          // console.log({ result })
           return result.recordset;
      }
      catch (error) {
@@ -219,19 +226,19 @@ const updateSuppliersBranches = async function (obj) {
 };
 
 const countRows = async function (obj) {
-     try{
-     const { tableName, condition } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('condition', condition)
-     //      .execute(`pro_CountRows`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
-     console.log({ count: result })
-     return result;
-}
-catch(error){
-     throw error
-}
+     try {
+          const { tableName, condition } = obj;
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('condition', condition)
+          //      .execute(`pro_CountRows`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
+          // console.log({ count: result })
+          return result;
+     }
+     catch (error) {
+          throw error
+     }
 }
 
 function setValues(obj) {
@@ -285,4 +292,5 @@ module.exports = {
      join,
      createNewTable,
      insertColumn
-};
+}
+

@@ -21,7 +21,6 @@ function getSqlTableColumnsType(tablename) {
 };
 
 function parseSQLType(obj, tabledata) {
-    console.log({ obj });
     try {
         const keys = Object.keys(obj)
         let str = []
@@ -36,7 +35,6 @@ function parseSQLType(obj, tabledata) {
                     throw new Error(`Type: ${type} does not exist.`)
                 }
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
-                console.log({ val });
                 str.push(val);
             }
             else {

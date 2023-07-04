@@ -156,7 +156,7 @@ router.get('/readAll/:tbname/', async (req, res) => {
         let obj = {};
         obj['tableName'] = req.params.tbname;
         const table = await getAllSql(obj);
-        console.log(table);
+        // console.log(table);
         res.status(200).send(table);
     }
     catch (error) {
@@ -206,9 +206,8 @@ router.post('/findpolygon', async (req, res) => {
 
 router.get('/distinct/:collection/:filter', async (req, res) => {
     try {
-        console.log('distinct---------', req.params.collection, req.params.filter);
+        // console.log('distinct---------', req.params.collection, req.params.filter);
         const response = await getDetailsWithDistinct(req.params.collection, req.params.filter);
-        console.log({ response });
         res.status(200).send(response);
     }
     catch (error) {
