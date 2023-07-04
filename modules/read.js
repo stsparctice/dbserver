@@ -1,7 +1,7 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { readJoin, viewConnectionsTables, isFull,readRelatedData, getPrimaryKeyField } = require('./config/config');
-const config = require('../config.json');
+const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {

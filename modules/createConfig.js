@@ -1,4 +1,4 @@
-const config = require('../config.json')
+const config = require('../config/DBconfig.json')
 
 async function getTableName() {
     let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list

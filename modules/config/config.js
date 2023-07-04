@@ -1,4 +1,4 @@
-const config = require('../../config.json')
+const config = require('../../config/DBconfig.json')
 const types = require('./config-objects')
 require('dotenv');
 const { SQL_DBNAME } = process.env;

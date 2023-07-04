@@ -1,5 +1,5 @@
 const { getAllSql } = require('../modules/read')
-const uniquesConfig = require('../modules/config/config-uniques.json')
+const uniquesConfig = require('../config/config-uniques.json')
 
 async function uniqueValue(field) {
     try {

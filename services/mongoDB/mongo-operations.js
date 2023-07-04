@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { getClient } = require('./mongo-connection');
 const { MONGO_DB } = process.env;
-const config = require('../../config.json');
+const config = require('../../config/DBconfig.json');
 
 class MongoDBOperations {
 
