@@ -64,6 +64,8 @@ function parseSQLTypeForColumn(col, tabledata) {
     return val
 }
 
+
+
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
     const myTableNameSQL = tables.find(({ MTDTable }) => (MTDTable.name.name === baseTableName)).MTDTable.name.sqlName;
@@ -142,14 +144,39 @@ const viewConnectionsTables = (tableName, condition = "") => {
 }
 
 function getPrimaryKeyField(tablename) {
+    console.log("in getPrimaryKeyField");
     let sql = config.find(db => db.database == 'sql')
+    console.log({ sql });
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let x = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase())
+    console.log({ tables });
+    // console.log(tablename.toLowerCase(),'tablename.toLowerCase()');
+    // let x = tables.find(table => (console.log(table.MTDTable.name.name.toLowerCase(),' mmmm')))
+    let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()||
+    table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase()))
+
+    console.log({ x });
     let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
+    console.log({col})
     if (col) {
         return col.sqlName
     }
     return false
+}
+
+function readRelatedData(tablename,id){
+    // let sql = config.find(db => db.database == 'sql')
+    // let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    // let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
+
+    
+}
+
+function isFull(tablename) {
+    let sql = config.find(db => db.database == 'sql')
+    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
+    let columns = x.columns.find(col => (col.reference))
+    return columns
 }
 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
@@ -194,4 +221,4 @@ function convertFieldType(tablename, field, value) {
     return ans
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, parseSQLTypeForColumn, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = { getSqlTableColumnsType, parseSQLType, parseSQLTypeForColumn, readJoin,readRelatedData, isFull, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };

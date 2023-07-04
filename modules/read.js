@@ -1,6 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables } = require('./config/config');
+const { readJoin, viewConnectionsTables, isFull,readRelatedData, getPrimaryKeyField } = require('./config/config');
 const config = require('../config.json');
 const mongoCollection = MongoDBOperations;
 
@@ -23,6 +23,44 @@ async function getAllSql(obj) {
         throw new Error('Read faild.')
     }
 };
+
+
+async function readRelatedObjects(tablename,primaryKey, value,column) {
+    column=column.sqlName
+    console.log({column})
+    let obj={
+        "tableName":`tbl_${tablename}`,
+        "columns":'*',
+        "condition":`${primaryKey}=${value}`
+    }
+
+    console.log({tablename})
+    const allData = await read(obj)
+
+    console.log({allData})
+    
+    const refTablename=allData[0].TableName
+    const refPrimaryKeyField  = getPrimaryKeyField(refTablename)
+    
+    obj={
+        "tableName":refTablename,
+        "columns":"*",
+        "condition":`${refPrimaryKeyField} = ${allData[0][column]}`
+    }
+    const result = await read(obj)
+    console.log({result});
+    allData[0].TableName=result
+    return allData
+    
+}
+
+async function readFullObjects(tablename) {
+    const result = await isFull(tablename)
+    if (result != undefined)
+        return result
+    return null
+
+}
 
 async function readWithJoin(tableName, column) {
     const query = await readJoin(tableName, column);
@@ -83,8 +121,8 @@ async function getPolygon(obj) {
         let areas = []
         for (let i = 0; i < response.length; i++) {
             const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
-            console.log({response2})
-            if(response2.length>0){
+            console.log({ response2 })
+            if (response2.length > 0) {
                 areas.push(response[i])
             }
         }
@@ -134,6 +172,7 @@ async function getCountDocumentsMng(collection) {
 module.exports = {
     getDetailsSql,
     getAllSql, readJoin, countRowsSql,
+    readFullObjects,readRelatedObjects,
     getDetailsMng, readWithJoin,
     getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
 };
