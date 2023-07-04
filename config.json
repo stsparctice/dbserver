@@ -135,7 +135,38 @@
                                 "type": "BIT NOT NULL"
                             }
                         ]
-                    },                    
+                    },  
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_Status"
+                            },
+                            "description": "Table that contain all the statuses"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
+                                "values": [
+                                    1,
+                                    2,
+                                    3
+                                ]
+                            },
+                            {
+                                "name": "StatusName",
+                                "sqlName": "StatusName",
+                                "type": "nvarchar(50) NOT NULL",
+                                "values": [
+                                    "פעיל",
+                                    "מושהה",
+                                    "מוגבל"
+                                ]
+                            }
+                        ]
+                    },                  
                     {
                         "MTDTable": {
                             "name": {
@@ -909,7 +940,7 @@
                             {
                                 "name": "Status",
                                 "sqlName": "Status",
-                                "type": "int NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Status) REFERENCES tbl_Status(Id)"
                             },
                             {
                                 "name": "Street",
@@ -1363,37 +1394,7 @@
                             }
                         ]
                     },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "Status",
-                                "sqlName": "tbl_Status"
-                            },
-                            "description": "Table that contain all the statuses"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
-                                "values": [
-                                    1,
-                                    2,
-                                    3
-                                ]
-                            },
-                            {
-                                "name": "StatusName",
-                                "sqlName": "StatusName",
-                                "type": "nvarchar(50) NOT NULL",
-                                "values": [
-                                    "פעיל",
-                                    "מושהה",
-                                    "מוגבל"
-                                ]
-                            }
-                        ]
-                    },
+                   
                     {
                         "MTDTable": {
                             "name": {
