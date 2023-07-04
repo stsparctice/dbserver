@@ -124,7 +124,6 @@ const read = async function (obj) {
      }
 };
 
-
 const readAll = async function (obj) {
      try {
           if (!Object.keys(obj).includes("condition")) {
