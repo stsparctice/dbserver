@@ -5,6 +5,7 @@ const { SQL_DBNAME } = process.env;
 const { getPrimaryKeyField } = require('../../modules/config/config')
 
 const create = async function (obj) {
+     console.log('8888888888888888888888888888888888888888888888');
      try {
           const { tableName, columns, values } = obj;
           // const result = await getPool().request()

@@ -14,7 +14,7 @@ function getTableFromConfig(tableName) {
 }
 
 function getSqlTableColumnsType(tablename) {
-   
+
     const table = getTableFromConfig(tablename)
     let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
@@ -50,8 +50,8 @@ function parseSQLType(obj, tabledata) {
     }
 }
 
-function parseSQLTypeForColumn(col, tabledata){
-    console.log({col})
+function parseSQLTypeForColumn(col, tabledata) {
+    console.log({ col })
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
     let parse
     try {
@@ -61,12 +61,14 @@ function parseSQLTypeForColumn(col, tabledata){
         throw new Error(`Type: ${type} does not exist.`)
     }
     const val = parse.parseNodeTypeToSqlType(col.value);
-   return val
+    return val
 }
 
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
-    const myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
+    const myTableNameSQL = tables.find(({ MTDTable }) => (MTDTable.name.name === baseTableName)).MTDTable.name.sqlName;
+    console.log({ tables });
+    console.log({ myTableNameSQL });
     baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
@@ -76,6 +78,7 @@ const readJoin = async (baseTableName, baseColumn) => {
             let alias1 = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).MTDTable.name.name;
             join = `FROM ${tableName} ${alias1} `
             prevTableAlias = alias1;
+
             let columns = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).columns.map(({ sqlName }) => { return sqlName });
             selectColumns.push({ alias: prevTableAlias, columns });
         }
@@ -87,7 +90,12 @@ const readJoin = async (baseTableName, baseColumn) => {
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
                 let columnToJoin = [table].map(({ columns }) => columns.find(({ type }) => type.includes('PRIMARY KEY')).sqlName)[0];
-                join = `${join} JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                if (join.includes(`JOIN ${tableJoin} ${alias}`)) {
+                    join = `${join} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                }
+                else {
+                    join = `${join} LEFT JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                }
             }
         else {
             join = ``;
@@ -102,7 +110,7 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    // console.log(result);
+    console.log(result);
     return result;
 };
 
@@ -181,7 +189,7 @@ function convertFieldType(tablename, field, value) {
     const columns = getSqlTableColumnsType(tablename)
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
     let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
-    console.log({columns})
+    console.log({ columns })
     const ans = parse.parseNodeTypeToSqlType(value)
     return ans
 }
