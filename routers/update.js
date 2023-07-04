@@ -3,11 +3,12 @@ const { parseTableName, parseColumnName } = require('../utils/parse_name');
 const router = express.Router();
 const { updateSql,updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng} = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
+const {checkDataIsUnique} = require('../utils/checkunique')
 
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/update', parseTableName(), parseColumnName(), async (req, res) => {
+router.post('/update', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
     try {
         const result = await updateSql(req.body);
         res.status(204).send(result);
@@ -22,7 +23,7 @@ router.post('/updateOne', async (req, res) => {
     res.status(200).send(result);
 });
 
-router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res) => {
+router.post('/updateQuotation', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
     try {
         const result = await updateQuotationSql(req.body);
         res.status(200).send(result);
@@ -33,7 +34,7 @@ router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res
 });
 
 
-router.post('/updateSuppliersBranches', parseTableName, parseColumnName, async (req, res) => {
+router.post('/updateSuppliersBranches', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
     try {
         const result = await updateSuppliersBranchesSql(req.body);
         res.status(200).send(result);
@@ -64,7 +65,7 @@ router.post('/dropCollection', async (req, res) => {
 });
 
 router.post('/dropDocument', async (req, res) => {
-    console.log("req.body",req.body);
+    // console.log("req.body",req.body);
     const result = await dropDocumentMng(req.body);
     res.status(200).send(result);
 });

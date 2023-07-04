@@ -14,14 +14,13 @@ function getTableFromConfig(tableName) {
 }
 
 function getSqlTableColumnsType(tablename) {
-   
+
     const table = getTableFromConfig(tablename)
     let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
 };
 
 function parseSQLType(obj, tabledata) {
-    console.log({ obj });
     try {
         const keys = Object.keys(obj)
         let str = []
@@ -36,7 +35,6 @@ function parseSQLType(obj, tabledata) {
                     throw new Error(`Type: ${type} does not exist.`)
                 }
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
-                console.log({ val });
                 str.push(val);
             }
             else {
@@ -88,7 +86,6 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    // console.log(result);
     return result;
 };
 
@@ -130,7 +127,7 @@ function getPrimaryKeyField(tablename) {
     return false
 }
 
-function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
+function getObjectWithFieldNameForPrimaryKey(tablename, fields, id) {
     let primarykey = getPrimaryKeyField(tablename)
     if (primarykey) {
         let where = {}
@@ -167,9 +164,11 @@ function convertFieldType(tablename, field, value) {
     const columns = getSqlTableColumnsType(tablename)
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
     let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
-    console.log({columns})
     const ans = parse.parseNodeTypeToSqlType(value)
     return ans
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+
+
+
+module.exports = {  getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFieldNameForPrimaryKey, getForeignTableAndColumn };

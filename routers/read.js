@@ -36,9 +36,9 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
     try {
         const { tablename, field, value } = req.params
         let val = convertFieldType(tablename, field, value)
-        console.log({val})
+        // console.log({val})
         const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
-        console.log({ result })
+        // console.log({ result })
             res.status(200).send(result)
     }
     catch (error) {
@@ -126,7 +126,7 @@ router.get('/readAll/:tbname/', async (req, res) => {
         let obj = {};
         obj['tableName'] = req.params.tbname;
         const table = await getAllSql(obj);
-        console.log(table);
+        // console.log(table);
         res.status(200).send(table);
     }
     catch (error) {
@@ -159,9 +159,9 @@ router.post('/find', async (req, res) => {
 
 router.get('/distinct/:collection/:filter', async (req, res) => {
     try {
-        console.log('distinct---------', req.params.collection, req.params.filter);
+        // console.log('distinct---------', req.params.collection, req.params.filter);
         const response = await getDetailsWithDistinct(req.params.collection, req.params.filter);
-        console.log({ response });
+        // console.log({ response });
         res.status(200).send({ response });
     }
     catch (error) {
