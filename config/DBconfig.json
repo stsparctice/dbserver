@@ -1819,12 +1819,12 @@
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "INT NOT NULL"
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "Discount",
                                 "sqlName": "Discount",
-                                "type": "INT NOT NULL"
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
@@ -1877,12 +1877,12 @@
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName": "CountPrecent",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
@@ -1925,12 +1925,12 @@
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName": "CountPrecent",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "DayOfWeek",
@@ -1988,17 +1988,17 @@
                             {
                                 "name": "Distance",
                                 "sqlName": "Distance",
-                                "type": "INT NOT NULL"
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "Price",
                                 "sqlName": "Price",
-                                "type": "INT NOT NULL"
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "CountPrecent",
                                 "sqlName": "CountPrecent",
-                                "type": "INT NOT NULL"
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
@@ -2041,12 +2041,12 @@
                             {
                                 "name": "TransportDiff",
                                 "sqlName": "TransportDiff",
-                                "type": "INT  NOT NULL"
+                                "type": "FLOAT NOT NULL"
                             },
                             {
                                 "name": "MaxTransportDiff",
                                 "sqlName": "MaxTransportDiff",
-                                "type": "INT NOT NULL"
+                                "type": "Float NOT NULL"
                             },
                             {
                                 "name": "AddedDate",
