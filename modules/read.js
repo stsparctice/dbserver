@@ -5,13 +5,23 @@ const config = require('../config.json');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
-    const list = await read(obj);
-    return list;
+    try {
+        const list = await read(obj);
+        return list;
+    }
+    catch {
+        throw new Error('Read faild.')
+    }
 };
 
 async function getAllSql(obj) {
-    const list = await readAll(obj);
-    return list;
+    try {
+        const list = await readAll(obj);
+        return list;
+    }
+    catch {
+        throw new Error('Read faild.')
+    }
 };
 
 async function readWithJoin(tableName, column) {
@@ -43,32 +53,57 @@ async function connectTables(tableName = "",condition="") {
 }
 
 async function countRowsSql(obj) {
-    const list = await countRows(obj);
-    return list;
+    try {
+        const list = await countRows(obj);
+        return list;
+    }
+    catch {
+        throw new Error('Count faild.')
+    }
 };
 
 async function getDetailsMng(obj) {
-    mongoCollection.setCollection(obj.collection);
-    const response = await mongoCollection.find(obj);
-    return response;
+    try {
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.find(obj);
+        return response;
+    }
+    catch {
+        throw new Error('Read faild.')
+    }
 };
 
 async function getDetailsWithAggregateMng(obj) {
-    mongoCollection.setCollection(obj.collection);
-    const response = await mongoCollection.aggregate(obj.aggregate);
-    return response;
+    try {
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.aggregate(obj.aggregate);
+        return response;
+    }
+    catch {
+        throw new Error('Read with Aggregate faild.')
+    }
 };
 
-async function getDetailsWithDistinct(collection,filter) {
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.distinct(filter);
-    return response;
+async function getDetailsWithDistinct(collection, filter) {
+    try {
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.distinct(filter);
+        return response;
+    }
+    catch {
+        throw new Error('Read with distinct faild.')
+    }
 };
 
 async function getCountDocumentsMng(collection) {
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.countDocuments();
-    return response;
+    try {
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.countDocuments();
+        return response;
+    }
+    catch {
+        throw new Error('Count faild.')
+    }
 };
 
 module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };

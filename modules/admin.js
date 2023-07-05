@@ -20,7 +20,10 @@ async function updateConfig2(object) {
             m.dbobjects[1].list.push(object)
         }
     })
-    fs.writeFileSync('config2.json', JSON.stringify(n))
+
+    // fs.writeFileSync('configCreate.json', JSON.stringify(n))
+    fs.writeFileSync('config.json', JSON.stringify(n))
+
 };
 
 
@@ -51,7 +54,9 @@ async function updateConfig(object) {
                 };
             };
         };
-        fs.writeFileSync('config2.json', JSON.stringify(config));
+        // fs.writeFileSync('configCreate.json', JSON.stringify(config));
+        fs.writeFileSync('config.json', JSON.stringify(config));
+
     }
 };
 

@@ -7,13 +7,14 @@ const { SQL_DBNAME } = process.env;
 function getTableFromConfig(tableName) {
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({ tables })
-    let table = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase())
+    let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
+        tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
     return table
 
 }
 
 function getSqlTableColumnsType(tablename) {
+   
     const table = getTableFromConfig(tablename)
     let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
     return col
@@ -21,20 +22,32 @@ function getSqlTableColumnsType(tablename) {
 
 function parseSQLType(obj, tabledata) {
     console.log({ obj });
-    const keys = Object.keys(obj)
-    let str = []
-    for (let i = 0; i < keys.length; i++) {
-        if (obj[keys[i]]) {
-            let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
-            let parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
-            str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
-
+    try {
+        const keys = Object.keys(obj)
+        let str = []
+        for (let i = 0; i < keys.length; i++) {
+            if (obj[keys[i]] != null) {
+                let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type
+                let parse
+                try {
+                    parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+                }
+                catch {
+                    throw new Error(`Type: ${type} does not exist.`)
+                }
+                const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
+                console.log({ val });
+                str.push(val);
+            }
+            else {
+                str.push('NULL')
+            }
         }
-        else {
-            str.push('NULL')
-        }
+        return str
     }
-    return str
+    catch {
+        throw new Error('Object is not valid')
+    }
 }
 
 const readJoin = async (baseTableName, baseColumn) => {
@@ -75,7 +88,7 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    console.log(result);
+    // console.log(result);
     return result;
 };
 
@@ -131,18 +144,31 @@ function getForeignTableAndColumn(tablename, field) {
     const table = getTableFromConfig(tablename)
     if (table) {
         const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
+
         const { type } = column;
+
         let foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
         let index = foreignTableName.indexOf('(')
-        foreignTableName=foreignTableName.slice(0, index)
+        foreignTableName = foreignTableName.slice(0, index)
         const foreignTable = getTableFromConfig(foreignTableName)
+        if (foreignTable) {
 
-        const { defaultColumn } = foreignTable.MTDTable
-        return { foreignTableName, defaultColumn }
+            const { defaultColumn } = foreignTable.MTDTable
 
+            return { foreignTableName, defaultColumn }
+        }
     }
     return false
 
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, getPrimaryKeyField,viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+function convertFieldType(tablename, field, value) {
+
+    const columns = getSqlTableColumnsType(tablename)
+    let col = columns.find(c => c.sqlName.toLowerCase() === field)
+    let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
+    const ans = parse.parseNodeTypeToSqlType(value)
+    return ans
+}
+
+module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
