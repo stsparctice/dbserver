@@ -24,7 +24,7 @@ function parseSQLType(obj, tabledata) {
     console.log({ obj });
     const keys = Object.keys(obj)
     let str = []
-    console.log({tabledata});
+    console.log({ tabledata });
     for (let i = 0; i < keys.length; i++) {
         let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == keys[i].trim().toLowerCase()).type;
         if (obj[keys[i]] !== null) {
@@ -48,6 +48,8 @@ const readJoin = async (baseTableName, baseColumn) => {
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
+        console.log({ connectionTable });
+
         let join = '';
         if (tableName === myTableNameSQL) {
             let alias1 = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).MTDTable.name.name;
@@ -60,11 +62,18 @@ const readJoin = async (baseTableName, baseColumn) => {
             for (let table of connectionTable) {
                 let tableJoin = table.MTDTable.name.sqlName;
                 let alias = table.MTDTable.name.name;
+                console.log({ tableJoin });
                 let columns = table.columns.map(({ name }) => { return name });
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
                 let columnToJoin = [table].map(({ columns }) => columns.find(({ type }) => type.includes('PRIMARY KEY')).sqlName)[0];
-                join = `${join} JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                if (join.includes(`JOIN ${tableJoin} ${alias}`)) {
+                    join=`${join} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                }
+                else {
+
+                    join = `${join} JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                }
             }
         else {
             join = ``;
@@ -155,7 +164,6 @@ function convertFieldType(tablename, field, value) {
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
     let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
     const ans = parse.parseNodeTypeToSqlType(value)
-    console.log({ ans })
     return ans
 
 }

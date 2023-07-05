@@ -1273,7 +1273,7 @@
                             {
                                 "name": "pump",
                                 "sqlName": "Pump",
-                                "type": "NVARCHAR(50) NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
+                                "type": "INT NULL FOREIGN KEY(Pump) REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "pumpPipeLength",
@@ -1523,52 +1523,6 @@
                                 "name": "Price",
                                 "sqlName": "Price",
                                 "type": "FLOAT NOT NULL"
-                            },
-                            {
-                                "name": "Disabled",
-                                "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "TruckFill",
-                                "sqlName": "tbl_TruckFill"
-                            },
-                            "description": "table that contains the fill count of truck"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "int IDENTITY (1000,1) NOT NULL PRIMARY KEY"
-                            },
-                            {
-                                "name": "PriceListId",
-                                "sqlName": "PriceListId",
-                                "type": "INT NOT NULL"
-                            },
-                            {
-                                "name": "ProductId",
-                                "sqlName": "ProductId",
-                                "type": "INT NOT NULL"
-                            },
-                            {
-                                "name": "AmountTransportDiff",
-                                "sqlName": "AmountTransportDiff",
-                                "type": "float NOT NULL"
-                            },
-                            {
-                                "name": "MaxTransportDiff",
-                                "sqlName": "MaxTransportDiff",
-                                "type": "float NOT NULL"
-                            },
-                            {
-                                "name": "Price",
-                                "sqlName": "Price",
-                                "type": "float NOT NULL"
                             },
                             {
                                 "name": "Disabled",

@@ -5,7 +5,7 @@ const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
     readWithJoin, connectTables, getDetailsWithDistinct } = require('../modules/read');
 const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
-const { parseColumnName, parseTableName } = require('../utils/parse_name')
+const { parseColumnName, parseTableName,parseTBname } = require('../utils/parse_name')
 
 router.use(express.json());
 router.use(routerLogger())
@@ -24,22 +24,20 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.columns += `,${primarykey}`
     }
     obj.n = 10
-    
+
     const result = await getDetailsSql(obj);
     res.status(200).send(result);
 
 })
 
 router.get('/exist/:tablename/:field/:value', async (req, res) => {
-
     try {
-        const { tablename, field, value } = req.params
+        const { tablename, field, value } = req.params;
+        console.log({ tablename, field, value });
         let val = convertFieldType(tablename, field, value)
         const result = await getDetailsSql({ tableName: tablename, columns: field, condition: `${field} = ${val}` })
-        console.log({ result })
         if (result.length > 0) {
             res.status(200).send(true)
-
         }
         else {
             res.status(200).send(false)
@@ -47,6 +45,7 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
 
     }
     catch (error) {
+        console.log(error);
         res.status(500).send(error.message)
     }
 
@@ -113,8 +112,8 @@ router.get('/readAll/:tbname', async (req, res) => {
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
     let obj = {};
-    console.log(req.params.condition, "condition");
-    obj['tableName'] = req.params.tbname;
+    console.log({tbname:req.params.tbname});
+    obj['tableName'] = parseTBname(req.params.tbname);
     obj['condition'] = req.params.condition;
     const table = await getAllSql(obj);
     res.status(200).send(table);

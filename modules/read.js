@@ -16,6 +16,7 @@ async function getAllSql(obj) {
 
 async function readWithJoin(tableName, column) {
     const query = await readJoin(tableName, column);
+    console.log(query);
     const values = await join(query);
     let result = [];
     if (values) {
