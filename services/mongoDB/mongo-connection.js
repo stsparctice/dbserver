@@ -5,6 +5,9 @@ const { MONGO_CONNECTION } = process.env;
 let client = null;
 
 const connectMng = async (server_url = MONGO_CONNECTION) => {
+    if(!MONGO_CONNECTION){
+        throw new Error('.env file is not valid or is not exsist.')
+    }
     if (server_url.indexOf('mongodb') != 0) {
         throw new Error('connection string is not in the right format');
     };
