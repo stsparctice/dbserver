@@ -135,7 +135,39 @@
                                 "type": "BIT NOT NULL"
                             }
                         ]
-                    },                    
+                    },  
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_Status"
+                            },
+                            "description": "Table that contain all the statuses",
+                            "defaultColumn":"StatusName" 
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
+                                "values": [
+                                    1,
+                                    2,
+                                    3
+                                ]
+                            },
+                            {
+                                "name": "StatusName",
+                                "sqlName": "StatusName",
+                                "type": "nvarchar(50) NOT NULL",
+                                "values": [
+                                    "פעיל",
+                                    "מושהה",
+                                    "מוגבל"
+                                ]
+                            }
+                        ]
+                    },                  
                     {
                         "MTDTable": {
                             "name": {
@@ -281,7 +313,6 @@
                             }
                         ]
                     },
-                    
                     {
                         "MTDTable": {
                             "name": {
@@ -767,7 +798,7 @@
                             {
                                 "name": "Status",
                                 "sqlName": "Status",
-                                "type": "int NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Status) REFERENCES tbl_Status(Id)"
                             },
                             {
                                 "name": "Description",
@@ -909,7 +940,7 @@
                             {
                                 "name": "Status",
                                 "sqlName": "Status",
-                                "type": "int NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Status) REFERENCES tbl_Status(Id)"
                             },
                             {
                                 "name": "Street",
@@ -1263,7 +1294,7 @@
                                 "name": "baseConcretProduct",
                                 "sqlName": "BaseConcretProduct",
                                 "type": "NVARCHAR (20) NULL",
-                                "referenceTable": "Tablename"
+                                "reference": "Tablename"
                             },
                             {
                                 "name": "tablename",
@@ -1363,37 +1394,7 @@
                             }
                         ]
                     },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "Status",
-                                "sqlName": "tbl_Status"
-                            },
-                            "description": "Table that contain all the statuses"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
-                                "values": [
-                                    1,
-                                    2,
-                                    3
-                                ]
-                            },
-                            {
-                                "name": "StatusName",
-                                "sqlName": "StatusName",
-                                "type": "nvarchar(50) NOT NULL",
-                                "values": [
-                                    "פעיל",
-                                    "מושהה",
-                                    "מוגבל"
-                                ]
-                            }
-                        ]
-                    },
+                   
                     {
                         "MTDTable": {
                             "name": {
@@ -1517,7 +1518,7 @@
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(ProductId) REFERENCES tbl_PriceListForProducts(Id)"
                             },
                             {
                                 "name": "MinDistance",
@@ -1558,7 +1559,7 @@
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(ProductId) REFERENCES tbl_PriceListForProducts(Id)"
                             },
                             {
                                 "name": "AmountTransportDiff",
@@ -1588,13 +1589,14 @@
                                 "name": "BuytonStrength",
                                 "sqlName": "tbl_BuytonStrength"
                             },
-                            "description": "Table that contain buyton strength"
+                            "description": "Table that contain buyton strength",
+                            "defaultColumn": "StrengthDescribe"
                         },
                         "columns": [
                             {
                                 "name": "StrengthCode",
                                 "sqlName": "StrengthCode",
-                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "strengthDescribe",
@@ -1604,7 +1606,7 @@
                             {
                                 "name": "strengthNumber",
                                 "sqlName": "StrengthNumber",
-                                "type": "int NOT NULL"
+                                "type": "int NOT NULL PRIMARY KEY"
                             }
                         ]
                     },
@@ -1614,13 +1616,14 @@
                                 "name": "BuytonDegree",
                                 "sqlName": "tbl_BuytonDegree"
                             },
-                            "description": "Table that contain Buyton Degree"
+                            "description": "Table that contain Buyton Degree",
+                            "defaultColumn": "DegreeDescribe"
                         },
                         "columns": [
                             {
                                 "name": "DegreeCode",
                                 "sqlName": "DegreeCode",
-                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
+                                "type": "nvarchar(20) NOT NULL "
                             },
                             {
                                 "name": "DegreeDescribe",
@@ -1630,7 +1633,7 @@
                             {
                                 "name": "DegreeNumber",
                                 "sqlName": "DegreeNumber",
-                                "type": "int NOT NULL"
+                                "type": "int NOT NULL PRIMARY KEY"
                             }
                         ]
                     },
@@ -1640,13 +1643,14 @@
                                 "name": "BuytonGrain",
                                 "sqlName": "tbl_BuytonGrain"
                             },
-                            "description": "Table that contain Buyton Grain"
+                            "description": "Table that contain Buyton Grain",
+                            "defaultColumn": "GrainDescribe"
                         },
                         "columns": [
                             {
                                 "name": "GrainCode",
                                 "sqlName": "GrainCode",
-                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
+                                "type": "nvarchar(20) NOT NULL "
                             },
                             {
                                 "name": "GrainDescribe",
@@ -1656,7 +1660,7 @@
                             {
                                 "name": "GrainNumber",
                                 "sqlName": "GrainNumber",
-                                "type": "int NOT NULL"
+                                "type": "int NOT NULL PRIMARY KEY"
                             }
                         ]
                     },
@@ -1666,7 +1670,8 @@
                                 "name": "BuytonItems",
                                 "sqlName": "tbl_BuytonItems"
                             },
-                            "description": "Table that contain Buyton items"
+                            "description": "Table that contain Buyton items",
+                            "defaultColumn": "ItemDescribe"
                         },
                         "columns": [
                             {
@@ -1707,13 +1712,14 @@
                                 "name": "BuytonSomech",
                                 "sqlName": "tbl_BuytonSomech"
                             },
-                            "description": "Table that contain BuytonSomech"
+                            "description": "Table that contain BuytonSomech",
+                            "defaultColumn": "SomechDescribe"
                         },
                         "columns": [
                             {
                                 "name": "SomechCode",
                                 "sqlName": "SomechCode",
-                                "type": "nvarchar(20) NOT NULL PRIMARY KEY"
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "SomechDescribe",
@@ -1723,7 +1729,7 @@
                             {
                                 "name": "SomechNumber",
                                 "sqlName": "SomechNumber",
-                                "type": "int NOT NULL"
+                                "type": "int NOT NULL PRIMARY KEY"
                             }
                         ]
                     },
@@ -1733,9 +1739,8 @@
                                 "name": "PriceList",
                                 "sqlName": "tbl_PriceList"
                             },
-                            "description": {
-                                "description": "table that contains all the priceList of the products"
-                            }
+                            "description": "table that contains all the priceList of the products",
+                            "defaultColumn": "Name"
                         },
                         "columns": [
                             {
@@ -1786,9 +1791,8 @@
                                 "name": "PricelistForProducts",
                                 "sqlName": "tbl_PricelistForProducts"
                             },
-                            "description": {
-                                "description": "table that contacts  between products to their priclist"
-                            }
+                            "description": "table that contacts  between products to their priclist",
+                            "defaultColumn": "ProductId"
                         },
                         "columns": [
                             {

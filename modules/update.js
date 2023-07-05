@@ -6,10 +6,12 @@ const mongoCollection = MongoDBOperations;
 async function updateSql(obj) {
     try {
         console.log({obj})
+        console.log({condition:obj.condition})
         let tabledata = getSqlTableColumnsType(obj.tableName)
-       
+       console.log({tabledata})
         if(obj.condition){
             const entries = Object.entries(obj.condition)
+            
             const conditionList = entries.map(c=>
 
                 `${c[0]} =  ${parseSQLTypeForColumn({name:c[0], value:c[1]}, tabledata)}`
@@ -23,13 +25,19 @@ async function updateSql(obj) {
         const result = await update(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error){
+        throw error
     }
 };
 async function updateOneSql(obj) {
-    const result = await updateOne(obj);
-    return result;
+    try{
+
+        const result = await updateOne(obj);
+        return result;
+    }
+    catch(error){
+        throw error
+    }
 };
 async function updateMng(obj) {
     try {
@@ -38,8 +46,8 @@ async function updateMng(obj) {
         const response = await mongoCollection.updateOne(obj);
         return response;
     }
-    catch {
-        throw new Error('Update falid.')
+    catch (error){
+        throw error
     }
 };
 
@@ -76,7 +84,6 @@ async function dropCollectionMng(obj) {
 
 async function dropDocumentMng(obj) {
     const {data,collection}=obj;
-    console.log("data in dropDocumentMng",data);
     mongoCollection.setCollection(collection);
     const response = await mongoCollection.dropOneDocument(data);
     console.log({response})

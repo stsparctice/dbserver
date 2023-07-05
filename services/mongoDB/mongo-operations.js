@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { getClient } = require('./mongo-connection');
 const { MONGO_DB } = process.env;
-const config = require('../../config.json');
+const config = require('../../config/DBconfig.json');
 
 class MongoDBOperations {
 
@@ -49,12 +49,13 @@ class MongoDBOperations {
     };
 
     async updateOne(obj) {
-        try {
+        try{
+
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
             return result;
         }
-        catch (error) {
-            throw (error)
+        catch(error){
+            throw error
         }
     };
 
