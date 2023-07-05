@@ -180,12 +180,10 @@ router.post('/find', async (req, res) => {
 router.post('/findpolygon', async (req, res) => {
     try {
         const response = await getPolygon(req.body)
-        console.log({ response })
-        console.log(response.length)
         if (response)
-            res.status(200).send(response)
+            res.status(200).send(response);
         else {
-            res.status(404).send(response)
+            res.status(404).send(response);
         }
     }
     catch (error) {
