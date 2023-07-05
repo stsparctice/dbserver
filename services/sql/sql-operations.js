@@ -181,9 +181,9 @@ const update = async function (obj) {
 };
 const updateOne = async function (obj) {
      try {
-          const tableName = "tbl_Leads"
+          // const tableName = "tbl_Leads"
 
-          const { values, condition } = obj;
+          const { tableName, values, condition } = obj;
           const value = setValues(values);
           // const result = await getPool().request()
           //      .input('tableName', tableName)
