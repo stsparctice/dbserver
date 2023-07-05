@@ -49,8 +49,8 @@ router.get('/readAllEntity/:entity', async (req, res) => {
     try {
         let obj = {};
         obj['tableName'] = req.params.entity;
-        console.log({obj})
-        const fullObjects =await readFullObjects(req.params.entity)
+        console.log({ obj })
+        const fullObjects = await readFullObjects(req.params.entity)
         console.log(fullObjects)
         let condition = ''
         if (req.query) {
@@ -70,15 +70,15 @@ router.get('/readAllEntity/:entity', async (req, res) => {
     }
 });
 
-router.get('/readAll/:tablename', async (req, res) => {
+router.get('/readAll/:entity', async (req, res) => {
     try {
         let obj = {};
         obj['tableName'] = req.params.entity;
         const table = await getAllSql(obj);
-        // console.log(table);
         res.status(200).send(table);
     }
     catch (error) {
+        console.log(error.message)
         res.status(404).send(error.message)
     }
 })

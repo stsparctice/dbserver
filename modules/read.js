@@ -20,6 +20,7 @@ async function getAllSql(obj) {
         return list;
     }
     catch (error) {
+        console.log(error.message)
         throw error
     }
 };

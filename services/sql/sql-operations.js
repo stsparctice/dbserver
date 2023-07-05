@@ -141,11 +141,13 @@ const readAll = async function (obj) {
           //      .input('tableName', tableName)
           //      .input('condition', condition)
           //      .execute(`pro_ReadAll`);
+          console.log(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
           const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-          // console.log({ result })
+           console.log({ result })
           return result.recordset;
      }
      catch (error) {
+          console.log(error.message)
           throw error
      }
 };
