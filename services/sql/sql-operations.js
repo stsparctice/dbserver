@@ -177,11 +177,11 @@ const update = async function (obj) {
           //      .execute(`pro_BasicUpdate`);
 
           const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-          console.log({query})
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
           return result;
      }
      catch (error) {
+          console.log(error.message)
           throw error
      }
 };

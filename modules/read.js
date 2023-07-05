@@ -1,6 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables, isFull,readRelatedData, getPrimaryKeyField } = require('./config/config');
+const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField } = require('./config/config');
 const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
@@ -9,7 +9,7 @@ async function getDetailsSql(obj) {
         const list = await read(obj);
         return list;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
@@ -19,51 +19,50 @@ async function getAllSql(obj) {
         const list = await readAll(obj);
         return list;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
 
 
-async function readRelatedObjects(tablename,primaryKey, value,column) {
-    column=column.sqlName
-    console.log({column})
-    let obj={
-        "tableName":`tbl_${tablename}`,
-        "columns":'*',
-        "condition":`${primaryKey}=${value}`
+async function readRelatedObjects(tablename, primaryKey, value, column) {
+    column = column.sqlName
+    console.log({ column })
+    let obj = {
+        "tableName": `tbl_${tablename}`,
+        "columns": '*',
+        "condition": `${primaryKey}=${value}`
     }
 
-    console.log({tablename})
+    console.log({ tablename })
     const allData = await read(obj)
 
-    console.log({allData})
-    
-    const refTablename=allData[0].TableName
-    const refPrimaryKeyField  = getPrimaryKeyField(refTablename)
-    
-    obj={
-        "tableName":refTablename,
-        "columns":"*",
-        "condition":`${refPrimaryKeyField} = ${allData[0][column]}`
+    console.log({ allData })
+
+    const refTablename = allData[0].TableName
+    const refPrimaryKeyField = getPrimaryKeyField(refTablename)
+
+    obj = {
+        "tableName": refTablename,
+        "columns": "*",
+        "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
     }
     const result = await read(obj)
-    console.log({result});
-    allData[0].TableName=result
+    console.log({ result });
+    allData[0].TableName = result
     return allData
-    
+
 }
 
 async function readFullObjects(tablename) {
-    const result = await isFull(tablename)
-    if (result != undefined)
-        return result
-    return null
+
+    const result = await getReferencedColumns(tablename)
+    return result
 
 }
 
 async function readWithJoin(tableName, column) {
-    try{
+    try {
 
         const query = await readJoin(tableName, column);
         const values = await join(query);
@@ -81,23 +80,55 @@ async function readWithJoin(tableName, column) {
         }
         return result;
     }
-    catch(error){
+    catch (error) {
         throw error
     }
 }
-async function connectTables(tableName = "",condition="") {
-    try{
+async function connectTables(tableName = "", condition = "") {
+    try {
 
-        const query = viewConnectionsTables(tableName,condition);
+        const query = viewConnectionsTables(tableName, condition);
         const values = await join(query);
-        if (values) {
-            return values;
+        const items = []
+        for (let val of values) {
+            const entries = Object.entries(val)
+            const foreignkeys = entries.filter(e => e[0].startsWith('FK'))
+            let groups = foreignkeys.reduce((gr, fk) => {
+                const prop = fk[0].split('_')[1]
+                if (!gr.some(g => g.name === prop)) {
+                    let group = { name: prop, values: [fk] }
+                    gr = [...gr, group]
+                }
+                else {
+                    gr.find(g => g.name === prop).values.push(fk)
+                }
+                return gr
+            }                , [])
+
+            const newObj = entries.reduce((obj, ent) => {
+                if (ent[0].startsWith('FK')) {
+                    return obj
+                }
+                const gr = groups.find(g => g.name.indexOf(ent[0]) !== -1)
+                if (gr) {
+                    obj[ent[0]] = gr.values.reduce((val, v) => {
+                        const split = v[0].split('_')
+                        val[split[split.length - 1]] = v[1]
+                        return val
+                    }, {})
+                }
+                else {
+                    obj[ent[0]] = ent[1]
+                }
+                return obj
+            }, {})
+            items.push(newObj)
         }
-        else {
-            return false;
-        }
+        return items;
+
     }
-    catch(error){
+    catch (error) {
+        console.log({ error })
         throw error
     }
 }
@@ -107,7 +138,7 @@ async function countRowsSql(obj) {
         const list = await countRows(obj);
         return list;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
@@ -154,7 +185,7 @@ async function getDetailsWithAggregateMng(obj) {
         const response = await mongoCollection.aggregate(obj.aggregate);
         return response;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
@@ -165,7 +196,7 @@ async function getDetailsWithDistinct(collection, filter) {
         const response = await mongoCollection.distinct(filter);
         return response;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
@@ -176,7 +207,7 @@ async function getCountDocumentsMng(collection) {
         const response = await mongoCollection.countDocuments();
         return response;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
@@ -184,7 +215,7 @@ async function getCountDocumentsMng(collection) {
 module.exports = {
     getDetailsSql,
     getAllSql, readJoin, countRowsSql,
-    readFullObjects,readRelatedObjects,
+    readFullObjects, readRelatedObjects,
     getDetailsMng, readWithJoin,
     getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
 };

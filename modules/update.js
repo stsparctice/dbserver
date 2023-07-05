@@ -6,10 +6,12 @@ const mongoCollection = MongoDBOperations;
 async function updateSql(obj) {
     try {
         console.log({obj})
+        console.log({condition:obj.condition})
         let tabledata = getSqlTableColumnsType(obj.tableName)
-       
+       console.log({tabledata})
         if(obj.condition){
             const entries = Object.entries(obj.condition)
+            
             const conditionList = entries.map(c=>
 
                 `${c[0]} =  ${parseSQLTypeForColumn({name:c[0], value:c[1]}, tabledata)}`

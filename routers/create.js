@@ -10,7 +10,7 @@ const { checkDataIsUnique } = require('../utils/checkunique')
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/create', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
+router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
     try {
         const result = await createSql(req.body);
         if (result)

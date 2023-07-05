@@ -117,16 +117,17 @@ const readJoin = async (baseTableName, baseColumn) => {
 const viewConnectionsTables = (tableName, condition = "") => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
     const myTable = tables.find(({ MTDTable }) => MTDTable.name.name === tableName);
+
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => { return sqlName })] }];
+    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName )] }];
     let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
     columns.forEach(column => {
         const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
         const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
         const thisTable = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableToJoin);
         const alias = thisTable.MTDTable.name.name;
-        columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [thisTable.MTDTable.default] }];
-        join = `${join} JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
+        columnsSelect = [...columnsSelect,{tableName: alias, columnsName: [`${columnToJoin} as FK_${column.name}_${columnToJoin}`, `${thisTable.MTDTable.defaultColumn} as FK_${column.name}_${thisTable.MTDTable.defaultColumn}`] }];
+        join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
     });
     if (condition.length > 0 && condition.includes('=')) {
         join = `${join} WHERE ${condition}`;
@@ -138,42 +139,29 @@ const viewConnectionsTables = (tableName, condition = "") => {
         })
     })
     select = select.slice(0, select.length - 1);
-    return `SELECT ${select} FROM ${join}`;
+    return `use ${SQL_DBNAME} SELECT ${select} FROM ${join}`;
 }
 
 function getPrimaryKeyField(tablename) {
-    console.log("in getPrimaryKeyField");
-    let sql = config.find(db => db.database == 'sql')
-    console.log({ sql });
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    console.log({ tables });
-    // console.log(tablename.toLowerCase(),'tablename.toLowerCase()');
-    // let x = tables.find(table => (console.log(table.MTDTable.name.name.toLowerCase(),' mmmm')))
-    let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()||
-    table.MTDTable.name.sqlName.toLowerCase() == tablename.toLowerCase()))
-
-    console.log({ x });
-    let col = x.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
-    console.log({col})
+    const table =getTableFromConfig(tablename)
+    let col = table.columns.find(col => (col.type.toLowerCase().indexOf('primary') !== -1))
     if (col) {
         return col.sqlName
     }
     return false
 }
 
-function readRelatedData(tablename,id){
+function readRelatedData(tablename, id) {
     // let sql = config.find(db => db.database == 'sql')
     // let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     // let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
 
-    
+
 }
 
-function isFull(tablename) {
-    let sql = config.find(db => db.database == 'sql')
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
-    let columns = x.columns.find(col => (col.reference))
+function getReferencedColumns(tablename) {
+    const table = getTableFromConfig(tablename)
+    let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
     return columns
 }
 
@@ -219,4 +207,8 @@ function convertFieldType(tablename, field, value) {
     return ans
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, parseSQLTypeForColumn, readJoin,readRelatedData, isFull, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = {
+    getSqlTableColumnsType,
+    parseSQLType, parseSQLTypeForColumn, readJoin, readRelatedData,
+    getReferencedColumns, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn
+};
