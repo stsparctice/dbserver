@@ -5,6 +5,7 @@ const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules
 const { routerLogger } = require('../utils/logger');
 
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
+const { checkDataIsUnique } = require('../utils/checkunique')
 
 router.use(express.json());
 router.use(routerLogger())
@@ -12,7 +13,10 @@ router.use(routerLogger())
 router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
     try {
         const result = await createSql(req.body);
-        res.status(result.status).send(result.data);
+        if (result)
+            res.status(201).send(result);
+        else
+            res.status(500).send(false)
     }
     catch (error) {
         res.status(500).send(error.message)
@@ -25,7 +29,6 @@ router.post('/createManySql', parseTableName(), async (req, res) => {
         res.status(201).send(result);
     }
     catch (error) {
-        console.log(error);
         res.status(500).send(error.message);
 
     }

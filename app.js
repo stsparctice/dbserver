@@ -13,7 +13,6 @@ const a= require('./routers/a');
 app.set('view engine', 'ejs');
 
 
-
 app.use(cors());
 app.use(session({
     secret: 'any',

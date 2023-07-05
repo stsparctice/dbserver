@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // const config = require('../config.json')
-const {getTableName,getColumns,getProcedures,getvalues} =require('../modules/createConfig')
+const {getTableName,getColumns,getProcedures,getvalues} =require('../modules/config/createConfig')
 
 router.use(express.json());
 

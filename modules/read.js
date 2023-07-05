@@ -1,7 +1,7 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables } = require('./config/config');
-const config = require('../config.json');
+const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField } = require('./config/config');
+const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
@@ -9,8 +9,8 @@ async function getDetailsSql(obj) {
         const list = await read(obj);
         return list;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -19,36 +19,118 @@ async function getAllSql(obj) {
         const list = await readAll(obj);
         return list;
     }
-    catch {
-        throw new Error('Read faild.')
+    catch (error) {
+        console.log(error.message)
+        throw error
     }
 };
 
-async function readWithJoin(tableName, column) {
-    const query = await readJoin(tableName, column);
-    const values = await join(query);
-    let result = [];
-    if (values) {
-        values.forEach(val => {
-            const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
-            const keys = Object.keys(sameRecord[0]);
-            const temp = {}
-            for (let key of keys) {
-                temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
-            }
-            result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
-        });
+
+async function readRelatedObjects(tablename, primaryKey, value, column) {
+    column = column.sqlName
+    console.log({ column })
+    let obj = {
+        "tableName": `tbl_${tablename}`,
+        "columns": '*',
+        "condition": `${primaryKey}=${value}`
     }
-    return result;
+
+    console.log({ tablename })
+    const allData = await read(obj)
+
+    console.log({ allData })
+
+    const refTablename = allData[0].TableName
+    const refPrimaryKeyField = getPrimaryKeyField(refTablename)
+
+    obj = {
+        "tableName": refTablename,
+        "columns": "*",
+        "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
+    }
+    const result = await read(obj)
+    console.log({ result });
+    allData[0].TableName = result
+    return allData
+
 }
-async function connectTables(tableName = "",condition="") {
-    const query = viewConnectionsTables(tableName,condition);
-    const values = await join(query);
-    if (values) {
-        return values;
+
+async function readFullObjects(tablename) {
+
+    const result = await getReferencedColumns(tablename)
+    return result
+
+}
+
+async function readWithJoin(tableName, column) {
+    try {
+
+        const query = await readJoin(tableName, column);
+        const values = await join(query);
+        let result = [];
+        if (values) {
+            values.forEach(val => {
+                const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
+                const keys = Object.keys(sameRecord[0]);
+                const temp = {}
+                for (let key of keys) {
+                    temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
+                }
+                result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
+            });
+        }
+        return result;
     }
-    else {
-        return false;
+    catch (error) {
+        throw error
+    }
+}
+async function connectTables(tableName = "", condition = "") {
+    try {
+
+        const query = viewConnectionsTables(tableName, condition);
+        const values = await join(query);
+        const items = []
+        for (let val of values) {
+            const entries = Object.entries(val)
+            const foreignkeys = entries.filter(e => e[0].startsWith('FK'))
+            let groups = foreignkeys.reduce((gr, fk) => {
+                const prop = fk[0].split('_')[1]
+                if (!gr.some(g => g.name === prop)) {
+                    let group = { name: prop, values: [fk] }
+                    gr = [...gr, group]
+                }
+                else {
+                    gr.find(g => g.name === prop).values.push(fk)
+                }
+                return gr
+            }                , [])
+
+            const newObj = entries.reduce((obj, ent) => {
+                if (ent[0].startsWith('FK')) {
+                    return obj
+                }
+                const gr = groups.find(g => g.name.indexOf(ent[0]) !== -1)
+                if (gr) {
+                    obj[ent[0]] = gr.values.reduce((val, v) => {
+                        const split = v[0].split('_')
+                        val[split[split.length - 1]] = v[1]
+                        return val
+                    }, {})
+                }
+                else {
+                    obj[ent[0]] = ent[1]
+                }
+                return obj
+            }, {})
+            items.push(newObj)
+        }
+        return items;
+
+    }
+    catch (error) {
+        console.log({ error })
+        throw error
     }
 }
 
@@ -57,8 +139,8 @@ async function countRowsSql(obj) {
         const list = await countRows(obj);
         return list;
     }
-    catch {
-        throw new Error('Count faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -68,10 +150,35 @@ async function getDetailsMng(obj) {
         const response = await mongoCollection.find(obj);
         return response;
     }
-    catch {
+    catch (error) {
+        console.log(error.message)
         throw new Error('Read faild.')
     }
 };
+
+async function getPolygon(obj) {
+    try {
+        console.log({ obj })
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.find({ filter: obj.filter });
+        // console.log(/)
+        let areas = []
+        for (let i = 0; i < response.length; i++) {
+            const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
+            console.log({ response2 })
+            if (response2.length > 0) {
+                areas.push(response[i])
+            }
+        }
+        console.log('areas')
+        console.log(areas)
+        return areas;
+    }
+    catch (error) {
+        console.log(error.message)
+        throw new Error('Read faild.')
+    }
+}
 
 async function getDetailsWithAggregateMng(obj) {
     try {
@@ -79,8 +186,8 @@ async function getDetailsWithAggregateMng(obj) {
         const response = await mongoCollection.aggregate(obj.aggregate);
         return response;
     }
-    catch {
-        throw new Error('Read with Aggregate faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -90,8 +197,8 @@ async function getDetailsWithDistinct(collection, filter) {
         const response = await mongoCollection.distinct(filter);
         return response;
     }
-    catch {
-        throw new Error('Read with distinct faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -101,9 +208,15 @@ async function getCountDocumentsMng(collection) {
         const response = await mongoCollection.countDocuments();
         return response;
     }
-    catch {
-        throw new Error('Count faild.')
+    catch (error) {
+        throw error
     }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct,connectTables };
+module.exports = {
+    getDetailsSql,
+    getAllSql, readJoin, countRowsSql,
+    readFullObjects, readRelatedObjects,
+    getDetailsMng, readWithJoin,
+    getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
+};
