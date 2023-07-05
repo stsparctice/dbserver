@@ -64,6 +64,7 @@ async function countRowsSql(obj) {
 
 async function getDetailsMng(obj) {
     try {
+        console.log('obje', obj);
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.find(obj);
         return response;
@@ -113,6 +114,7 @@ async function getDetailsWithDistinct(collection, filter) {
     try {
         mongoCollection.setCollection(collection);
         const response = await mongoCollection.distinct(filter);
+        console.log('----------',response);
         return response;
     }
     catch {

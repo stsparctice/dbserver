@@ -6,7 +6,7 @@ const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
 const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
-
+const { ObjectId } = require('mongodb');
 router.use(express.json());
 router.use(routerLogger())
 
@@ -14,7 +14,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
     let obj = {}
     obj.tableName = req.params.table
     obj.columns = `${req.params.column}`
-  obj.condition =`${req.params.column} LIKE N'%${req.params.word}%'`
+    obj.condition = `${req.params.column} LIKE N'%${req.params.word}%'`
     if (req.params.condition.trim() != "1=1") {
         obj.condition += "AND " + req.params.condition
         // console.log(obj.condition);
@@ -85,23 +85,23 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
 // })
 
 router.get('/foreignkeyvalue/:tablename/:field/:id', async (req, res) => {
-    try{
-    const { foreignTableName, defaultColumn } = getForeignTableAndColumn(req.params.tablename, req.params.field)
-    let obj = {}
-    obj.tableName = foreignTableName
-    obj.columns = `${defaultColumn}`
-    const primarykey = getPrimaryKeyField(foreignTableName)
-    if (primarykey) {
-        obj.columns += `,${primarykey}`
+    try {
+        const { foreignTableName, defaultColumn } = getForeignTableAndColumn(req.params.tablename, req.params.field)
+        let obj = {}
+        obj.tableName = foreignTableName
+        obj.columns = `${defaultColumn}`
+        const primarykey = getPrimaryKeyField(foreignTableName)
+        if (primarykey) {
+            obj.columns += `,${primarykey}`
+        }
+        obj.condition = `${primarykey} = ${req.params.id}`
+        obj.n = 1
+        const result = await getDetailsSql(obj);
+        res.status(200).send(result);
     }
-    obj.condition = `${primarykey} = ${req.params.id}`
-    obj.n = 1
-    const result = await getDetailsSql(obj);
-    res.status(200).send(result);
-}
-catch(error){
-    res.status(500).send(error.message)
-}
+    catch (error) {
+        res.status(500).send(error.message)
+    }
 })
 
 router.get('/connectTables/:tableName/:condition', async (req, res) => {
@@ -152,6 +152,7 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
 
 router.post('/find', async (req, res) => {
     try {
+        console.log('boooooo', req.body);
         const response = await getDetailsMng(req.body);
         res.status(200).send(response);
     }
@@ -160,9 +161,25 @@ router.post('/find', async (req, res) => {
     }
 });
 
+
+
+// router.post('/findme', async (req, res) => {
+//     try {
+//         const { collection, filter } = req.body
+//         filter['_id'] = ObjectId(filter['_id'])
+//         console.log('boooooo',req.body);
+//         const response = await getDetailsMng({collection, filter});
+//         res.status(200).send(response);
+//     }
+//     catch (error) {
+//         res.status(404).send(error.message)
+//     }
+// });
+
+
 router.post('/findpolygon', async (req, res) => {
     try {
-        const response =await getPolygon(req.body)
+        const response = await getPolygon(req.body)
         console.log({ response })
         console.log(response.length)
         if (response)

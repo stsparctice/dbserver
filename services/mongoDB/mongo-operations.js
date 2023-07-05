@@ -50,7 +50,9 @@ class MongoDBOperations {
 
     async updateOne(obj) {
         try {
+            // console.log('before', this.dbName, this.collectionName, obj.filter, obj.set);
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
+            // console.log('after',result);
             return result;
         }
         catch (error) {

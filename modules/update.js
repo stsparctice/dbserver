@@ -14,28 +14,32 @@ async function updateSql(obj) {
 
                 `${c[0]} =  ${parseSQLTypeForColumn({name:c[0], value:c[1]}, tabledata)}`
             )
-            obj.condition = conditionList.join(' AND ')
+            obj.condition = conditionList.join(' AND ');
         }
         else{
             obj.condition = "1 = 1"
         }
         console.log({obj})
         const result = await update(obj);
+        console.log("----------------",result);
         return result;
     }
     catch {
         throw new Error('Update faild.')
     }
 };
+
 async function updateOneSql(obj) {
     const result = await updateOne(obj);
     return result;
 };
+
 async function updateMng(obj) {
     try {
         console.log({obj})
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateOne(obj);
+        console.log('rrrrrrrrrrrrrrrrrrr');
         return response;
     }
     catch {

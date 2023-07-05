@@ -19,7 +19,7 @@ const create = async function (obj) {
 
           const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
           console.log({ result })
-          return result.recordset;
+          return result;
      }
      catch (error) {
           console.log(error.message)
@@ -170,8 +170,9 @@ const update = async function (obj) {
           //      .input('condition', condition)
           //      .execute(`pro_BasicUpdate`);
 
+
           const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-          console.log({query})
+          console.log({ query })
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
           return result;
      }
@@ -179,21 +180,22 @@ const update = async function (obj) {
           throw error
      }
 };
+
 const updateOne = async function (obj) {
      try {
+          if (!Object.keys(obj).includes("condition")) {
+               obj["condition"] = '1=1';
+          };
           // const tableName = "tbl_Leads"
-
+          console.log('herehhhhhhhhhhh');
           const { tableName, values, condition } = obj;
+          console.log({ tableName, values, condition });
+          console.log(values);
           const value = setValues(values);
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('values', value)
-          //      .input('condition', condition)
-          //      .execute(`pro_BasicUpdate`);
-
           const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-          // console.log({query})
+          console.log(value, condition)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+          // console.log(result);
           return result;
      }
      catch (error) {
@@ -220,19 +222,19 @@ const updateSuppliersBranches = async function (obj) {
 };
 
 const countRows = async function (obj) {
-     try{
-     const { tableName, condition } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('condition', condition)
-     //      .execute(`pro_CountRows`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
-     console.log({ count: result })
-     return result;
-}
-catch(error){
-     throw error
-}
+     try {
+          const { tableName, condition } = obj;
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('condition', condition)
+          //      .execute(`pro_CountRows`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
+          console.log({ count: result })
+          return result;
+     }
+     catch (error) {
+          throw error
+     }
 }
 
 function setValues(obj) {
