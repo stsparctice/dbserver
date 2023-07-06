@@ -1,6 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField } = require('./config/config');
+const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField ,  parseSQLTypeForColumn, buildSqlCondition} = require('./config/config');
 const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
@@ -56,7 +56,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
 }
 
 async function readFullObjects(tablename) {
-
+console.log('readFullObjects:', tablename)
     const result = await getReferencedColumns(tablename)
     return result
 
@@ -85,9 +85,9 @@ async function readWithJoin(tableName, column) {
         throw error
     }
 }
-async function connectTables(tableName = "", condition = "") {
+async function connectTables(tableName = "", condition = {}) {
     try {
-
+console.log('connectTables:', tableName)
         const query = viewConnectionsTables(tableName, condition);
         const values = await join(query);
         const items = []
@@ -136,10 +136,13 @@ async function connectTables(tableName = "", condition = "") {
 
 async function countRowsSql(obj) {
     try {
-        const list = await countRows(obj);
-        return list;
+      obj.condition = buildSqlCondition(obj.tableName, obj.condition)
+       console.log({obj})
+        const count = await countRows(obj);
+        return  count.recordset[0];
     }
     catch (error) {
+        console.log(error.message)
         throw error
     }
 };

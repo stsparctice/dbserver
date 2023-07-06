@@ -523,7 +523,7 @@
                             {
                                 "name": "DocumentUrl",
                                 "sqlName": "DocumentUrl",
-                                "type": "NVARCHAR(20)NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "Disabled",
@@ -564,32 +564,32 @@
                             {
                                 "name": "CreditNumber",
                                 "sqlName": "CreditNumber",
-                                "type": "NVARCHAR(16)NOT NULL"
+                                "type": "NVARCHAR(16) NOT NULL"
                             },
                             {
                                 "name": "CardType",
                                 "sqlName": "CardType",
-                                "type": "NVARCHAR(20)NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "OwnerCard",
                                 "sqlName": "OwnerCard",
-                                "type": "NVARCHAR(40)NOT NULL"
+                                "type": "NVARCHAR(40) NOT NULL"
                             },
                             {
                                 "name": "IdOwnerCard",
                                 "sqlName": "IdOwnerCrad",
-                                "type": "NVARCHAR(9)NOT NULL"
+                                "type": "NVARCHAR(9) NOT NULL"
                             },
                             {
                                 "name": "Validity",
                                 "sqlName": "Validity",
-                                "type": "NVARCHAR(4)NOT NULL"
+                                "type": "NVARCHAR(4) NOT NULL"
                             },
                             {
                                 "name": "PaymentMethod",
                                 "sqlName": "PaymentMethod",
-                                "type": "NVARCHAR(20)NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "PaymentsSum",
@@ -599,7 +599,7 @@
                             {
                                 "name": "CardName",
                                 "sqlName": "CardName",
-                                "type": "NVARCHAR(20)NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "Disabled",
@@ -640,12 +640,12 @@
                             {
                                 "name": "StandingOrderType",
                                 "sqlName": "StandingOrderType",
-                                "type": "NVARCHAR(20)NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "AccountNumberOrCard",
                                 "sqlName": "AccountNumberOrCard",
-                                "type": "NVARCHAR(40)NOT NULL"
+                                "type": "NVARCHAR(40) NOT NULL"
                             },
                             {
                                 "name": "UntilDate",
@@ -655,7 +655,7 @@
                             {
                                 "name": "ProofBackFromBank",
                                 "sqlName": "ProofBackFromBank",
-                                "type": "NVARCHAR(20)NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "Disabled",
@@ -1041,17 +1041,17 @@
                             {
                                 "name": "BranchName",
                                 "sqlName": "BranchName",
-                                "type": "nvarchar(20)NOT NULL"
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "Status",
                                 "sqlName": "Status",
-                                "type": " int NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(Status) REFERENCES tbl_Status(Id)"
                             },
                             {
                                 "name": "Street",
                                 "sqlName": "Street",
-                                "type": "nvarchar(50)NOT NULL"
+                                "type": "nvarchar(50) NOT NULL"
                             },
                             {
                                 "name": "HomeNumber",
@@ -1061,7 +1061,7 @@
                             {
                                 "name": "City",
                                 "sqlName": "City",
-                                "type": " nvarchar(20)NOT NULL"
+                                "type": " nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "ZipCode",
@@ -1071,7 +1071,7 @@
                             {
                                 "name": "Phone1",
                                 "sqlName": "Phone1",
-                                "type": "nvarchar(20)NOT NULL"
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "Phone2",
@@ -1106,7 +1106,7 @@
                             {
                                 "name": "UserThatInsert",
                                 "sqlName": "UserThatInsert",
-                                "type": "nvarchar(20)NOT NULL"
+                                "type": "nvarchar(20) NOT NULL"
                             },
                             {
                                 "name": "Disabled",
