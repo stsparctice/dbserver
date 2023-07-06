@@ -49,16 +49,16 @@ router.get('/readAllEntity/:entity', async (req, res) => {
     try {
         let obj = {};
         obj['tableName'] = req.params.entity;
-        console.log({obj})
-        const fullObjects =await readFullObjects(req.params.entity)
+        console.log({ obj })
+        const fullObjects = await readFullObjects(req.params.entity)
         console.log(fullObjects)
-        let condition = ''
-        if (req.query) {
-            const entries = Object.entries(req.query)
-            const conditions = entries.map(con => `${req.params.entity}.${con[0]}= ${con[1]}`)
-            condition = conditions.join(' AND ')
-        }
-        condition = condition.length > 0 ? condition : "1=1"
+        let condition = req.query? req.query : {}
+        // if (req.query) {
+        //     const entries = Object.entries(req.query)
+        //     const conditions = entries.map(con => `${req.params.entity}.${con[0]}= ${con[1]}`)
+        //     condition = conditions.join(' AND ')
+        // }
+        // condition = condition.length > 0 ? condition : "1=1"
         if (fullObjects.length === 0) {
             const response = await connectTables(req.params.entity, condition)
             res.status(200).send(response)
@@ -70,15 +70,15 @@ router.get('/readAllEntity/:entity', async (req, res) => {
     }
 });
 
-router.get('/readAll/:tablename', async (req, res) => {
+router.get('/readAll/:entity', async (req, res) => {
     try {
         let obj = {};
         obj['tableName'] = req.params.entity;
         const table = await getAllSql(obj);
-        // console.log(table);
         res.status(200).send(table);
     }
     catch (error) {
+        console.log(error.message)
         res.status(404).send(error.message)
     }
 })
@@ -183,7 +183,9 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
 
 router.post('/countRows', parseTableName(), async (req, res) => {
     try {
+       
         const count = await countRowsSql(req.body);
+        console.log({count})
         res.status(200).send(count);
     }
     catch (error) {
