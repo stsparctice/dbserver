@@ -22,6 +22,7 @@ router.post('/create', parseTableName(), parseColumnName(), async (req, res) => 
 router.post('/createManySql', parseTableName(), async (req, res) => {
     try {
         const result = await insertManySql(req.body);
+        console.log({result});
         res.status(201).send(result);
     }
     catch (error) {

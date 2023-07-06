@@ -3,6 +3,7 @@ require('dotenv').config();
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 const { getPrimaryKeyField } = require('../../modules/config/config')
+const { Log } = require('../../services/log/log');
 
 const create = async function (obj) {
 
@@ -87,8 +88,7 @@ const createNewTable = async function (obj) {
 }
 
 const read = async function (obj) {
-     console.log("objjjjjjjjjjjjjjj",obj);
-     // console.log("9999999999999999999999999");
+
      if (!Object.keys(obj).includes("condition")) {
           obj.condition = '1=1';
      };
@@ -103,14 +103,30 @@ const read = async function (obj) {
      //      .input('condition', condition)
      //      .input('n', n)
      //      .execute(`pro_BasicRead`);
-     console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-     return result.recordset;
-};
+     try {
+          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          return result.recordset;
+     }
+     catch (error) {
+          console.log(error);
+     }
+     // let newObject = {
+     //      name: "read",
+     //      path: "services/sql/sql-operations",
+     // }
+     // if (result)
+     // newObject.body = { rowsAffected: result.rowsAffected }
+
+     // else
+     // newObject.body = { rowsAffected: "problem" }
+     // object.push(newObject)
+     // Log(object)
+
+}
 
 
 const readAll = async function (obj) {
-     // console.log("6666666666666666666666666666666");
      if (!Object.keys(obj).includes("condition")) {
           obj["condition"] = '1=1';
      };
@@ -119,8 +135,9 @@ const readAll = async function (obj) {
      //      .input('tableName', tableName)
      //      .input('condition', condition)
      //      .execute(`pro_ReadAll`);
+     console.log("{ tableName, condition }{ tableName, condition }", { tableName, condition });
      const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-     // console.log("777777777777777",result);
+     console.log("result.recordsetresult.recordsetresult.recordsetresult.recordsetresult.recordset", result.recordset);
      return result.recordset;
 };
 
@@ -137,7 +154,7 @@ const update = async function (obj) {
           obj["condition"] = '1=1';
      };
      const { tableName, values, condition } = obj;
-     
+
      const value = setValues(values);
 
      // const result = await getPool().request()
@@ -147,8 +164,13 @@ const update = async function (obj) {
      //      .execute(`pro_BasicUpdate`);
 
      const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
-     return result;
+     try {
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+          return result;
+     }
+     catch (error) {
+          console.log(error);
+     }
 };
 const updateOne = async function (obj) {
      // console.log("obj-=-=-=-=++++++++++++",obj);
@@ -156,9 +178,9 @@ const updateOne = async function (obj) {
      //      obj["condition"] = '1=1';
      // };
      // const { tableName, values, condition } = obj;
-const tableName="tbl_Leads"
-     
-     const {  values, condition } = obj;
+     const tableName = "tbl_Leads"
+
+     const { values, condition } = obj;
      const value = setValues(values);
      // const result = await getPool().request()
      //      .input('tableName', tableName)
@@ -167,8 +189,10 @@ const tableName="tbl_Leads"
      //      .execute(`pro_BasicUpdate`);
 
      const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-     // console.log({query})
+     console.log({ query })
      const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+     console.log({ result })
+
      return result;
 };
 // 

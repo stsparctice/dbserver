@@ -4,6 +4,7 @@ const mongoCollection = MongoDBOperations;
 
 async function updateSql(obj) {
     try {
+        console.log("&&%%%%%%%%%%%%%%%%%%%%%%%%%%%%%$$$$$$$$$$$$$############@@@@@@@@@@@@");
         const result = await update(obj);
         return result;
     }
@@ -13,6 +14,7 @@ async function updateSql(obj) {
 };
 async function updateOneSql(obj) {
     const result = await updateOne(obj);
+    console.log("resultresult^^^^^^^^^^^^^^^",result);
     return result;
 };
 async function updateMng(obj) {
