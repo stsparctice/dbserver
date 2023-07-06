@@ -9,25 +9,21 @@ if (!SQL_DBNAME) {
 }
 
 const create = async function (obj) {
-     try {
-          const { tableName, columns, values } = obj;
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('values', values)
-          //      .execute(`pro_BasicCreate`);
+     const { tableName, columns, values } = obj;
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('values', values)
+     //      .execute(`pro_BasicCreate`);
 
-          //      console.log({result})
-          // console.log({ tableName, columns, values })
-          const primarykey = getPrimaryKeyField(tableName)
-          console.log(primarykey);
-
-          const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-          // console.log({ result })
-          return result.recordset;
+     //      console.log({result})
+     console.log({ tableName, columns, values })
+     const primarykey = getPrimaryKeyField(tableName)
+     try{
+     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
+     return result.recordset;
      }
-     catch (error) {
-          console.log(error.message)
+     catch(error){
           throw error
      }
 
@@ -156,6 +152,7 @@ const join = async (query = "") => {
           throw error
      }
 };
+
 
 const update = async function (obj) {
      try {
