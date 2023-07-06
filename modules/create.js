@@ -8,15 +8,18 @@ const { getSqlTableColumnsType, parseSQLType } = require('../modules/config/conf
 
 async function createSql(obj) {
     try {
+        // obj.tableName=`tbl_${obj.tableName}`
         let tabledata = getSqlTableColumnsType(obj.tableName)
+        console.log({tabledata});
         let arr = parseSQLType(obj.values, tabledata)
 
-        console.log({ obj })
+
+        console.log({ arr })
         const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
-        console.log({ result })
         return result
     }
     catch (error){
+        console.log(error.message)
         throw error
     }
 };
@@ -45,14 +48,43 @@ async function insertManySql(obj) {
     }
 }
 async function creatNewColumn(obj) {
-    const result = await insertColumn(obj)
+    try {
+        const result = await insertColumn(obj)
+        return result
+    } catch (error) {
+        console.log("error modul");
+        throw error
+    }
 }
 
 async function creatSqlTable(obj) {
-    const result = await createNewTable(obj)
-    return result
+    console.log("creatSqlTable module");
+    console.log(creatSqlNameTable(obj.MTDTable.name.name), "upper case");
+    try {
+        console.log(obj);
+        // (creatSqlNameTable(req.body.MTDTable.name) ,"upper case" );
+        // obj.MTDTable.name.sqlName=await creatSqlNameTable(obj.MTDTable.name.name)
+        // console.log(obj.MTDTable.name.sqlName,  "  sqlName");
+        const result = await createNewTable(obj)
+        return result
+    } catch (error) {
+        throw error
+    }
 }
 
+<<<<<<< HEAD
+
+async function creatSqlNameColumn(str) {
+    return str.replace(str.charAt(0), str.charAt(0).toUpperCase())
+}
+
+async function creatSqlNameTable(str) {
+    return `tbl_${str.replace(str.charAt(0), str.charAt(0).toUpperCase())}`
+}
+
+
+=======
+>>>>>>> 56ee8cc3311d081d848d0b6d855757b4304b6818
 async function createMng(obj) {
     try {
         mongoCollection.setCollection(obj.collection);
@@ -64,4 +96,4 @@ async function createMng(obj) {
     }
 };
 
-module.exports = { createSql, insertManySql, createMng, creatSqlTable, creatNewColumn };
+module.exports = { createSql, createMng, creatSqlTable, creatNewColumn, creatSqlNameTable, creatSqlNameColumn,insertManySql };

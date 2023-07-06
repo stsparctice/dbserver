@@ -12,7 +12,7 @@ const { HOST, PORT } = process.env;
 const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 
-// connectMng().then(_ => {
+connectMng().then(_ => {
     console.log('connect to mongo')
     connectSql().then(_ => {
         createTables().then(_ => {
@@ -22,15 +22,28 @@ const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
                     app.listen(PORT, HOST, () => {
                         console.log(`http://${HOST}:${PORT}`);
                     });
+                }, (err) => {
+                    console.log(err.message, 'from insertDataToSql');
                 })
+            }, (err) => {
+                console.log(err.message, 'from createSpecialProcedures');
             });
+        }, (err) => {
+            console.log(err.message, 'from createProcedures');
         });
-        // deleteData();
+        
+    }, (err) => {
+        console.log(err.message, 'from createTabels');
+    });
+
+}, (err) => {
+    console.log(err.message, 'from connectSql');
+});
+// });
+const server = http.createServer(app)
+
+
+
+// deleteData();
         // dropSQLTables();
         // dropMongoDBCollection();
-    });
- 
-// });
-// });
-
-const server = http.createServer(app)

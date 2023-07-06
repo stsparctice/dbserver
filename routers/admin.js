@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const config = require('../config.json');
+<<<<<<< HEAD
+const config = require('../config2.json');
+=======
+const config = require('../config/DBconfig.json');
+>>>>>>> cdaca1186d82ceb20dfbe4798fd0f323a445a06e
 const { checkUserRole } = require('../modules/authorization');
 const { updateConfig } = require('../modules/admin');
 const { routerLogger } = require('../utils/logger');

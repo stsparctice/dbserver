@@ -60,7 +60,6 @@ async function readWithJoin(tableName, column, object) {
             result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
         });
     }
-    return result;
 }
 async function connectTables(tableName = "", condition = "", object) {
     object.push({
@@ -74,9 +73,10 @@ async function connectTables(tableName = "", condition = "", object) {
     if (values) {
         return values;
     }
-    else {
-        return false;
-    }
+    // catch (error) {
+    //     console.log({ error })
+    //     throw error
+    // }
 }
 
 async function countRowsSql(obj, object) {

@@ -1,0 +1,1829 @@
+[
+    {
+        "database": "sql",
+        "dbobjects": [
+            {
+                "type": "Procedures",
+                "list": [
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "BasicCreate": "pro_BasicCreate"
+                            },
+                            "description": {
+                                "description": "Procedure for inserting values to table"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "tableName": "tableName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR (20)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "values": "values"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR (200)"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "BasicRead": "pro_BasicRead"
+                            },
+                            "description": {
+                                "description": "Procedure for reading values from table"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "TableName": "TableName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(30)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "columns": "columns"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "condition": "condition"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "BasicUpdate": "pro_BasicUpdate"
+                            },
+                            "description": {
+                                "description": "Procedure for updating values in table"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "tableName": "tableName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "values": "values"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "condition": "condition"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "Tables",
+                "list": [
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "finishProducts",
+                                "sqlName": "tbl_finishProducts"
+                            },
+                            "description": "a table of finish products "
+                        },
+                        "columns": [
+                            {
+                                "name": "ordinalNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "name",
+                                "type": "NVARCHAR(20)  NOT NULL"
+                            },
+                            {
+                                "name": "unitOfMeasure",
+                                "type": "INT NULL"
+                            },
+                            {
+                                "name": "bookkeepingCode",
+                                "type": "NVARCHAR(20)  NULL"
+                            },
+                            {
+                                "name": "addedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "enabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "deletedDate",
+                                "type": "DATETIME NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "additions",
+                                "sqlName": "tbl_additions"
+                            },
+                            "description": "a table of additions to the byton "
+                        },
+                        "columns": [
+                            {
+                                "name": "ordinalNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "name",
+                                "type": "NVARCHAR(20)  NOT NULL"
+                            },
+                            {
+                                "name": "unitOfMeasure",
+                                "type": "INT NULL"
+                            },
+                            {
+                                "name": "bookkeepingCode",
+                                "type": "NVARCHAR(20) NULL"
+                            },
+                            {
+                                "name": "addedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "enabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "deletedDate",
+                                "type": "DATETIME NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "pumps",
+                                "sqlName": "tbl_pumps"
+                            },
+                            "description": "a table of pumps and additions to the pumps "
+                        },
+                        "columns": [
+                            {
+                                "name": "ordinalNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "name",
+                                "type": "NVARCHAR(20)  NOT NULL"
+                            },
+                            {
+                                "name": "unitOfMeasure",
+                                "type": "INT NULL"
+                            },
+                            {
+                                "name": "addition",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "bookkeepingCode",
+                                "type": "NVARCHAR(20) NULL"
+                            },
+                            {
+                                "name": "addedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "enabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "deletedDate",
+                                "type": "DATETIME NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "unitOfMeasure",
+                                "sqlName": "tbl_unitOfMeasure"
+                            },
+                            "description": "a normalization table of unitsOfMeasure"
+                        },
+                        "columns": [
+                            {
+                                "name": "id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "measure",
+                                "type": "NVARCHAR(20) NOT NULL "
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "BasicDetails",
+                                "sqlName": "tbl_BasicDetails"
+                            },
+                            "description": "Table for the Basic details of receipt"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ClientCode",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "DateReceipt",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "TotalSum",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Comments",
+                                "type": "NVARCHAR(MAX) NULL"
+                            },
+                            {
+                                "name": "InsertDate",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NULL"
+                            },
+                            {
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_PaymentTypes"
+                            },
+                            "description": "Normalization table to describe the paymentId of BasicDetails table"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PaymentId",
+                                "type": "INT NOT NULL",
+                                "values": [
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5
+                                ]
+                            },
+                            {
+                                "name": "PaymentType",
+                                "type": "NVARCHAR(20)  NOT NULL",
+                                "values": [
+                                    "Cash",
+                                    "Cheque",
+                                    "Credit",
+                                    "StandingOrder",
+                                    "BankTransfer"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "NormalizationTable",
+                                "sqlName": "tbl_NormalizationTable"
+                            },
+                            "description": "Normalization table BasicDatails with the payment types tables"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20)  NOT NULL"
+                            },
+                            {
+                                "name": "PaymentId",
+                                "type": "INT  NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Cash",
+                                "sqlName": "tbl_Cash"
+                            },
+                            "description": "Table of cash details"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "SumOfCash",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Cheque",
+                                "sqlName": "tbl_Cheque"
+                            },
+                            "description": "Table of cheque details"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "SumOfCheque",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "BankNumber",
+                                "type": "NVARCHAR(10) NOT NULL"
+                            },
+                            {
+                                "name": "BankBranch",
+                                "type": "NVARCHAR(10) NOT NULL"
+                            },
+                            {
+                                "name": "AccountNumber",
+                                "type": "NVARCHAR(20)  NOT NULL"
+                            },
+                            {
+                                "name": "UntilDate",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "DocumentUrl",
+                                "type": "NVARCHAR(20)NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Credit",
+                                "sqlName": "tbl_Credit"
+                            },
+                            "description": "Table of credit details"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY  PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "SumOfCredit",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "CreditNumber",
+                                "type": "NVARCHAR(16)NOT NULL"
+                            },
+                            {
+                                "name": "CardType",
+                                "type": "NVARCHAR(20)NOT NULL"
+                            },
+                            {
+                                "name": "OwnerCard",
+                                "type": "NVARCHAR(40)NOT NULL"
+                            },
+                            {
+                                "name": "IdOwnerCard",
+                                "type": "NVARCHAR(9)NOT NULL"
+                            },
+                            {
+                                "name": "Validity",
+                                "type": "NVARCHAR(4)NOT NULL"
+                            },
+                            {
+                                "name": "PaymentMethod",
+                                "type": "NVARCHAR(20)NOT NULL"
+                            },
+                            {
+                                "name": "PaymentsSum",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "CardName",
+                                "type": "NVARCHAR(20)NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "StandingOrder",
+                                "sqlName": "tbl_StandingOrder"
+                            },
+                            "description": "Table of standingOrder details"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "SumOfStandingOrder",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "StandingOrderType",
+                                "type": "NVARCHAR(20)NOT NULL"
+                            },
+                            {
+                                "name": "AccountNumberOrCard",
+                                "type": "NVARCHAR(40)NOT NULL"
+                            },
+                            {
+                                "name": "UntilDate",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "ProofBackFromBank",
+                                "type": "NVARCHAR(20)NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "BankTransfer",
+                                "sqlName": "tbl_BankTransfer"
+                            },
+                            "description": "Table of bankTransfer details"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ReceiptNumber",
+                                "type": "NVARCHAR(20)  NOT NULL"
+                            },
+                            {
+                                "name": "SumOfBankTransfer",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "TransferDate",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Proof",
+                                "type": "NVARCHAR(100) NOT NULL"
+                            },
+                            {
+                                "name": "ProofNumber",
+                                "type": "NVARCHAR(30) NOT NULL"
+                            },
+                            {
+                                "name": "AccountNumber",
+                                "type": "NVARCHAR(15) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeleteDate",
+                                "type": "NVARCHAR(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Suppliers",
+                                "sqlName": "tbl_Suppliers"
+                            },
+                            "description": "Table for the details of suppliers"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+                            },
+                            {
+                                "name": "SupplierCode",
+                                "type": "nvarchar(50) NOT NULL "
+                            },
+                            {
+                                "name": "SupplierName",
+                                "type": "nvarchar(50) NOT NULL"
+                            },
+                            {
+                                "name": "licensedDealerNumber",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "BokkeepingNumber",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "ObjectiveBank",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "ConditionGushyPayment",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "PreferredPaymentDate",
+                                "type": "INT  NULL"
+                            },
+                            {
+                                "name": "Ovligo",
+                                "type": "int  NULL"
+                            },
+                            {
+                                "name": "Status",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "Street",
+                                "type": "nvarchar(20)NOT NULL"
+                            },
+                            {
+                                "name": "HomeNumber",
+                                "type": " int NOT NULL"
+                            },
+                            {
+                                "name": "City",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "ZipCode",
+                                "type": " nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Phone1",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "Phone2",
+                                "type": " nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Mobile",
+                                "type": " nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Fax",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Mail",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Notes",
+                                "type": "nvarchar(MAX) NULL"
+                            },
+                            {
+                                "name": "CreationDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "InsertUser",
+                                "type": "NVARCHAR(50) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT"
+                            },
+                            {
+                                "name": "DisabledDate",
+                                "type": "nvarchar(50)"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "type": " nvarchar(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Branches",
+                                "sqlName": "tbl_Branches"
+                            },
+                            "description": "Table for the details of branches"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "int Identity (1000,1) PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "SupplierCode",
+                                "type": "INT NOT NULL FOREIGN KEY(SupplierCode) REFERENCES tbl_Suppliers(Id) "
+                            },
+                            {
+                                "name": "BranchName",
+                                "type": "nvarchar(20)NOT NULL"
+                            },
+                            {
+                                "name": "Status",
+                                "type": " int NOT NULL"
+                            },
+                            {
+                                "name": "Street",
+                                "type": "nvarchar(50)NOT NULL"
+                            },
+                            {
+                                "name": "HomeNumber",
+                                "type": " int NOT NULL"
+                            },
+                            {
+                                "name": "City",
+                                "type": " nvarchar(20)NOT NULL"
+                            },
+                            {
+                                "name": "ZipCode",
+                                "type": " nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Phone1",
+                                "type": "nvarchar(20)NOT NULL"
+                            },
+                            {
+                                "name": "Phone2",
+                                "type": " nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Mobile",
+                                "type": " nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Fax",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Mail",
+                                "type": "nvarchar(20) NULL"
+                            },
+                            {
+                                "name": "Notes",
+                                "type": "nvarchar(MAX) NULL"
+                            },
+                            {
+                                "name": "CreationDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserThatInsert",
+                                "type": "nvarchar(20)NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NULL"
+                            },
+                            {
+                                "name": "DisabledDate",
+                                "type": "DATETIME NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "type": "nvarchar(20) NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Orderers",
+                                "sqlName": "tbl_Orderers"
+                            },
+                            "description": "table of orderers details"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "OrdereName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "OrdererPhone",
+                                "type": "NVARCHAR(10) NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "Disable",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeletingDate",
+                                "type": "DATETIME NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PouringsTypes",
+                                "sqlName": "tbl_PouringsTypes"
+                            },
+                            "description": "type of pourings "
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PouringName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "Disable",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeletingDate",
+                                "type": "DATETIME NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "StatusesLead",
+                                "sqlName": "tbl_StatusesLead"
+                            },
+                            "description": "table of statuses leads option"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "StatusName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "Disable",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DeletingDate",
+                                "type": "DATETIME NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Clients",
+                                "sqlName": "tbl_Clients"
+                            },
+                            "description": "Table that contain all the details of the clients"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "ClientCode",
+                                "type": "nvarchar(50) NOT NULL"
+                            },
+                            {
+                                "name": "ClientName",
+                                "type": "nvarchar(50) NOT NULL"
+                            },
+                            {
+                                "name": "PrivateCompanyNumber",
+                                "type": "nvarchar(50) NOT NULL"
+                            },
+                            {
+                                "name": "BookkeepingNumber",
+                                "type": "nvarchar(50) "
+                            },
+                            {
+                                "name": "DestinationBank",
+                                "type": "nvarchar(50) "
+                            },
+                            {
+                                "name": "PaymentTermsFluent",
+                                "type": "nvarchar(50)"
+                            },
+                            {
+                                "name": "PreferredPaymentDate",
+                                "type": "int"
+                            },
+                            {
+                                "name": "Ovligo",
+                                "type": "int"
+                            },
+                            {
+                                "name": "ReceiptIssueTerm",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "ReceiptCentralism",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "AccountantClassifiedCode",
+                                "type": "int"
+                            },
+                            {
+                                "name": "Status",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "Description",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "Street",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "House",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "City",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "ZipCode",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "Telephone1",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "Telephone2",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "MobilePhone",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "Fax",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "Email",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "Comments",
+                                "type": "nvarchar(20)"
+                            },
+                            {
+                                "name": "CreationDate",
+                                "type": "nvarchar(50) NOT NULL"
+                            },
+                            {
+                                "name": "UserThatAdd",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "bit NOT NULL"
+                            },
+                            {
+                                "name": "DeletionDate",
+                                "type": "nvarchar(50)"
+                            },
+                            {
+                                "name": "UserThatDelete",
+                                "type": "nvarchar(20)"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_Status"
+                            },
+                            "description": "Table that contain all the statuses"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
+                                "values": [
+                                    1,
+                                    2,
+                                    3
+                                ]
+                            },
+                            {
+                                "name": "StatusName",
+                                "type": "nvarchar(50) NOT NULL",
+                                "values": [
+                                    "פעיל",
+                                    "מושהה",
+                                    "מוגבל"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Quotation",
+                                "sqlName": "tbl_Quotation"
+                            },
+                            "description": "Table for the details of quotations"
+                        },
+                        "columns": [
+                            {
+                                "name": "SerialNumber",
+                                "type": "int Identity (1000,1) NOT NULL PRIMARY KEY"
+                            },
+                            {
+                                "name": "ClientCode",
+                                "type": "int NOT NULL "
+                            },
+                            {
+                                "name": "Date",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "PriceBeforeDiscount",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "DiscountPercent",
+                                "type": "float NULL"
+                            },
+                            {
+                                "name": "Discount",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "PriceAfterDiscount",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "VATPercent",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "VAT",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "Total",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "Comments",
+                                "type": "nvarchar(1000) NULL"
+                            },
+                            {
+                                "name": "Contact",
+                                "type": "varchar(255) NULL"
+                            },
+                            {
+                                "name": "PayoffDate",
+                                "type": "DATETIME NULL"
+                            },
+                            {
+                                "name": "ClosingComments",
+                                "type": "nvarchar(1000) NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "DisabledDate",
+                                "type": "DATETIME NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "priceList",
+                                "sqlName": "tbl_PriceList"
+                            },
+                            "description": "table that contains all the priceList of the products"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Category",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Associate",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "CreateDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Active",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "DisableDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_Prices"
+                            },
+                            "description": "table of prices by product"
+                        },
+                        "columns": [
+                            {
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Discount",
+                                "type": "FLOAT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "priceList",
+                                "sqlName": "tbl_CitiesAdditions"
+                            },
+                            "description": "table that contains all the prices additions about the cities"
+                        },
+                        "columns": [
+                            {
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "CityId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "priceList",
+                                "sqlName": "tbl_TimeAdditions"
+                            },
+                            "description": "table that contains all the prices additions about the times"
+                        },
+                        "columns": [
+                            {
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "DayOfTheWeek",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "StartHour",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "EndHour",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "StartDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "EndDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_DistanceAdditions"
+                            },
+                            "description": "table that contains all the prices additions about the distance"
+                        },
+                        "columns": [
+                            {
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "MinDistance",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "priceList",
+                                "sqlName": "tbl_TruckFill"
+                            },
+                            "description": "table that contains the fill count of truck"
+                        },
+                        "columns": [
+                            {
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "AmountTransportDiff",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "MaxTransportDiff",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "float NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PaymentTypes",
+                                "sqlName": "tbl_PricesListBySupplierOrClient"
+                            },
+                            "description": "table that ocntacts between the suppliers and clients to them prices lists"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "SupplierOrClient",
+                                "type": "NVARCHAR(20) NOT NULL"
+                            },
+                            {
+                                "name": "StartDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "EndDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "AreaId",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonStrength"
+                            },
+                            "description": "Table that contain buyton strength"
+                        },
+                        "columns": [
+                            {
+                                "name": "StrengthCode",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "strengthDescribe",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "strengthNumber",
+                                "type": "int NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonDegree"
+                            },
+                            "description": "Table that contain Buyton Degree"
+                        },
+                        "columns": [
+                            {
+                                "name": "DegreeCode",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "DegreeDescribe",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "DegreeNumber",
+                                "type": "int NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonGrain"
+                            },
+                            "description": "Table that contain Buyton Grain"
+                        },
+                        "columns": [
+                            {
+                                "name": "GrainCode",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "GrainDescribe",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "GrainNumber",
+                                "type": "int NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_BuytonItems"
+                            },
+                            "description": "Table that contain Buyton items"
+                        },
+                        "columns": [
+                            {
+                                "name": "ItemCode",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "ItemDescribe",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "ItemType",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "ItemStrength",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "ItemDegreeExposure",
+                                "type": "int NOT NULL"
+                            },
+                            {
+                                "name": "SomechBuyton",
+                                "type": "int NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "Status",
+                                "sqlName": "tbl_SomechBuyton"
+                            },
+                            "description": "Table that contain SomechBuyton"
+                        },
+                        "columns": [
+                            {
+                                "name": "SomechCode",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "SomechDescribe",
+                                "type": "nvarchar(20) NOT NULL"
+                            },
+                            {
+                                "name": "SomechNumber",
+                                "type": "int NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PriceList2",
+                                "sqlName": "tbl_PriceList2"
+                            },
+                            "description": {
+                                "description": "table that contains all the priceList of the products"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "Name",
+                                "type": "NVARCHAR(50) NOT NULL UNIQUE"
+                            },
+                            {
+                                "name": "Pumps",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Beton",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR(50) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "CitiesAdditions",
+                                "sqlName": "tbl_CitiesAdditions"
+                            },
+                            "description": {
+                                "description": "table that contains all the prices additions about the cities"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber) NOT NULL"
+                            },
+                            {
+                                "name": "AreaId",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "Float NOT NULL"
+                            },
+                            {
+                                "name": "CountPrecent",
+                                "type": "Float NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR(50) NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "TimeAdditions",
+                                "sqlName": "tbl_TimeAdditions"
+                            },
+                            "description": {
+                                "description": "table that contains all the prices additions about the times"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id)"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber)"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "CountPrecent",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "DayOfWeek",
+                                "type": "INT NOT NULL"
+                            },
+                            {
+                                "name": "StartDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "EndDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR(50) NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "AdditionsForDistance",
+                                "sqlName": "tbl_AdditionsForDistance"
+                            },
+                            "description": {
+                                "description": "table that contains all the prices additions about the distance"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber) NOT NULL"
+                            },
+                            {
+                                "name": "Distance",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "CountPrecent",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "TruckFill",
+                                "sqlName": "tbl_TruckFill"
+                            },
+                            "description": {
+                                "description": "table that contains the fill count of truck"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_finishProducts(ordinalNumber) NOT NULL"
+                            },
+                            {
+                                "name": "TransportDiff",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "MaxTransportDiff",
+                                "type": "Float NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PricesListBySupplierOrClient",
+                                "sqlName": "tbl_PricesListBySupplierOrClient"
+                            },
+                            "description": {
+                                "description": "table that ocntacts between the suppliers and clients to them prices lists"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList2(Id) NOT NULL"
+                            },
+                            {
+                                "name": "SupplierOrClient",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_Suppliers(Id) NOT NULL"
+                            },
+                            {
+                                "name": "Debit",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Credit",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "AreaId",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            },
+                            {
+                                "name": "StartDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "EndDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "database": "mongoDB",
+        "mongodb": {
+            "leads": "leads",
+            "products": "products",
+            "areas": "areas",
+            "users": "users",
+            "rand_password": "rand_password"
+        }
+    }
+]
