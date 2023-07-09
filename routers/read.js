@@ -32,6 +32,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
 router.get('/exist/:tablename/:field/:value', async (req, res) => {
 
     try {
+        
         const { tablename, field, value } = req.params
         let val = convertFieldType(tablename, field, value)
         console.log({ val })
