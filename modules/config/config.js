@@ -50,8 +50,6 @@ function parseSQLType(obj, tabledata) {
 
 function parseSQLTypeForColumn(col, tableName) {
     const tabledata = getSqlTableColumnsType(tableName)
-    console.log({tabledata});
-    console.log({column:col.name});
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
     let parse
     try {

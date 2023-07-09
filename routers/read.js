@@ -5,7 +5,7 @@ const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
     readWithJoin, readFullObjects, readRelatedObjects, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
 const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
-const { parseColumnName, parseTableName, parseTBname } = require('../utils/parse_name')
+const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
 router.use(express.json());
 router.use(routerLogger())
@@ -25,23 +25,20 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.columns += `,${primarykey}`
     }
     obj.n = 10
-
     const result = await getDetailsSql(obj);
     res.status(200).send(result);
 
 })
 
 router.get('/exist/:tablename/:field/:value', async (req, res) => {
+
     try {
-        const { tablename, field, value } = req.params;
+        const { tablename, field, value } = req.params
         let val = convertFieldType(tablename, field, value)
-        const result = await getDetailsSql({ tableName: tablename, columns: field, condition: `${field} = ${val}` })
-        if (result.length > 0) {
-            res.status(200).send(true)
-        }
-        else {
-            res.status(200).send(false)
-        }
+        console.log({ val })
+        const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
+        console.log({ result })
+        res.status(200).send(result)
     }
     catch (error) {
         res.status(500).send(error.message)
@@ -56,7 +53,7 @@ router.get('/readAllEntity/:entity', async (req, res) => {
         console.log({ obj })
         const fullObjects = await readFullObjects(req.params.entity)
         console.log(fullObjects)
-        let condition = req.query ? req.query : {}
+        let condition = req.query? req.query : {}
         // if (req.query) {
         //     const entries = Object.entries(req.query)
         //     const conditions = entries.map(con => `${req.params.entity}.${con[0]}= ${con[1]}`)
@@ -70,7 +67,6 @@ router.get('/readAllEntity/:entity', async (req, res) => {
         // console.log(table);
     }
     catch (error) {
-        console.log(error);
         res.status(500).send(error.message)
     }
 });
@@ -188,9 +184,9 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
 
 router.post('/countRows', parseTableName(), async (req, res) => {
     try {
-
+       
         const count = await countRowsSql(req.body);
-        console.log({ count })
+        console.log({count})
         res.status(200).send(count);
     }
     catch (error) {
@@ -201,12 +197,16 @@ router.post('/countRows', parseTableName(), async (req, res) => {
 
 
 router.get('/readAll/:tbname/:condition', async (req, res) => {
-    let obj = {};
-    console.log({ tbname: req.params.tbname });
-    obj['tableName'] = parseTBname(req.params.tbname);
-    obj['condition'] = req.params.condition;
-    const table = await getAllSql(obj);
-    res.status(200).send(table);
+    try {
+        let obj = {};
+        obj['tableName'] = req.params.tbname;
+        obj['condition'] = req.params.condition;
+        const table = await getAllSql(obj);
+        res.status(200).send(table);
+    }
+    catch (error) {
+        res.status(404).send(error.message)
+    }
 });
 
 router.post('/find', async (req, res) => {
