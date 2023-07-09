@@ -14,9 +14,14 @@ function getTableFromConfig(tableName) {
 }
 
 function getSqlTableColumnsType(tablename) {
-    const table = getTableFromConfig(tablename)
-    let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
-    return col
+    try {
+        const table = getTableFromConfig(tablename)
+        let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
+        return col
+    }
+    catch (error) {
+        throw error
+    }
 };
 
 function parseSQLType(obj, tabledata) {
@@ -187,13 +192,19 @@ function getReferencedColumns(tablename) {
 }
 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
-    let primarykey = getPrimaryKeyField(tablename)
-    if (primarykey) {
-        let where = {}
-        where[primarykey] = id
-        return { tablename, columns: fields, where }
+    try {
+
+        let primarykey = getPrimaryKeyField(tablename)
+        if (primarykey) {
+            let where = {}
+            where[primarykey] = id
+            return { tablename, columns: fields, where }
+        }
+        return false
     }
-    return false
+    catch (error) {
+        throw error
+    }
 }
 
 function getForeignTableAndColumn(tablename, field) {
@@ -214,11 +225,11 @@ function getForeignTableAndColumn(tablename, field) {
             return { foreignTableName, defaultColumn }
         }
     }
-    return false
 
 }
 
 function convertFieldType(tablename, field, value) {
+    try {
 
     const columns = getSqlTableColumnsType(tablename)
     let col = columns.find(c => c.sqlName.toLowerCase() === field)
@@ -226,6 +237,10 @@ function convertFieldType(tablename, field, value) {
     console.log({ columns })
     const ans = parse.parseNodeTypeToSqlType(value)
     return ans
+}
+catch(error){
+    throw error 
+}
 }
 
 module.exports = {

@@ -186,21 +186,32 @@ const updateOne = async function (obj) {
 };
 // 
 const updateQuotation = async function (obj) {
-     const { Id } = obj;
-     const result = await getPool().request()
+     try{
+          const { Id } = obj;
+          const result = await getPool().request()
           .input('serialNumber', Id)
           .execute(`pro_UpdateQuotation`);
-     return result;
+          return result;
+     }
+     catch{
+          throw new Error('Object is not valid.')
+     }
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode, id } = obj;
-     const result = await getPool().request()
+     try{
+
+          const { name, supplierCode, id } = obj;
+          const result = await getPool().request()
           .input('name', name)
           .input('id', id)
           .input('supplierCode', supplierCode)
           .execute(`pro_UpdateSuppliersBranches`);
-     return result;
+          return result;
+     }
+     catch{
+          throw new Error('Object is not valid.')
+     }
 };
 
 const countRows = async function (obj) {
