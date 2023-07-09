@@ -19,7 +19,7 @@ async function createSql(obj) {
         return result
     }
     catch (error){
-        console.log(error.message)
+        console.log({error})
         throw error
     }
 };
@@ -36,14 +36,16 @@ async function insertManySql(obj) {
             tabledata = getSqlTableColumnsType(obj.tableName)
             arr = parseSQLType(o, tabledata);
             let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-            result = [...result, res]
+            result = [...result, ...res]
         }
         if (result)
+        {
             return result;
+        }
         else
             return false;
     }
-    catch {
+    catch(error) {
         throw new Error('Insert failed.')
     }
 }

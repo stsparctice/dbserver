@@ -1,6 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField ,  parseSQLTypeForColumn, buildSqlCondition} = require('./config/config');
+const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
 const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
@@ -56,7 +56,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
 }
 
 async function readFullObjects(tablename) {
-console.log('readFullObjects:', tablename)
+    console.log('readFullObjects:', tablename)
     const result = await getReferencedColumns(tablename)
     return result
 
@@ -87,7 +87,7 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(tableName = "", condition = {}) {
     try {
-console.log('connectTables:', tableName)
+        console.log('connectTables:', tableName)
         const query = viewConnectionsTables(tableName, condition);
         const values = await join(query);
         const items = []
@@ -104,7 +104,7 @@ console.log('connectTables:', tableName)
                     gr.find(g => g.name === prop).values.push(fk)
                 }
                 return gr
-            }                , [])
+            }, [])
 
             const newObj = entries.reduce((obj, ent) => {
                 if (ent[0].startsWith('FK')) {
@@ -136,10 +136,10 @@ console.log('connectTables:', tableName)
 
 async function countRowsSql(obj) {
     try {
-      obj.condition = buildSqlCondition(obj.tableName, obj.condition)
-       console.log({obj})
+        obj.condition = buildSqlCondition(obj.tableName, obj.condition)
+        console.log({ obj })
         const count = await countRows(obj);
-        return  count.recordset[0];
+        return count.recordset[0];
     }
     catch (error) {
         console.log(error.message)

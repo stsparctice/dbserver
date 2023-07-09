@@ -50,6 +50,8 @@ function parseSQLType(obj, tabledata) {
 
 function parseSQLTypeForColumn(col, tableName) {
     const tabledata = getSqlTableColumnsType(tableName)
+    console.log({tabledata});
+    console.log({column:col.name});
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
     let parse
     try {
@@ -64,7 +66,6 @@ function parseSQLTypeForColumn(col, tableName) {
 
 function buildSqlCondition(tableName, condition) {
     const tablealias = getTableFromConfig(tableName).MTDTable.name.name
-    console.log({tableName, condition})
     if (condition) {
         const entries = Object.entries(condition)
         const conditionList = entries.map(c =>

@@ -15,6 +15,7 @@ router.post('/update', parseTableName(), parseColumnName(),  async (req, res) =>
         res.status(204).send(result);
     }
     catch (error) {
+        console.log({error});
         res.status(500).send(error.message)
     }
 });

@@ -29,6 +29,7 @@ router.post('/createManySql', parseTableName(), async (req, res) => {
         res.status(201).send(result);
     }
     catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
 
     }

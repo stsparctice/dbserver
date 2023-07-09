@@ -19,6 +19,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.condition += "AND " + req.params.condition
         // console.log(obj.condition);
     }
+    console.log({ tableName: obj.tableName, column: obj.columns, condition: obj.condition});
     const primarykey = getPrimaryKeyField(obj.tableName)
     if (primarykey) {
         obj.columns += `,${primarykey}`
