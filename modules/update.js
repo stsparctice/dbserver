@@ -29,15 +29,18 @@ async function updateSql(obj) {
         throw new Error('Update faild.')
     }
 };
+
 async function updateOneSql(obj) {
     const result = await updateOne(obj);
     return result;
 };
+
 async function updateMng(obj) {
     try {
         console.log({ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateOne(obj);
+        console.log('rrrrrrrrrrrrrrrrrrr');
         return response;
     }
     catch {

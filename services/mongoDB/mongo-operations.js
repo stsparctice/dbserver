@@ -36,10 +36,10 @@ class MongoDBOperations {
 
         let sort = {};
         sort[obj.sort] = 1;
-        console.log('hi')
+        // console.log('hi')
         try {
             const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter).sort(sort).toArray();
-            console.log({ result })
+            // console.log({ result })
             return result;
         }
         catch (error) {
@@ -50,7 +50,9 @@ class MongoDBOperations {
 
     async updateOne(obj) {
         try {
+            // console.log('before', this.dbName, this.collectionName, obj.filter, obj.set);
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
+            // console.log('after',result);
             return result;
         }
         catch (error) {
@@ -138,26 +140,19 @@ class MongoDBOperations {
 
 
     async geoWithInPolygon(array, point) {
-        console.log({ point })
+        console.log("*****",Object.values(point.point))
         try {
             if (point) {
-                const index = await getClient().db(this.dbName).collection('points').createIndex({ pos: "2dsphere" })
-
+                _ = await getClient().db(this.dbName).collection('points').createIndex({ pos: "2dsphere" })
                 const insertresult = await getClient().db(this.dbName).collection('points').insertOne({
                     pos: {
                         type: "Point", coordinates: Object.values(point.point)
                     }
                 });
-
-
                 // result = result.insertedId;
                 console.log({ insertresult })
-
-
-
                 const arrayPoints = array.map((p) => Object.values(p))
-                console.log(arrayPoints)
-
+                console.log({arrayPoints})
                 // console.log({'104':[arrayPoints[104], arrayPoints[105]]})
                 // console.log({'104':[arrayPoints[106], arrayPoints[107]]})
                 const searchresult = await getClient().db(this.dbName).collection('points').find(

@@ -12,6 +12,7 @@ router.post('/update', parseTableName(), parseColumnName(), async (req, res) => 
     try {
         console.log({req:req.body});
         const result = await updateSql(req.body);
+        console.log("+++++++++++++++++++",result);
         res.status(204).send(result);
     }
     catch (error) {
@@ -20,8 +21,14 @@ router.post('/update', parseTableName(), parseColumnName(), async (req, res) => 
 });
 
 router.post('/updateOne', async (req, res) => {
-    const result = await updateOneSql(req.body);
-    res.status(200).send(result);
+    try {
+        const result = await updateOneSql(req.body);
+        res.status(240).send(result);
+    }
+    catch (error) {
+        res.status(500).send(error.message)
+    }
+
 });
 
 router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res) => {
@@ -46,6 +53,10 @@ router.post('/updateSuppliersBranches', parseTableName, parseColumnName, async (
 });
 
 router.post('/mongo', async (req, res) => {
+    // console.log('update moooooooooo', req.body);
+    const { collection, filter, set } = req.body
+    // set[obj._id] = ObjectId(set[obj._id])
+    filter['_id'] = ObjectId(filter['_id'])
     try {
         const result = await updateMng(req.body);
         console.log('!!!!!!!!!!!!!!!',result);

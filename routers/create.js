@@ -41,6 +41,7 @@ router.post('/createManySql', parseTableName(), async (req, res) => {
 router.post('/insertone', async (req, res) => {
     try {
         const result = await createMng(req.body);
+        console.log('rrrrrrrrrrrrrres',result,'ressssssssss');
         res.status(200).send(result);
     }
     catch (error) {
