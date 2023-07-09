@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const { getPrimaryKeyField } = require('../../modules/config/config')
+const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getTableFromConfig } = require('../../modules/config/config')
 
 if (!SQL_DBNAME) {
      throw new Error('.env file is not valid or is not exsist.')
@@ -117,7 +117,7 @@ const read = async function (obj) {
           //      .input('n', n)
           //      .execute(`pro_BasicRead`);
           // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
      }
      catch (error) {
@@ -127,19 +127,11 @@ const read = async function (obj) {
 
 const readAll = async function (obj) {
      try {
-          // console.log('readAll');
-          // console.log(obj,'readAll');
           if (!Object.keys(obj).includes("condition")) {
                obj["condition"] = '1=1';
           };
           const { tableName, condition } = obj;
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('condition', condition)
-          //      .execute(`pro_ReadAll`);
-          console.log(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-           console.log({ result })
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`)
           return result.recordset;
      }
      catch (error) {
@@ -164,19 +156,14 @@ const join = async (query = "") => {
 
 const update = async function (obj) {
      try {
-          if (!Object.keys(obj).includes("condition")) {
-               obj["condition"] = '1=1';
-          };
-          const { tableName, values, condition } = obj;
-          const value = setValues(values);
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('values', value)
-          //      .input('condition', condition)
-          //      .execute(`pro_BasicUpdate`);
+        
+          obj.condition = buildSqlCondition(obj.tableName, obj.condition)
+          const alias = getTableFromConfig(obj.tableName).MTDTable.name.name
 
-          const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+          const valEntries = Object.entries(obj.values)
+          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.tableName)}`).join(',')
+          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
      catch (error) {
@@ -186,19 +173,11 @@ const update = async function (obj) {
 };
 const updateOne = async function (obj) {
      try {
-          const tableName = "tbl_Leads"
+          // const tableName = "tbl_Leads"
 
-          const { values, condition } = obj;
-          const value = setValues(values);
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('values', value)
-          //      .input('condition', condition)
-          //      .execute(`pro_BasicUpdate`);
-
-          const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-          // console.log({query})
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+          const { tableName, values, condition } = obj;
+          const tabledata = getSqlTableColumnsType(tableName)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${value} WHERE ${condition}`)
           return result;
      }
      catch (error) {
@@ -231,7 +210,8 @@ const countRows = async function (obj) {
           //      .input('tableName', tableName)
           //      .input('condition', condition)
           //      .execute(`pro_CountRows`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
+
+          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) as countRows FROM ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} WHERE ${condition}`)
           // console.log({ count: result })
           return result;
      }
@@ -240,44 +220,25 @@ const countRows = async function (obj) {
      }
 }
 
-function setValues(obj) {
-     let values = "";
-     for (let key in obj) {
-          values += `${key} = `;
-          if (typeof (obj[key]) === 'string') {
-               values += `N'${obj[key]}'`;
-          }
-          else {
-               if (typeof (obj[key]) === 'boolean')
-                    values += `'${obj[key]}'`;
-               else
-                    values += obj[key];
-          };
-          values += ' , ';
-     };
-     values = values.substring(0, values.length - 2);
-     return values;
-};
+// function setValues(obj) {
+//      let values = "";
+//      for (let key in obj) {
+//           values += `${key} = `;
+//           if (typeof (obj[key]) === 'string') {
+//                values += `N'${obj[key]}'`;
+//           }
+//           else {
+//                if (typeof (obj[key]) === 'boolean')
+//                     values += `'${obj[key]}'`;
+//                else
+//                     values += obj[key];
+//           };
+//           values += ' , ';
+//      };
+//      values = values.substring(0, values.length - 2);
+//      return values;
+// };
 
-async function buildcolumns(obj) {
-     let values = "";
-     let columns = "";
-     for (let key = 0; key < obj['values'].length; key++) {
-          if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `N'${obj['values'][key]}'`;
-          }
-          else {
-               values += obj['values'][key];
-          };
-          values += ', ';
-     };
-     values = values.substring(0, values.length - 2);
-     for (let key = 0; key < obj['columns'].length; key++) {
-          columns += `${obj['columns'][key]},`;
-     };
-     columns = columns.substring(0, columns.length - 1);
-     return { columns, values };
-};
 
 module.exports = {
      create,
