@@ -52,6 +52,7 @@ router.get('/readAllEntity/:entity', async (req, res) => {
     try {
         let obj = {};
         obj['tableName'] = req.params.entity;
+        obj.tableName = parseTBname(obj.tableName)
         console.log({ obj })
         const fullObjects = await readFullObjects(req.params.entity)
         console.log(fullObjects)
