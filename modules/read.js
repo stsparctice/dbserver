@@ -1,17 +1,27 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin } = require('./config/config');
+const { readJoin, viewConnectionsTables } = require('./config/config');
 const config = require('../config.json');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
-    const list = await read(obj);
-    return list;
+    try {
+        const list = await read(obj);
+        return list;
+    }
+    catch {
+        throw new Error('Read faild.')
+    }
 };
 
 async function getAllSql(obj) {
-    const list = await readAll(obj);
-    return list;
+    try {
+        const list = await readAll(obj);
+        return list;
+    }
+    catch {
+        throw new Error('Read faild.')
+    }
 };
 
 async function readWithJoin(tableName, column) {
@@ -25,40 +35,102 @@ async function readWithJoin(tableName, column) {
             const temp = {}
             for (let key of keys) {
                 temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
-            }       
-             result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length==0? [...result, temp]:[...result];
+            }
+            result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
         });
     }
     return result;
 }
+async function connectTables(tableName = "", condition = "") {
+    const query = viewConnectionsTables(tableName, condition);
+    const values = await join(query);
+    if (values) {
+        return values;
+    }
+    else {
+        return false;
+    }
+}
 
 async function countRowsSql(obj) {
-    const list = await countRows(obj);
-    return list;
+    try {
+        const list = await countRows(obj);
+        return list;
+    }
+    catch {
+        throw new Error('Count faild.')
+    }
 };
 
 async function getDetailsMng(obj) {
-    mongoCollection.setCollection(obj.collection);
-    const response = await mongoCollection.find(obj);
-    return response;
+    try {
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.find(obj);
+        return response;
+    }
+    catch (error) {
+        console.log(error.message)
+        throw new Error('Read faild.')
+    }
 };
 
-async function getDetailsWithAggregateMng(obj) {
-    mongoCollection.setCollection(obj.collection);
-    const response = await mongoCollection.aggregate(obj.aggregate);
-    return response;
-}; 
+async function getPolygon(obj) {
+    try {
+        console.log({ obj })
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.find({ filter: obj.filter });
+        // console.log(/)
+        let areas = []
+        for (let i = 0; i < response.length; i++) {
+            const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
+            console.log({response2})
+            if(response2.length>0){
+                areas.push(response[i])
+            }
+        }
+        console.log('areas')
+        console.log(areas)
+        return areas;
+    }
+    catch (error) {
+        console.log(error.message)
+        throw new Error('Read faild.')
+    }
+}
 
-async function getDetailsWithDistinct(collection,filter) {
+async function getDetailsWithDistinct(obj) {
+    const {collection,field,filter}=obj
+    console.log('fffffffffffffffffffffffff',filter);
     mongoCollection.setCollection(collection);
-    const response = await mongoCollection.distinct(filter);
+    const response = await mongoCollection.distinct(field,filter);
     return response;
+}
+
+async function getDetailsWithAggregateMng(obj) {
+    try {
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.aggregate(obj.aggregate);
+        return response;
+    }
+    catch {
+        throw new Error('Read with Aggregate faild.')
+    }
 };
 
 async function getCountDocumentsMng(collection) {
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.countDocuments();
-    return response;
+    try {
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.countDocuments();
+        return response;
+    }
+    catch {
+        throw new Error('Count faild.')
+    }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng,getDetailsWithDistinct };
+module.exports = {
+    getDetailsSql,
+    getAllSql, readJoin, countRowsSql,
+    getDetailsMng, readWithJoin,
+    getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
+};
