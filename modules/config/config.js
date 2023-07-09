@@ -202,7 +202,6 @@ function getForeignTableAndColumn(tablename, field) {
     catch (error) {
         throw error
     }
-
 }
 
 function convertFieldType(tablename, field, value) {
