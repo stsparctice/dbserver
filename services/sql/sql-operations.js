@@ -112,15 +112,7 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
-          // console.log({ tableName, columns, condition, n })
-          // console.log({ tableName, columns, condition, n })
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('condition', condition)
-          //      .input('n', n)
-          //      .execute(`pro_BasicRead`);
-          // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
           return result.recordset;
      }
