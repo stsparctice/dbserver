@@ -10,9 +10,9 @@ router.use(routerLogger())
 
 router.post('/update', parseTableName(), parseColumnName(), async (req, res) => {
     try {
-        console.log({req:req.body});
+        console.log({ reqqqq: req.body });
         const result = await updateSql(req.body);
-        console.log("+++++++++++++++++++",result);
+        console.log("+++++++++++++++++++", result);
         res.status(204).send(result);
     }
     catch (error) {
@@ -59,7 +59,7 @@ router.post('/mongo', async (req, res) => {
     filter['_id'] = ObjectId(filter['_id'])
     try {
         const result = await updateMng(req.body);
-        console.log('!!!!!!!!!!!!!!!',result);
+        console.log('!!!!!!!!!!!!!!!', result);
         res.status(200).send(result);
     }
     catch (error) {

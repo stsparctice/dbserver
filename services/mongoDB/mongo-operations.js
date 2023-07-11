@@ -82,7 +82,7 @@ class MongoDBOperations {
 
     async distinct(field,filter) {
         try {
-            console.log('uiuiuiuiui');
+            console.log('uiuiuiuiui',field);
             const result = await getClient().db(this.dbName).collection(this.collectionName).distinct(field)
             console.log('asasasasassasasa',{result});
             return result;

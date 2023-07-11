@@ -20,7 +20,7 @@ async function updateSql(obj) {
         else {
             obj.condition = "1 = 1"
         }
-        console.log({ l: obj.condition })
+        console.log({ llll: obj.condition })
         const result = await update(obj);
         console.log({ result });
         return result;
