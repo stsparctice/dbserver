@@ -1,9 +1,11 @@
-const { update, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
+const { update,updateOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
+const {parseSQLTypeForColumn, getSqlTableColumnsType} = require('./config/config')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
 async function updateSql(obj) {
     try {
+        
         const result = await update(obj);
         return result;
     }
@@ -11,9 +13,19 @@ async function updateSql(obj) {
         throw error
     }
 };
+async function updateOneSql(obj) {
+    try{
 
+        const result = await update(obj);
+        return result;
+    }
+    catch(error){
+        throw error
+    }
+};
 async function updateMng(obj) {
     try {
+        console.log({obj})
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateOne(obj);
         return response;
@@ -54,5 +66,13 @@ async function dropCollectionMng(obj) {
     }
 };
 
+async function dropDocumentMng(obj) {
+    const {data,collection}=obj;
+    mongoCollection.setCollection(collection);
+    const response = await mongoCollection.dropOneDocument(data);
+    console.log({response})
+    return response;
+};
 
-module.exports = { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng };
+
+module.exports = { updateSql,updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng, dropDocumentMng};

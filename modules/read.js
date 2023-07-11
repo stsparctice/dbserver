@@ -1,7 +1,7 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables } = require('./config/config');
-const config = require('../config.json');
+const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField ,  parseSQLTypeForColumn, buildSqlCondition} = require('./config/config');
+const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
@@ -23,6 +23,43 @@ async function getAllSql(obj) {
         throw error
     }
 };
+
+
+async function readRelatedObjects(tablename, primaryKey, value, column) {
+    column = column.sqlName
+    console.log({ column })
+    let obj = {
+        "tableName": `tbl_${tablename}`,
+        "columns": '*',
+        "condition": `${primaryKey}=${value}`
+    }
+
+    console.log({ tablename })
+    const allData = await read(obj)
+
+    console.log({ allData })
+
+    const refTablename = allData[0].TableName
+    const refPrimaryKeyField = getPrimaryKeyField(refTablename)
+
+    obj = {
+        "tableName": refTablename,
+        "columns": "*",
+        "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
+    }
+    const result = await read(obj)
+    console.log({ result });
+    allData[0].TableName = result
+    return allData
+
+}
+
+async function readFullObjects(tablename) {
+console.log('readFullObjects:', tablename)
+    const result = await getReferencedColumns(tablename)
+    return result
+
+}
 
 async function readWithJoin(tableName, column) {
     try {
@@ -47,27 +84,61 @@ async function readWithJoin(tableName, column) {
         throw error
     }
 }
-async function connectTables(tableName = "", condition = "") {
+async function connectTables(tableName = "", condition = {}) {
     try {
-
+console.log('connectTables:', tableName)
         const query = viewConnectionsTables(tableName, condition);
         const values = await join(query);
-        if (values) {
-            return values;
+        const items = []
+        for (let val of values) {
+            const entries = Object.entries(val)
+            const foreignkeys = entries.filter(e => e[0].startsWith('FK'))
+            let groups = foreignkeys.reduce((gr, fk) => {
+                const prop = fk[0].split('_')[1]
+                if (!gr.some(g => g.name === prop)) {
+                    let group = { name: prop, values: [fk] }
+                    gr = [...gr, group]
+                }
+                else {
+                    gr.find(g => g.name === prop).values.push(fk)
+                }
+                return gr
+            }                , [])
+
+            const newObj = entries.reduce((obj, ent) => {
+                if (ent[0].startsWith('FK')) {
+                    return obj
+                }
+                const gr = groups.find(g => g.name.indexOf(ent[0]) !== -1)
+                if (gr) {
+                    obj[ent[0]] = gr.values.reduce((val, v) => {
+                        const split = v[0].split('_')
+                        val[split[split.length - 1]] = v[1]
+                        return val
+                    }, {})
+                }
+                else {
+                    obj[ent[0]] = ent[1]
+                }
+                return obj
+            }, {})
+            items.push(newObj)
         }
-        else {
-            return false;
-        }
+        return items;
+
     }
     catch (error) {
+        console.log({ error })
         throw error
     }
 }
 
 async function countRowsSql(obj) {
     try {
-        const list = await countRows(obj);
-        return list;
+      obj.condition = buildSqlCondition(obj.tableName, obj.condition)
+       console.log({obj})
+        const count = await countRows(obj);
+        return  count.recordset[0];
     }
     catch (error) {
         throw error
@@ -84,6 +155,30 @@ async function getDetailsMng(obj) {
         throw error
     }
 };
+
+async function getPolygon(obj) {
+    try {
+        console.log({ obj })
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.find({ filter: obj.filter });
+        // console.log(/)
+        let areas = []
+        for (let i = 0; i < response.length; i++) {
+            const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
+            console.log({ response2 })
+            if (response2.length > 0) {
+                areas.push(response[i])
+            }
+        }
+        console.log('areas')
+        console.log(areas)
+        return areas;
+    }
+    catch (error) {
+        console.log(error.message)
+        throw new Error('Read faild.')
+    }
+}
 
 async function getDetailsWithAggregateMng(obj) {
     try {
@@ -118,4 +213,10 @@ async function getCountDocumentsMng(collection) {
     }
 };
 
-module.exports = { getDetailsSql, getAllSql, readJoin, countRowsSql, getDetailsMng, readWithJoin, getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables };
+module.exports = {
+    getDetailsSql,
+    getAllSql, readJoin, countRowsSql,
+    readFullObjects, readRelatedObjects,
+    getDetailsMng, readWithJoin,
+    getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
+};

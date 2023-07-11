@@ -1,4 +1,4 @@
-const config = require('../../config.json')
+const config = require('../../config/DBconfig.json')
 const types = require('./config-objects')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
@@ -31,9 +31,6 @@ function getSqlTableColumnsType(tablename) {
 };
 
 function parseSQLType(obj, tabledata) {
-console.log("functionb");
-
-    console.log({ obj });
     try {
         const keys = Object.keys(obj)
         let str = []
@@ -45,9 +42,10 @@ console.log("functionb");
                     parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
                 }
                 catch {
-                    throw new Error(`Type: ${type} is not exsist.`)
+                    throw new Error(`Type: ${type} does not exist.`)
                 }
-                str.push(parse.parseNodeTypeToSqlType(obj[keys[i]]))
+                const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
+                str.push(val);
             }
             else {
                 str.push('NULL')
@@ -62,6 +60,37 @@ console.log("functionb");
         throw new Error('Object is not valid')
     }
 }
+
+function parseSQLTypeForColumn(col, tableName) {
+    const tabledata = getSqlTableColumnsType(tableName)
+    let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
+    let parse
+    try {
+        parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+    }
+    catch {
+        throw new Error(`Type: ${type} does not exist.`)
+    }
+    const val = parse.parseNodeTypeToSqlType(col.value);
+    return val
+}
+
+function buildSqlCondition(tableName, condition) {
+    const tablealias = getTableFromConfig(tableName).MTDTable.name.name
+    console.log({tableName, condition})
+    if (condition) {
+        const entries = Object.entries(condition)
+        const conditionList = entries.map(c =>
+            `${tablealias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, tableName)}`
+        )
+        condition = conditionList.join(' AND ')
+    }
+    else {
+        condition = "1 = 1"
+    }
+    return condition
+}
+
 
 const readJoin = async (baseTableName, baseColumn) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
@@ -86,6 +115,7 @@ const readJoin = async (baseTableName, baseColumn) => {
             let alias1 = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).MTDTable.name.name;
             join = `FROM ${tableName} ${alias1} `
             prevTableAlias = alias1;
+
             let columns = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).columns.map(({ sqlName }) => { return sqlName });
             selectColumns.push({ alias: prevTableAlias, columns });
         }
@@ -97,7 +127,12 @@ const readJoin = async (baseTableName, baseColumn) => {
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
                 let columnToJoin = [table].map(({ columns }) => columns.find(({ type }) => type.includes('PRIMARY KEY')).sqlName)[0];
-                join = `${join} JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                if (join.includes(`JOIN ${tableJoin} ${alias}`)) {
+                    join = `${join} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                }
+                else {
+                    join = `${join} LEFT JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias)}`
+                }
             }
         else {
             join = ``;
@@ -114,24 +149,29 @@ const readJoin = async (baseTableName, baseColumn) => {
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
     console.log(result);
     return result;
-};
+}
 
-const viewConnectionsTables = (tableName, condition = "") => {
-    const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
-    const myTable = tables.find(({ MTDTable }) => MTDTable.name.name === tableName);
+const viewConnectionsTables = (tableName, condition = {}) => {
+   console.log("viewConnectionsTables:", tableName)
+    const myTable =getTableFromConfig(tableName)
+
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => { return sqlName })] }];
+    let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];
     let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
     columns.forEach(column => {
         const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
         const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
-        const thisTable = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableToJoin);
+        console.log("viewConnectionsTables:2", tableToJoin)
+        const thisTable = getTableFromConfig(tableToJoin);
         const alias = thisTable.MTDTable.name.name;
-        columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [thisTable.MTDTable.default] }];
-        join = `${join} JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
+        columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} as FK_${column.name}_${columnToJoin}`, `${thisTable.MTDTable.defaultColumn} as FK_${column.name}_${thisTable.MTDTable.defaultColumn}`] }];
+        join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
     });
-    if (condition.length > 0 && condition.includes('=')) {
-        join = `${join} WHERE ${condition}`;
+    if (Object.keys(condition).length > 0) {
+
+        let conditionString = buildSqlCondition(tableName, condition)
+
+        join = `${join} WHERE ${conditionString}`;
     }
     let select = ``;
     columnsSelect.forEach(cs => {
@@ -140,7 +180,8 @@ const viewConnectionsTables = (tableName, condition = "") => {
         })
     })
     select = select.slice(0, select.length - 1);
-    return `SELECT ${select} FROM ${join}`;
+   console.log(`use ${SQL_DBNAME} SELECT ${select} FROM ${join}`)
+    return `use ${SQL_DBNAME} SELECT ${select} FROM ${join}`;
 }
 
 function getPrimaryKeyField(tablename) {
@@ -156,6 +197,21 @@ function getPrimaryKeyField(tablename) {
     catch (error) {
         throw error
     }
+}
+
+function readRelatedData(tablename, id) {
+    // let sql = config.find(db => db.database == 'sql')
+    // let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+    // let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
+
+
+}
+
+function getReferencedColumns(tablename) {
+    console.log('getReferencedColumns:', tablename)
+    const table = getTableFromConfig(tablename)
+    let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
+    return columns
 }
 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
@@ -220,4 +276,9 @@ function convertFieldType(tablename, field, value) {
 
 }
 
-module.exports = { getSqlTableColumnsType, parseSQLType, readJoin, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn };
+module.exports = {
+    getTableFromConfig,
+    getSqlTableColumnsType, buildSqlCondition,
+    parseSQLType, parseSQLTypeForColumn, readJoin, readRelatedData,
+    getReferencedColumns, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn
+};

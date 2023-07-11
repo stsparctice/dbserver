@@ -8,14 +8,18 @@ const { getSqlTableColumnsType, parseSQLType } = require('../modules/config/conf
 
 async function createSql(obj) {
     try {
+        // obj.tableName=`tbl_${obj.tableName}`
         let tabledata = getSqlTableColumnsType(obj.tableName)
+        console.log({tabledata});
         let arr = parseSQLType(obj.values, tabledata)
 
-        console.log({ obj })
+
+        console.log({ arr })
         const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
-        console.log({ result })
+        return result
     }
     catch (error){
+        console.log(error.message)
         throw error
     }
 };
@@ -32,7 +36,7 @@ async function insertManySql(obj) {
             tabledata = getSqlTableColumnsType(obj.tableName)
             arr = parseSQLType(o, tabledata);
             let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-            result = [...result, res.recordset[0]]
+            result = [...result, res]
         }
         if (result)
             return result;
@@ -43,25 +47,6 @@ async function insertManySql(obj) {
         throw error
     }
 }
-// {
-//     "MTDTable": {
-//         "name": {
-//             "name": "unitOfMeasure",
-//             "sqlName": "tbl_unitOfMeasure"
-//         },
-//         "description": "a normalization table of unitsOfMeasure"
-//     },
-//     "columns": [
-//         {
-//             "name": "id",
-//             "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-//         },
-//         {
-//             "name": "measure",
-//             "type": "NVARCHAR(20) NOT NULL "
-//         }
-//     ]
-// },
 async function creatNewColumn(obj) {
     const result = await insertColumn(obj)
 }

@@ -1,23 +1,30 @@
 const express = require('express');
 const { parseTableName, parseColumnName } = require('../utils/parse_name');
 const router = express.Router();
-const { updateSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng } = require('../modules/update');
+const { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng, dropDocumentMng } = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
+const { ObjectId } = require('mongodb');
+const {checkDataIsUnique} = require('../utils/checkunique')
 
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/update', parseTableName, parseColumnName, async (req, res) => {
+router.post('/update', parseTableName(), parseColumnName(),  async (req, res) => {
     try {
         const result = await updateSql(req.body);
-        res.status(200).send(result);
+        res.status(204).send(result);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(500).send(error.message)
     }
 });
 
-router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res) => {
+router.post('/updateOne', async (req, res) => {
+    const result = await updateOneSql(req.body);
+    res.status(200).send(result);
+});
+
+router.post('/updateQuotation', parseTableName(), parseColumnName(),  async (req, res) => {
     try {
         const result = await updateQuotationSql(req.body);
         res.status(200).send(result);
@@ -28,7 +35,7 @@ router.post('/updateQuotation', parseTableName, parseColumnName, async (req, res
 });
 
 
-router.post('/updateSuppliersBranches', parseTableName, parseColumnName, async (req, res) => {
+router.post('/updateSuppliersBranches', parseTableName(), parseColumnName(),  async (req, res) => {
     try {
         const result = await updateSuppliersBranchesSql(req.body);
         res.status(200).send(result);
@@ -38,7 +45,7 @@ router.post('/updateSuppliersBranches', parseTableName, parseColumnName, async (
     }
 });
 
-router.post('/updateone', async (req, res) => {
+router.post('/mongo', async (req, res) => {
     try {
         const result = await updateMng(req.body);
         res.status(200).send(result);
@@ -56,6 +63,26 @@ router.post('/dropCollection', async (req, res) => {
     catch (error) {
         res.status(404).send(error.message)
     }
+});
+
+router.post('/dropDocumentById', async (req, res) => {
+    const { collection, data } = req.body
+    data['_id'] = ObjectId(data['_id'])
+    const result = await dropDocumentMng({ collection, data });
+    if (result) {
+        res.status(204).send('resourse deleted successfully');
+    }
+    else {
+        res.status(500).send('cannot delete resource')
+    }
+});
+
+router.post('/dropDocument', async (req, res) => {
+    // console.log("req.body",req.body);
+    const result = await dropDocumentMng(req.body);
+
+    res.status(204).send('resourse deleted successfully');
+
 });
 
 module.exports = router;
