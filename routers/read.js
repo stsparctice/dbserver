@@ -193,7 +193,6 @@ router.post('/findpolygon', async (req, res) => {
     }
 })
 
-
 router.post('/distinct', async (req, res) => {
     try {
         console.log(

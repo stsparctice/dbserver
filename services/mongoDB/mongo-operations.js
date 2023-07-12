@@ -50,9 +50,9 @@ class MongoDBOperations {
 
     async updateOne(obj) {
         try {
-            // console.log('before', this.dbName, this.collectionName, obj.filter, obj.set);
+            console.log('before', this.dbName, this.collectionName, obj.filter, obj.set);
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
-            // console.log('after',result);
+            console.log('after', result);
             return result;
         }
         catch (error) {
@@ -72,7 +72,9 @@ class MongoDBOperations {
 
     async aggregate(array = []) {
         try {
-            const result = await getClient().db(this.dbName).collection(this.collectionName).aggregate(array).toArray();
+            console.log("tttttttttttttttt",array);
+            const result = await getClient().db(this.dbName).collection(this.collectionName).aggregate(array)
+            console.log("*-*-*-*-*-*-*-*-",result);
             return result;
         }
         catch (error) {
@@ -80,11 +82,22 @@ class MongoDBOperations {
         }
     };
 
-    async distinct(field,filter) {
+    async createIndex() {
         try {
-            console.log('uiuiuiuiui');
-            const result = await getClient().db(this.dbName).collection(this.collectionName).distinct(field)
-            console.log('asasasasassasasa',{result});
+            const result = await getClient().db(this.dbName).collection(this.collectionName).createIndex({ point: "2dsphere" }, { partialFilterExpression:{ type: 'point' }  });
+            console.log('create index---', result);
+            return result;
+        }
+        catch (error) {
+            throw (error)
+        }
+    }
+    async distinct(field, filter) {
+        try {
+            console.log('uiuiuiuiui', { filter, field });
+            filter = { "disabled": false }
+            const result = await getClient().db(this.dbName).collection(this.collectionName).distinct(field, filter)
+            console.log('asasasasassasasa', { result });
             return result;
         }
         catch (error) {
@@ -140,7 +153,7 @@ class MongoDBOperations {
 
 
     async geoWithInPolygon(array, point) {
-        console.log("*****",Object.values(point.point))
+        console.log("*****", Object.values(point.point))
         try {
             if (point) {
                 _ = await getClient().db(this.dbName).collection('points').createIndex({ pos: "2dsphere" })
@@ -152,7 +165,7 @@ class MongoDBOperations {
                 // result = result.insertedId;
                 console.log({ insertresult })
                 const arrayPoints = array.map((p) => Object.values(p))
-                console.log({arrayPoints})
+                console.log({ arrayPoints })
                 // console.log({'104':[arrayPoints[104], arrayPoints[105]]})
                 // console.log({'104':[arrayPoints[106], arrayPoints[107]]})
                 const searchresult = await getClient().db(this.dbName).collection('points').find(

@@ -104,6 +104,7 @@ async function getPolygon(obj) {
 async function getDetailsWithDistinct(obj) {
     const {collection,field,filter}=obj
     console.log('fffffffffffffffffffffffff',filter);
+    
     mongoCollection.setCollection(collection);
     const response = await mongoCollection.distinct(field,filter);
     return response;
@@ -111,6 +112,7 @@ async function getDetailsWithDistinct(obj) {
 
 async function getDetailsWithAggregateMng(obj) {
     try {
+        console.log("__________________",obj.aggregate,obj.collection);
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.aggregate(obj.aggregate);
         return response;

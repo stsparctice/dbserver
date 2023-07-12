@@ -1,25 +1,29 @@
 const express = require('express');
 const { parseTableName, parseColumnName } = require('../utils/parse_name');
 const router = express.Router();
-const { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng, dropDocumentMng } = require('../modules/update');
+const { startt, updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng, dropDocumentMng } = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
 const { ObjectId } = require('mongodb');
 
 router.use(express.json());
-router.use(routerLogger())
+// router.use(routerLogger())
 
 router.post('/update', parseTableName(), parseColumnName(), async (req, res) => {
     try {
-        console.log({req:req.body});
+        // console.log({req:req.body});
         const result = await updateSql(req.body);
-        console.log("+++++++++++++++++++",result);
+        console.log("+++++++++++++++++++", result);
         res.status(204).send(result);
     }
     catch (error) {
         res.status(500).send(error.message)
     }
 });
-
+router.post('/createIndex', async (req,res) => {
+    console.log('ccrree',req.body);
+    const y = await startt(req.body)
+    res.send(y.data)
+})
 router.post('/updateOne', async (req, res) => {
     try {
         const result = await updateOneSql(req.body);
@@ -53,13 +57,13 @@ router.post('/updateSuppliersBranches', parseTableName, parseColumnName, async (
 });
 
 router.post('/mongo', async (req, res) => {
-    // console.log('update moooooooooo', req.body);
+    console.log('update moooooooooo', req.body);
     const { collection, filter, set } = req.body
-    // set[obj._id] = ObjectId(set[obj._id])
-    filter['_id'] = ObjectId(filter['_id'])
+    // set[obj['_id']] = ObjectId(set[obj['_id']])
+    // filter['_id'] = ObjectId(filter['_id'])
     try {
         const result = await updateMng(req.body);
-        console.log('!!!!!!!!!!!!!!!',result);
+        console.log('!!!!!!!!!!!!!!!', result);
         res.status(200).send(result);
     }
     catch (error) {

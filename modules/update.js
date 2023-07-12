@@ -5,7 +5,7 @@ const mongoCollection = MongoDBOperations;
 
 async function updateSql(obj) {
     try {
-        console.log({ obj })
+        // console.log({ obj })
         let tabledata = getSqlTableColumnsType(obj.tableName)
 
         if (obj.condition) {
@@ -20,7 +20,7 @@ async function updateSql(obj) {
         else {
             obj.condition = "1 = 1"
         }
-        console.log({ l: obj.condition })
+        // console.log({ l: obj.condition })
         const result = await update(obj);
         console.log({ result });
         return result;
@@ -48,6 +48,18 @@ async function updateMng(obj) {
     }
 };
 
+async function startt(obj) {
+    try {
+        console.log('%%%%%%%%%%%%%%%%%%',{ obj })
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.createIndex();
+        console.log('rrrrrrrrrrrrrrrrrrr');
+        return response;
+    }
+    catch {
+        throw new Error('Update falid.')
+    }
+};
 async function updateQuotationSql(obj) {
     try {
         const result = await updateQuotation(obj);
@@ -89,4 +101,4 @@ async function dropDocumentMng(obj) {
 };
 
 
-module.exports = { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng, dropDocumentMng };
+module.exports = {startt, updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng, dropDocumentMng };
