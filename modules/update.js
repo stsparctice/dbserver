@@ -18,7 +18,7 @@ async function updateSql(obj) {
                 obj.condition = conditionList.join(' AND ')
         }
         else {
-            obj.condition = "1 = 1"
+            obj.condition = "1 = 1";
         }
         // console.log({ l: obj.condition })
         const result = await update(obj);
