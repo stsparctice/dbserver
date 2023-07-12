@@ -15,11 +15,11 @@ async function createSql(obj) {
 
 
         console.log({ arr })
+        console.log({obj});
         const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
         return result
     }
     catch (error){
-        console.log(error.message)
         throw error
     }
 };

@@ -125,10 +125,8 @@ router.get('/findEntityById/:entity/:id', async (req, res) => {
             const response = await readRelatedObjects(req.params.entity, primaryKeyField, req.params.id, fullObjects)
             res.status(200).send(response);
         }
-
         //check in function if the table has type: refernces, and if not to call the function of ruty, else to call to function-getDetailsSql to call to function 
         //that change the field- tablename to object of the id
-
     }
     catch (error) {
         res.status(500).send(error.message);

@@ -1499,6 +1499,116 @@
                     {
                         "MTDTable": {
                             "name": {
+                                "name": "PriceList",
+                                "sqlName": "tbl_PriceList"
+                            },
+                            "description": "table that contains all the priceList of the products",
+                            "defaultColumn": "Name"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "Name",
+                                "sqlName": "Name",
+                                "type": "NVARCHAR(50) NOT NULL UNIQUE"
+                            },
+                            {
+                                "name": "Pumps",
+                                "sqlName": "Pumps",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Beton",
+                                "sqlName": "Beton",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "sqlName": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "sqlName": "UserName",
+                                "type": "NVARCHAR(50) NOT NULL"
+                            },
+                            {
+                                "name": "Finish",
+                                "sqlName": "Finish",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PricelistForProducts",
+                                "sqlName": "tbl_PricelistForProducts"
+                            },
+                            "description": "table that contacts  between products to their priclist",
+                            "defaultColumn": "ProductId"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "sqlName": "PriceListId",
+                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                            },
+                            {
+                                "name": "ProductId",
+                                "sqlName": "ProductId",
+                                "type": "NVARCHAR NOT NULL",
+                                "reference": "TableName"
+                            },
+                            {
+                                "name": "tableName",
+                                "sqlName": "TableName",
+                                "type": "NVARCHAR(50)"
+                            },
+                            {
+                                "name": "Price",
+                                "sqlName": "Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Discount",
+                                "sqlName": "Discount",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "sqlName": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "sqlName": "UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
                                 "name": "DistanceAdditions",
                                 "sqlName": "tbl_DistanceAdditions"
                             },
@@ -1730,116 +1840,6 @@
                                 "name": "SomechNumber",
                                 "sqlName": "SomechNumber",
                                 "type": "int NOT NULL PRIMARY KEY"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "PriceList",
-                                "sqlName": "tbl_PriceList"
-                            },
-                            "description": "table that contains all the priceList of the products",
-                            "defaultColumn": "Name"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "Name",
-                                "sqlName": "Name",
-                                "type": "NVARCHAR(50) NOT NULL UNIQUE"
-                            },
-                            {
-                                "name": "Pumps",
-                                "sqlName": "Pumps",
-                                "type": "BIT NOT NULL"
-                            },
-                            {
-                                "name": "Beton",
-                                "sqlName": "Beton",
-                                "type": "BIT NOT NULL"
-                            },
-                            {
-                                "name": "AddedDate",
-                                "sqlName": "AddedDate",
-                                "type": "DATETIME NOT NULL"
-                            },
-                            {
-                                "name": "UserName",
-                                "sqlName": "UserName",
-                                "type": "NVARCHAR(50) NOT NULL"
-                            },
-                            {
-                                "name": "Finish",
-                                "sqlName": "Finish",
-                                "type": "BIT NOT NULL"
-                            },
-                            {
-                                "name": "Disabled",
-                                "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "PricelistForProducts",
-                                "sqlName": "tbl_PricelistForProducts"
-                            },
-                            "description": "table that contacts  between products to their priclist",
-                            "defaultColumn": "ProductId"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "PriceListId",
-                                "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
-                            },
-                            {
-                                "name": "ProductId",
-                                "sqlName": "ProductId",
-                                "type": "NVARCHAR NOT NULL",
-                                "reference": "TableName"
-                            },
-                            {
-                                "name": "tableName",
-                                "sqlName": "TableName",
-                                "type": "NVARCHAR(50)"
-                            },
-                            {
-                                "name": "Price",
-                                "sqlName": "Price",
-                                "type": "FLOAT NOT NULL"
-                            },
-                            {
-                                "name": "Discount",
-                                "sqlName": "Discount",
-                                "type": "FLOAT NOT NULL"
-                            },
-                            {
-                                "name": "AddedDate",
-                                "sqlName": "AddedDate",
-                                "type": "DATETIME NOT NULL"
-                            },
-                            {
-                                "name": "UserName",
-                                "sqlName": "UserName",
-                                "type": "NVARCHAR (50) NOT NULL"
-                            },
-                            {
-                                "name": "Disabled",
-                                "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
