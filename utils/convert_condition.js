@@ -7,11 +7,11 @@ const convertToSqlQuery = (condition) => {
         let query = ``
         for (let key in condition) {
             if (key === 'AND') {
-                query = `${query} (${buildAnd(condition[key])}) ${operator}`;
+                query = `${query} (${buildOrAnd(condition[key],"AND")}) ${operator}`;
             }
             else {
                 if (key === 'OR') {
-                    query = `${query} (${buildOr(condition[key])}) ${operator}`;
+                    query = `${query} (${buildOrAnd(condition[key],"OR")}) ${operator}`;
                 }
                 else {
                     query = `${query} ${key} = ${typeof condition[key] === 'string' ? `'${condition[key]}'` : condition[key]} ${operator}`;
@@ -21,31 +21,21 @@ const convertToSqlQuery = (condition) => {
         return query;
 
     }
-    const buildAnd = (andArray) => {
-        let andQuery = ``;
-        for (let and of andArray) {
-            if (andArray.indexOf(and) === andArray.length - 1) {
-                andQuery = `${andQuery} ${buildQuery(and, "")}`
+    const buildOrAnd = (array,operator) => {
+        let query = ``;
+        for (let item of array) {
+            if (array.indexOf(item) === array.length - 1) {
+                query = `${query} ${buildQuery(item, "")}`
             }
             else
-                andQuery = `${andQuery} ${buildQuery(and, "AND")}`
+                query = `${query} ${buildQuery(item, operator)}`
         }
-        return andQuery;
+        return query;
     }
-    const buildOr = (orArray) => {
-        let orQuery = ``
-        for (let or of orArray) {
-            if (orArray.indexOf(or) === orArray.length - 1)
-                orQuery = `${orQuery} ${buildQuery(or, "")}`
-            else
-                orQuery = `${orQuery} ${buildQuery(or, "OR")}`
-
-        }
-        return orQuery;
-    }
-    let result = buildQuery(condition, "AND")
-    result = result.slice(0, result.length - 3)
-    return result;
+    let result = buildQuery(condition, "AND");
+    result = result.slice(0, result.length - 3);
+    console.log({result});
+    return result; 
 }
 const convertToMongoFilter = () => {
 

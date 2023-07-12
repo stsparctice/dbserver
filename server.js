@@ -12,6 +12,7 @@ const { HOST, PORT } = process.env;
 const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 const {convertToSqlQuery}=require('./utils/convert_condition');
+convertToSqlQuery({ AND: [{ Ovligo: 4 }, { OR: [{ City: "אשדוד" },{OR:[{jorg:"kdjf"},{AND:[{SARIT:5},{kdjj:"jdhjfa"}]}]} ,{ City:"בני-ברק" }] }], OR: [{ ZipCode: "77452" }, { ZipCode: "74522" }] ,Shores:"jdhf"})
 connectMng().then(_ => {
     console.log('connect to mongo')
     connectSql().then(_ => {
