@@ -8,11 +8,18 @@ class MongoDBOperations {
     constructor(collectionName, dbName = MONGO_DB) {
         this.collectionName = collectionName;
         this.dbName = dbName;
-        this.collections = config[1]['mongodb'];
+        this.collections = config.find(({ database }) => database === "mongoDB").collections;
     };
 
     async setCollection(collection) {
-        this.collectionName = collection
+        const collectionConfig = this.collections.find(({ name }) => name === collection)
+        if (collectionConfig) {
+            this.collectionName = collectionConfig.mongoName;
+        }
+        else {
+            throw new Error(`the collection name ${collection} is not exist`);
+        }
+
     };
 
     async insertOne(obj = null) {
@@ -23,7 +30,7 @@ class MongoDBOperations {
                 result = result.insertedId;
             }
             else {
-                throw new Error('Object is not valid.')
+                throw new Error('Object is not valid');
             }
             return result.toString();
         }
@@ -49,12 +56,12 @@ class MongoDBOperations {
     };
 
     async updateOne(obj) {
-        try{
+        try {
 
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
             return result;
         }
-        catch(error){
+        catch (error) {
             throw error
         }
     };

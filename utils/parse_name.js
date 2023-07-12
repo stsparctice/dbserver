@@ -27,7 +27,7 @@ function parseColumnName() {
             if (column) {
                 columns[column.sqlName] = req.body.values[name]
             }
-            else {     
+            else {
                 error = name
             }
         }
@@ -39,15 +39,14 @@ function parseColumnName() {
     }
 }
 const parseTBname = (tbname) => {
-    let sql = config.find(db => db.database == 'sql')
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    let table = tables.find(table => table.MTDTable.name.name == tbname || table.MTDTable.name.sqlName == tbname)
+    let sql = config.find(db => db.database == 'sql');
+    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
+    let table = tables.find(table => table.MTDTable.name.name == tbname || table.MTDTable.name.sqlName == tbname);
     if (table) {
-        
-        return table.MTDTable.name.sqlName
+        return table.MTDTable.name.sqlName;
     }
     else {
-        throw new Error(`the entity name ${tbname} not exist`)
+        throw new Error(`the entity name ${tbname} not exist`);
     }
 }
 
