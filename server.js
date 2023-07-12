@@ -11,7 +11,7 @@ const { HOST, PORT } = process.env;
 
 const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
-
+const {convertToSqlQuery}=require('./utils/convert_condition');
 connectMng().then(_ => {
     console.log('connect to mongo')
     connectSql().then(_ => {
