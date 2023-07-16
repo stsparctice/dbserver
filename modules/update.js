@@ -67,11 +67,17 @@ async function dropCollectionMng(obj) {
 };
 
 async function dropDocumentMng(obj) {
-    const {data,collection}=obj;
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.dropOneDocument(data);
-    console.log({response})
-    return response;
+    try{
+
+        const {data,collection}=obj;
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.dropOneDocument(data);
+        console.log({response})
+        return response;
+    }
+    catch(error){
+        throw error
+    }
 };
 
 

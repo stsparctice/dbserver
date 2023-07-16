@@ -2,6 +2,7 @@ require('dotenv').config();
 const { getClient } = require('./mongo-connection');
 const { MONGO_DB } = process.env;
 const config = require('../../config/DBconfig.json');
+const notifications = require('../../config/serverNotifictionsConfig.json')
 
 class MongoDBOperations {
 
@@ -23,7 +24,7 @@ class MongoDBOperations {
                 result = result.insertedId;
             }
             else {
-                throw new Error('Object is not valid.')
+                throw notifications.find(n => n.status == 400)
             }
             return result.toString();
         }
@@ -54,7 +55,7 @@ class MongoDBOperations {
             return result;
         }
         catch {
-            throw new Error('Object is not valid.')
+            throw notifications.find(n => n.status == 400)
         }
     };
 

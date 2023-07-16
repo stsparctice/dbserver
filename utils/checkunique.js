@@ -3,12 +3,14 @@ const uniquesConfig = require('../config/config-uniques.json')
 
 async function uniqueValue(field) {
     try {
-        let list = uniquesConfig.find(u => Object.keys(u.fields).find(f => f == field.table))
-        if (!list) {
+        let list = uniquesConfig.find(u => Object.keys(u.fields).find(f => f == field.table && u.fields[f] == field.name))
+        console.log({ list });
+        if (!list || (list.allowNulls == true && field.value == null)) {
             return
         }
         for (let item in list.fields) {
-            if ((await getAllSql({ tableName: item, condition: `${list.fields[item]}='${field.value}'` })).length > 0) {
+            let sameValues = await getAllSql({ tableName: item, condition: `${list.fields[item]}='${field.value}'` })
+            if (sameValues.length > 0) {
                 return false
             }
         }
@@ -23,7 +25,9 @@ function checkDataIsUnique() {
     return async (req, res, next) => {
         let error
         for (let value of Object.keys(req.body.values)) {
-            if (await uniqueValue({ table: req.body.tableName, name: value, value: req.body.values[value] }) == false) {
+            console.log({ value });
+            let check = await uniqueValue({ table: req.body.tableName, name: value, value: req.body.values[value] })
+            if (check == false) {
                 error = { value }
             }
         }

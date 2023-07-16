@@ -2,6 +2,7 @@ const config = require('../../config/DBconfig.json')
 const types = require('./config-objects')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
+const notifictaions = require('../../config/serverNotifictionsConfig.json')
 
 
 function getTableFromConfig(tableName) {
@@ -14,7 +15,9 @@ function getTableFromConfig(tableName) {
         return table
     }
     catch {
-        throw new Error(`Table: ${tableName} is not exsist.`)
+        let error = notifictaions.find(n => n.status == 512)
+        error.description = `Table: ${tableName} is not exsist.`
+        throw error
     }
 
 }
@@ -42,7 +45,9 @@ function parseSQLType(obj, tabledata) {
                     parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
                 }
                 catch {
-                    throw new Error(`Type: ${type} does not exist.`)
+                    let error = notifictaions.find(n => n.status == 513)
+                    error.description = `Type: ${type} does not exist.`
+                    throw error
                 }
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
                 str.push(val);
@@ -54,10 +59,10 @@ function parseSQLType(obj, tabledata) {
         return str
     }
     catch (error) {
-        if (error.message.includes('Type:')) {
+        if (error.status == 513) {
             throw error
         }
-        throw new Error('Object is not valid')
+        throw notifictaions.find(n => n.status == 400)
     }
 }
 
@@ -69,26 +74,33 @@ function parseSQLTypeForColumn(col, tableName) {
         parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
     }
     catch {
-        throw new Error(`Type: ${type} does not exist.`)
+        let error = notifictaions.find(n => n.status == 513)
+        error.description = `Type: ${type} does not exist.`
+        throw error
     }
     const val = parse.parseNodeTypeToSqlType(col.value);
     return val
 }
 
 function buildSqlCondition(tableName, condition) {
-    const tablealias = getTableFromConfig(tableName).MTDTable.name.name
-    console.log({tableName, condition})
-    if (condition) {
-        const entries = Object.entries(condition)
-        const conditionList = entries.map(c =>
-            `${tablealias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, tableName)}`
-        )
-        condition = conditionList.join(' AND ')
+    try {
+        const tablealias = getTableFromConfig(tableName).MTDTable.name.name
+        console.log({ tableName, condition })
+        if (condition) {
+            const entries = Object.entries(condition)
+            const conditionList = entries.map(c =>
+                `${tablealias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, tableName)}`
+            )
+            condition = conditionList.join(' AND ')
+        }
+        else {
+            condition = "1 = 1"
+        }
+        return condition
     }
-    else {
-        condition = "1 = 1"
+    catch (error) {
+        throw error
     }
-    return condition
 }
 
 
@@ -99,13 +111,17 @@ const readJoin = async (baseTableName, baseColumn) => {
         myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
     }
     catch {
-        throw new Error(`BaseTableName: ${baseTableName} is not exsist.`)
+        let error = notifictaions.find(n => n.status == 512)
+        error.description = `BaseTableName: ${baseTableName} is not exsist.`
+        throw error
     }
     try {
         baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
     }
     catch {
-        throw new Error(`BaseColumn: ${baseColumn} is not exsist in table ${baseTableName}.`)
+        let error = notifictaions.find(n => n.status == 514)
+        error.description = `BaseColumn: ${baseColumn} is not exsist in table ${baseTableName}.`
+        throw error
     }
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
@@ -152,8 +168,8 @@ const readJoin = async (baseTableName, baseColumn) => {
 }
 
 const viewConnectionsTables = (tableName, condition = {}) => {
-   console.log("viewConnectionsTables:", tableName)
-    const myTable =getTableFromConfig(tableName)
+    console.log("viewConnectionsTables:", tableName)
+    const myTable = getTableFromConfig(tableName)
 
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
     let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];
@@ -180,7 +196,7 @@ const viewConnectionsTables = (tableName, condition = {}) => {
         })
     })
     select = select.slice(0, select.length - 1);
-   console.log(`use ${SQL_DBNAME} SELECT ${select} FROM ${join}`)
+    console.log(`use ${SQL_DBNAME} SELECT ${select} FROM ${join}`)
     return `use ${SQL_DBNAME} SELECT ${select} FROM ${join}`;
 }
 
@@ -208,10 +224,14 @@ function readRelatedData(tablename, id) {
 }
 
 function getReferencedColumns(tablename) {
-    console.log('getReferencedColumns:', tablename)
-    const table = getTableFromConfig(tablename)
-    let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
-    return columns
+    try {
+        console.log('getReferencedColumns:', tablename)
+        const table = getTableFromConfig(tablename)
+        let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
+        return columns
+    } catch (error) {
+        throw error
+    }
 }
 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
@@ -245,7 +265,9 @@ function getForeignTableAndColumn(tablename, field) {
                 foreignTableName = foreignTableName.slice(0, index)
             }
             catch {
-                throw new Error(`Field: ${field} is not exsist in table: ${tablename}.`)
+                let error = notifictaions.find(n => n.status == 515)
+                error.description = `Field: ${field} is not exsist in table: ${tablename}.`
+                throw error
             }
             const foreignTable = getTableFromConfig(foreignTableName)
 

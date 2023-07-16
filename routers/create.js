@@ -10,16 +10,13 @@ const { checkDataIsUnique } = require('../utils/checkunique')
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
+router.post('/create', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
     try {
         const result = await createSql(req.body);
-        if (result)
-            res.status(201).send(result);
-        else
-            res.status(500).send(false)
+        res.status(201).send(result);
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -29,7 +26,7 @@ router.post('/createManySql', parseTableName(), async (req, res) => {
         res.status(201).send(result);
     }
     catch (error) {
-        res.status(500).send(error.message);
+        res.status(error.status).send(error.message);
 
     }
 });
@@ -41,7 +38,7 @@ router.post('/insertone', async (req, res) => {
         res.status(200).send(result);
     }
     catch (error) {
-        res.send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
