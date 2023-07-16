@@ -12,32 +12,39 @@ class MongoDBOperations {
     };
 
     async setCollection(collection) {
-        const collectionConfig = this.collections.find(({ name }) => name === collection)
-        if (collectionConfig) {
-            this.collectionName = collectionConfig.mongoName;
-        }
-        else {
-            throw new Error(`the collection name ${collection} is not exist`);
-        }
-
+        this.collectionName = collection;
     };
 
     async insertOne(obj = null) {
         try {
             let result;
             if (obj) {
+                console.log({ obj });
                 result = await getClient().db(this.dbName).collection(this.collectionName).insertOne(obj);
                 result = result.insertedId;
             }
             else {
                 throw new Error('Object is not valid');
             }
-            return result.toString();
+            return result;
         }
         catch (error) {
             throw (error)
         }
     };
+    async insertMany(array) {
+        try {
+            const result = await getClient().db(this.dbName).collection(this.collectionName).insertMany(array);
+            if (result)
+                return result.insertedIds;
+            else{
+                throw new Error("Not success");
+            }
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 
     async find(obj = {}) {
 

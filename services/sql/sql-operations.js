@@ -158,18 +158,15 @@ const join = async (query = "") => {
 const update = async function (obj) {
      try {
         
-          obj.condition = buildSqlCondition(obj.tableName, obj.condition)
-          const alias = getTableFromConfig(obj.tableName).MTDTable.name.name
-
+          obj.condition = buildSqlCondition(obj.entityName, obj.condition)
+          const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
-          console.log({valEntries});
-          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.tableName)}`).join(',')
+          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
           console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
      catch (error) {
-          console.log(error.message)
           throw error
      }
 };

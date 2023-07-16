@@ -200,7 +200,7 @@ router.post('/countRows', parseTableName(), async (req, res) => {
 router.get('/readAll/:tbname/:condition', async (req, res) => {
     try {
         let obj = {};
-        obj['tableName'] = req.params.tbname;
+        obj['tableName'] =parseTBname( req.params.tbname);
         obj['condition'] = req.params.condition;
         const table = await getAllSql(obj);
         res.status(200).send(table);
@@ -269,9 +269,13 @@ router.get('/countdocuments/:collection', async (req, res) => {
 });
 
 router.get('/readMany', async (req, res) => {
-    // let response = await routeEntityByItsType(req.query.entity, getAllSql, getDetailsMng)
-    // res.send(response)
-    res.status(410).send()
+    try {
+        let response = await routeEntityByItsType(req.query.entity, getAllSql, getDetailsMng)
+        res.send(response)
+    }
+    catch (error) {
+        res.status(error.status).send(error.message)
+    }
 })
 
 module.exports = router;

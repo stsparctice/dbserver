@@ -33,7 +33,7 @@ const convertToSqlQuery = (condition) => {
     return result;
 }
 
-const convertToMongoFilter = () => {
+const convertToMongoFilter = (condition) => {
     let subFilter = {}
     for (let key in condition) {
         if (condition[key] instanceof Array) {
