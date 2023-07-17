@@ -117,6 +117,7 @@ const read = async function (obj) {
           //      .input('n', n)
           //      .execute(`pro_BasicRead`);
           // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
      }
@@ -157,17 +158,15 @@ const join = async (query = "") => {
 const update = async function (obj) {
      try {
         
-          obj.condition = buildSqlCondition(obj.tableName, obj.condition)
-          const alias = getTableFromConfig(obj.tableName).MTDTable.name.name
-
-          const valEntries = Object.entries(obj.values)
-          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.tableName)}`).join(',')
+          obj.condition = buildSqlCondition(obj.entityName, obj.condition)
+          const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
+          const valEntries = Object.entries(obj.values);
+          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
           console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
      catch (error) {
-          console.log(error.message)
           throw error
      }
 };
@@ -177,7 +176,7 @@ const updateOne = async function (obj) {
 
           const { tableName, values, condition } = obj;
           const tabledata = getSqlTableColumnsType(tableName)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${value} WHERE ${condition}`)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
           return result;
      }
      catch (error) {

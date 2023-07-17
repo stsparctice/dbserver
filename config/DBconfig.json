@@ -135,7 +135,7 @@
                                 "type": "BIT NOT NULL"
                             }
                         ]
-                    },  
+                    },
                     {
                         "MTDTable": {
                             "name": {
@@ -143,7 +143,7 @@
                                 "sqlName": "tbl_Status"
                             },
                             "description": "Table that contain all the statuses",
-                            "defaultColumn":"StatusName" 
+                            "defaultColumn": "StatusName"
                         },
                         "columns": [
                             {
@@ -167,7 +167,7 @@
                                 ]
                             }
                         ]
-                    },                  
+                    },
                     {
                         "MTDTable": {
                             "name": {
@@ -1394,7 +1394,6 @@
                             }
                         ]
                     },
-                   
                     {
                         "MTDTable": {
                             "name": {
@@ -2195,12 +2194,24 @@
     },
     {
         "database": "mongoDB",
-        "mongodb": {
-            "leads": "leads",
-            "products": "Products",
-            "areas": "areas",
-            "users": "users",
-            "rand_password": "rand_password"
-        }
+        "collections": [
+            {
+                "name": "products",
+                "mongoName": "Products"
+            },
+            {
+                "name": "areas",
+                "mongoName": "areas"
+            },
+            {
+                "name": "users",
+                "mongoName":  "users"
+            },
+            {
+                "name": "rand_password",
+                "mongoName":  "rand_password"
+            }
+           
+        ]
     }
 ]
