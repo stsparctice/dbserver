@@ -87,7 +87,6 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(tableName = "", condition = {}) {
     try {
-        console.log('connectTables:', tableName)
         const query = viewConnectionsTables(tableName, condition);
         const values = await join(query);
         const items = []
