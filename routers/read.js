@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
     getDetailsWithAggregateMng, getCountDocumentsMng,
-    readWithJoin, readFullObjects, readRelatedObjects, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
+    readWithJoin, readFullObjects, readFullObjectsWithRef, readRelatedObjects, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
 const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName, parseTBname } = require('../utils/parse_name')
@@ -49,23 +49,31 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
 
 router.get('/readAllEntity/:entity', async (req, res) => {
     try {
+        console.log("router.get('/readAllEntity/:entity', async (req, res) => {gshfghasjglasfdgjahkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklggghg");
         let obj = {};
         obj['tableName'] = req.params.entity;
-        console.log({ obj })
+        // console.log({ obj })
         const fullObjects = await readFullObjects(req.params.entity)
-        console.log(fullObjects)
-        let condition = req.query ? req.query : {}
-        // if (req.query) {
-        //     const entries = Object.entries(req.query)
-        //     const conditions = entries.map(con => `${req.params.entity}.${con[0]}= ${con[1]}`)
-        //     condition = conditions.join(' AND ')
-        // }
-        // condition = condition.length > 0 ? condition : "1=1"
+
+        console.log({ fullObjects })
+        let condition = ''
+        if (req.query) {
+            const entries = Object.entries(req.query)
+            const conditions = entries.map(con => `${req.params.entity}.${con[0]} = ${con[1]}`)
+            condition = conditions.join(' AND ')
+        }
+        condition = condition.length > 0 ? condition : "1=1"
+      
+      
+
         if (fullObjects.length === 0) {
             const response = await connectTables(req.params.entity, condition)
             res.status(200).send(response)
         }
-        // console.log(table);
+        else {
+            let response = await readFullObjectsWithRef(req.params.entity, fullObjects[0])
+            res.status(200).send(response)
+        }
     }
     catch (error) {
         res.status(500).send(error.message)

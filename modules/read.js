@@ -1,8 +1,11 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
+const { getTabeColumnName, setFullObj, getTables, readJoin, viewConnectionsTables, getReferencedColumns, getTableAccordingToRef, readRelatedData, getPrimaryKeyField } = require('./config/config');
 const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
+
 const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
+
 
 async function getDetailsSql(obj) {
     try {
@@ -13,6 +16,7 @@ async function getDetailsSql(obj) {
         throw error
     }
 };
+
 
 async function getAllSql(obj) {
     try {
@@ -58,8 +62,21 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
 async function readFullObjects(tablename) {
     console.log('readFullObjects:', tablename)
     const result = await getReferencedColumns(tablename)
+    console.log({ result });
     return result
 
+}
+
+async function readFullObjectsWithRef(table, fullObjects) {
+    const TabeColumnName = getTabeColumnName(table)
+    let y = await read({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
+    let answer = await Promise.all(y.map(myFunction));
+    async function myFunction(value) {
+        value[`${fullObjects.name}`] = await read({ tableName: `${value[`${fullObjects.ref}`]}`, columns: '*', condition: `${await getPrimaryKeyField(value[`${fullObjects.ref}`])}='${value[fullObjects.name]}'` })
+        return value;
+    }
+    console.log({ answer });
+    return answer
 }
 
 async function readWithJoin(tableName, column) {
@@ -218,7 +235,7 @@ async function getCountDocumentsMng(collection) {
 module.exports = {
     getDetailsSql,
     getAllSql, readJoin, countRowsSql,
-    readFullObjects, readRelatedObjects,
+    readFullObjects, readFullObjectsWithRef, readRelatedObjects,
     getDetailsMng, readWithJoin,
     getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, connectTables, getPolygon
 };

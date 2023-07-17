@@ -10,8 +10,8 @@ function getTableFromConfig(tableName) {
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
         tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+    // console.log(table);
     return table
-
 }
 
 function getCollectionsFromConfig(collectionName) {
@@ -200,14 +200,43 @@ function readRelatedData(tablename, id) {
     // let sql = config.find(db => db.database == 'sql')
     // let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     // let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
-
-
 }
 
 function getReferencedColumns(tablename) {
     console.log('getReferencedColumns:', tablename)
     const table = getTableFromConfig(tablename)
     let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
+    // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
+    // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
+    // console.log({ columns });
+    return columns
+}
+function setFullObj(parentTable, refTable) {
+    console.log({ parentTable }, { refTable });
+    // let table = getTableFromConfig(parentTable)
+    // const f = `select ${refTable.ref} from ${parentTable}`
+    // let table2 = getTableFromConfig(refTable)
+    // console.log({ table });
+    // console.log({ table2 });
+    // table2 = table2.columns.map(col => { col.name })
+    // table.columns.filter(col => {
+    //     if (col.sqlName == refTable.name) {
+    //         col = table2
+    //     }
+    // }).map()
+    // let columns = table.columns.filter(col => col.sqlName == b.ref).map()
+}
+
+function getTables(tablename) {
+    const table = getTableFromConfig(tablename)
+    return table
+}
+function getTableAccordingToRef(tablename) {
+    const table = getTableFromConfig(tablename)
+    // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
+    // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
+    let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
+    console.log({ columns });
     return columns
 }
 
@@ -252,12 +281,21 @@ function convertFieldType(tablename, field, value) {
     const ans = parse.parseNodeTypeToSqlType(value)
     return ans
 }
+function getTabeColumnName(tablename) {
+    const table = getTableFromConfig(tablename)
+    let columns = table.columns.map(col => col.sqlName)
+    return columns
+}
 
 module.exports = {
-    getTableFromConfig,
+
+      getTabeColumnName,
+    getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType, getPrimaryKeyField, viewConnectionsTables,
+      getTableFromConfig,
     getSqlTableColumnsType, buildSqlCondition,
     parseSQLType, parseSQLTypeForColumn, readJoin, readRelatedData,
     getReferencedColumns, convertFieldType, getPrimaryKeyField, viewConnectionsTables, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn,
     checkEntityType,
     getCollectionsFromConfig
+
 };

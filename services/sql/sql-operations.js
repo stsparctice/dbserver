@@ -108,15 +108,8 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
-          // console.log({ tableName, columns, condition, n })
-          // console.log({ tableName, columns, condition, n })
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('condition', condition)
-          //      .input('n', n)
-          //      .execute(`pro_BasicRead`);
-          // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
           console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
@@ -172,8 +165,6 @@ const update = async function (obj) {
 };
 const updateOne = async function (obj) {
      try {
-          // const tableName = "tbl_Leads"
-
           const { tableName, values, condition } = obj;
           const tabledata = getSqlTableColumnsType(tableName)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
