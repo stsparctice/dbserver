@@ -5,34 +5,19 @@ const mongoCollection = MongoDBOperations;
 
 async function updateSql(obj) {
     try {
-        console.log({obj})
-        console.log({condition:obj.condition})
-        let tabledata = getSqlTableColumnsType(obj.tableName)
-       console.log({tabledata})
-        if(obj.condition){
-            const entries = Object.entries(obj.condition)
-            
-            const conditionList = entries.map(c=>
-
-                `${c[0]} =  ${parseSQLTypeForColumn({name:c[0], value:c[1]}, tabledata)}`
-            )
-            obj.condition = conditionList.join(' AND ')
-        }
-        else{
-            obj.condition = "1 = 1"
-        }
-        console.log({obj})
+        
         const result = await update(obj);
         return result;
     }
     catch (error){
+        console.log(error.message)
         throw error
     }
 };
 async function updateOneSql(obj) {
     try{
 
-        const result = await updateOne(obj);
+        const result = await update(obj);
         return result;
     }
     catch(error){

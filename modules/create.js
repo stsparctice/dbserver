@@ -8,19 +8,13 @@ const { getSqlTableColumnsType, parseSQLType } = require('../modules/config/conf
 
 async function createSql(obj) {
     try {
-        // obj.tableName=`tbl_${obj.tableName}`
-        let tabledata = getSqlTableColumnsType(obj.tableName)
-        console.log({tabledata});
-        let arr = parseSQLType(obj.values, tabledata)
-
-
-        console.log({ arr })
-        const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
-        return result
+        let tabledata = getSqlTableColumnsType(obj.entityName);
+        let arr = parseSQLType(obj.values, tabledata);
+        const result = await create({ tableName: obj.entityName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
+        return result;
     }
-    catch (error){
-        console.log(error.message)
-        throw error
+    catch (error) {
+        throw error;
     }
 };
 
@@ -33,18 +27,19 @@ async function insertManySql(obj) {
 
         let result = []
         for (let o of values) {
-            tabledata = getSqlTableColumnsType(obj.tableName)
+            tabledata = getSqlTableColumnsType(obj.entityName)
             arr = parseSQLType(o, tabledata);
-            let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-            result = [...result, res]
+            let res = await create({ tableName: obj.entityName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
+            result = [...result, ...res]
         }
-        if (result)
+        if (result) {
             return result;
+        }
         else
             return false;
     }
-    catch {
-        throw new Error('Insert failed.')
+    catch (error) {
+        throw error;
     }
 }
 async function creatNewColumn(obj) {
@@ -56,15 +51,25 @@ async function creatSqlTable(obj) {
     return result
 }
 
-async function createMng(obj) {
+async function insertOne(obj) {
     try {
-        mongoCollection.setCollection(obj.collection);
+        mongoCollection.setCollection(obj.entityName);
         const response = await mongoCollection.insertOne(obj.data);
         return response;
     }
-    catch (error){
+    catch (error) {
         throw error
     }
 };
+async function insertMany(obj) {
+    try {
+        mongoCollection.setCollection(obj.entityName);
+        const result = await mongoCollection.insertMany(obj.data);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}
 
-module.exports = { createSql, insertManySql, createMng, creatSqlTable, creatNewColumn };
+module.exports = { createSql, insertManySql, insertOne, creatSqlTable, creatNewColumn ,insertMany};
