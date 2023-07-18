@@ -110,33 +110,13 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
-     }
-     catch {
-          throw notifictions.find(n => n.status == 400)
-     }
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('columns', columns)
-     //      .input('condition', condition)
-     //      .input('n', n)
-     //      .execute(`pro_BasicRead`);
-     try {
-
-          // console.log({ tableName, columns, condition, n })
-          // console.log({ tableName, columns, condition, n })
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('condition', condition)
-          //      .input('n', n)
-          //      .execute(`pro_BasicRead`);
-          // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
           console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
      }
-     catch (error) {
-          throw error
+     catch (error){
+          console.log({error});
+          throw notifictions.find(({status}) => status == 400);
      }
 };
 
@@ -171,12 +151,12 @@ const join = async (query = "") => {
 
 const update = async function (obj) {
      try {
-        
+
           obj.condition = buildSqlCondition(obj.entityName, obj.condition)
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
-          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
+          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
@@ -269,7 +249,7 @@ module.exports = {
      read,
      readAll,
      update,
-//     updateOne,
+     //     updateOne,
      updateQuotation,
      updateSuppliersBranches,
      countRows,

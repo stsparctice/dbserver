@@ -25,7 +25,6 @@ async function updateOneSql(obj) {
 };
 async function updateOne(obj) {
     try {
-        console.log({ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateOne(obj);
         return response;
@@ -37,7 +36,6 @@ async function updateOne(obj) {
 
 async function updateMany(obj) {
     try {
-        console.log({ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateMany(obj);
         return response;

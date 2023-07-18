@@ -6,10 +6,6 @@ const routeEntityByItsType = async (data, sqlCallback, mongoCallback) => {
         let { type } = checkEntityType(data.entityName);
         let result;
         if (type === 'SQL') {
-            if (data.condition) {
-                data.condition = convertToSqlQuery(data.condition);
-            }
-            console.log({data});
             result = await sqlCallback(data);
         }
         if (type === 'mongoDB') {

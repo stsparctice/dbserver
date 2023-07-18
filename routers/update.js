@@ -1,5 +1,5 @@
 const express = require('express');
-const { parseTableName, parseColumnName } = require('../utils/parse_name');
+const { parseTableName, parseColumnName, parseColumnNameMiddleware } = require('../utils/parse_name');
 const router = express.Router();
 const { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateOne, dropCollectionMng, dropDocumentMng, updateMany } = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
@@ -95,7 +95,7 @@ router.use(routerLogger())
 // })
 
 
-router.put('/updateone', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
+router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
         const response = await routeEntityByItsType(req.body, updateSql, updateOne)
         res.status(204).send(response)
@@ -104,12 +104,13 @@ router.put('/updateone', parseTableName(), parseColumnName(), checkDataIsUnique(
     }
 })
 
-router.put('/updatemany', parseTableName(), parseColumnName(), checkDataIsUnique(), async (req, res) => {
+router.put('/updatemany', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        const response = await routeEntityByItsType(req.body, updateSql, updateMany)
-        res.status(204).send(response)
-    } catch (error) {
-        res.status(error.status).send(error.message)
+        const response = await routeEntityByItsType(req.body, updateSql, updateMany);
+        res.status(204).send(response);
+    } 
+    catch (error) {
+        res.status(error.status).send(error.message);
     }
 })
 

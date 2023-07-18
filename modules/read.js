@@ -94,10 +94,10 @@ async function readWithJoin(tableName, column) {
         throw error
     }
 }
-async function connectTables(tableName = "", condition = {}) {
+async function connectTables(obj) {
     try {
-        console.log('connectTables:', tableName)
-        const query = viewConnectionsTables(tableName, condition);
+        const query = viewConnectionsTables(obj.entityName, obj.condition,obj.topn);
+        console.log({query});
         const values = await join(query);
         const items = []
         for (let val of values) {
@@ -138,10 +138,10 @@ async function connectTables(tableName = "", condition = {}) {
 
     }
     catch (error) {
-        console.log({ error })
         throw error
     }
 }
+
 
 async function countRowsSql(obj) {
     try {

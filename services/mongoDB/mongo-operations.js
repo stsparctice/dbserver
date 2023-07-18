@@ -30,7 +30,7 @@ class MongoDBOperations {
             return result;
         }
         catch (error) {
-            throw (error)
+            throw error
         }
     };
     async insertMany(array) {
@@ -171,18 +171,7 @@ class MongoDBOperations {
                         type: "Point", coordinates: Object.values(point.point)
                     }
                 });
-
-
-                // result = result.insertedId;
-                console.log({ insertresult })
-
-
-
                 const arrayPoints = array.map((p) => Object.values(p))
-                console.log(arrayPoints)
-
-                // console.log({'104':[arrayPoints[104], arrayPoints[105]]})
-                // console.log({'104':[arrayPoints[106], arrayPoints[107]]})
                 const searchresult = await getClient().db(this.dbName).collection('points').find(
                     {
                         pos: {
@@ -191,18 +180,13 @@ class MongoDBOperations {
                                     type: "MultiPolygon",
                                     coordinates: [
                                         [arrayPoints]
-                                    ],
-                                    // crs: {
-                                    //     type: "name",
-                                    //     properties: { name: "urn:x-mongodb:crs:strictwinding:EPSG:4326" }
-                                    // }
+                                    ]
                                 }
                             }
                         }
 
                     }
                 ).toArray()
-                console.log({ searchresult })
                 await this.dropCollection('points')
                 return searchresult
             }

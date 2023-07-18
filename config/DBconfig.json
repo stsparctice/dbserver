@@ -868,7 +868,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "bit NOT NULL"
+                                "type": "BIT NOT NULL"
                             },
                             {
                                 "name": "DeletionDate",

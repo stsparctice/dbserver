@@ -35,6 +35,11 @@
         "description": "This is used for caching purposes. It tells the client that the response has not been modified, so the client can continue to use the same cached version of the response."
     },
     {
+        "message": "Bad Requeste",
+        "status": 400,
+        "description": "The server cannot or will not process the request."
+    },
+    {
         "message": "Forbidden",
         "status": 403,
         "description": "The client does not have access rights to the content;"

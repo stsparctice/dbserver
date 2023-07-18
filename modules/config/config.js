@@ -30,7 +30,7 @@ function getCollectionsFromConfig(collectionName) {
 
 function checkEntityType(entityName) {
     let table = getTableFromConfig(entityName);
-    console.log({table});
+    console.log({ table });
     if (table) {
         return { entityName, type: 'SQL' }
     }
@@ -70,7 +70,7 @@ function parseSQLType(obj, tabledata) {
                     error.description = `Type: ${type} does not exist.`
                     throw error
                 }
-                console.log(obj[keys[i]]); 
+                console.log(obj[keys[i]]);
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
                 str.push(val);
             }
@@ -192,10 +192,8 @@ const readJoin = async (baseTableName, baseColumn) => {
     return result;
 }
 
-const viewConnectionsTables = (tableName, condition = {}) => {
-    console.log("viewConnectionsTables:", tableName)
+const viewConnectionsTables = (tableName, condition = {},topn) => {
     const myTable = getTableFromConfig(tableName)
-
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
     let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];
     let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
@@ -221,8 +219,7 @@ const viewConnectionsTables = (tableName, condition = {}) => {
         })
     })
     select = select.slice(0, select.length - 1);
-    console.log(`use ${SQL_DBNAME} SELECT ${select} FROM ${join}`)
-    return `use ${SQL_DBNAME} SELECT ${select} FROM ${join}`;
+    return `use ${SQL_DBNAME} SELECT TOP ${topn} ${select} FROM ${join}`;
 }
 
 function getPrimaryKeyField(tablename) {
@@ -250,7 +247,6 @@ function readRelatedData(tablename, id) {
 
 function getReferencedColumns(tablename) {
     try {
-        console.log('getReferencedColumns:', tablename)
         const table = getTableFromConfig(tablename)
         let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
         return columns
@@ -311,14 +307,15 @@ function convertFieldType(tablename, field, value) {
     try {
 
         const columns = getSqlTableColumnsType(tablename)
-        let col = columns.find(c => c.sqlName.toLowerCase() === field)
+        let col = columns.find(c => c.sqlName === field)
         let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
         const ans = parse.parseNodeTypeToSqlType(value)
-        console.log({ ans })
         return ans
     }
     catch (error) {
-        throw error
+        const e = notifictaions.find(({ status }) => status === 513);
+        e.description = error.message;
+        throw e;
     }
 
 }

@@ -1,4 +1,5 @@
 const config = require('../config/DBconfig.json')
+const notifications = require('../config/serverNotifictionsConfig.json')
 
 function parseTableName() {
     return (req, res, next) => {
@@ -14,32 +15,68 @@ function parseTableName() {
     }
 }
 
-function parseColumnName() {
-    return (req, res, next) => {
-        let sql = config.find(db => db.database == 'sql')
-        let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        let table = tables.find(table => table.MTDTable.name.sqlName.trim() == req.body.tableName || table.MTDTable.name.sqlName == req.body.tableName)
-        // console.log(table.columns.map(c => ({ name: c.name, sql: c.sqlName })))
-        let error;
-        if (table) {
-            let columns = {}
-            for (let name of Object.keys(req.body.values)) {
-                let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() || column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
-                if (column) {
-                    columns[column.sqlName] = req.body.values[name]
-                }
-                else {
-                    error = name
-                }
-            }
-            req.body.values = columns
+function parseColumnName(values, table) {
+
+    let columns = {}
+    let error = [];
+    for (let name in values) {
+        let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() || column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
+        //😡 לסדר בהתאם לצורה השפויה
+        if (column) {
+            columns[column.sqlName] = values[name]
         }
-        if (error)
-            res.status(404).send(`This column: ${error} does not exsist.`)
-        else
-            next()
+        else {
+            error = [...error, name];
+        }
+    }
+    if (error.length > 0) {
+        let description = `This column: ${error.join(', ')} does not exsist.`
+        error = notifications.find(n => n.status === 514)
+        error.description = description
+        throw error
+    }
+    return columns
+
+}
+const parseColumnNameMiddleware = () => {
+    return (req, res, next) => {
+        try {
+            const table = getTableFromConfig(req.body.entityName)
+            if (table) {
+                req.body.values = parseColumnName(req, body.values, table);
+                next();
+            }
+            else {
+                const error = notifications.find(({ status }) => status === 513);
+                res.status(error.status).send(error.message);
+            }
+        }
+        catch (error) {
+            res.status(error.status).send(error.message);
+        }
     }
 }
+const parseListOfColumnsName = () => {
+    return (req, res, next) => {
+        try {
+            let sql = config.find(db => db.database == 'sql')
+            let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+            let table = tables.find(table => table.MTDTable.name.sqlName.trim() == req.body.entityName || table.MTDTable.name.sqlName == req.body.entityName)
+            if (table) {
+                req.body.values = req.body.values.map(obj => parseColumnName(obj, table))
+                next()
+            }
+            else {
+                throw notifications.find(n => n.status === 409)
+            }
+        }
+        catch (error) {
+            res.status(error.status).send(error.message)
+        }
+
+    }
+}
+
 const parseTBname = (entityName) => {
     let sql = config.find(db => db.database == 'sql');
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
@@ -57,4 +94,4 @@ const parseTBname = (entityName) => {
     }
 }
 
-module.exports = { parseTableName, parseColumnName, parseTBname }
+module.exports = { parseTableName, parseColumnName, parseTBname, parseListOfColumnsName ,parseColumnNameMiddleware}
