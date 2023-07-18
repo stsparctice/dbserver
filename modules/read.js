@@ -98,8 +98,7 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(obj) {
     try {
-        const query = viewConnectionsTables(obj.entityName, obj.condition,obj.topn);
-        console.log({query});
+        const query = viewConnectionsTables(tableName, condition);
         const values = await join(query);
         const items = []
         for (let val of values) {
