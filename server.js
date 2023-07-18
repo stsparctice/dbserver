@@ -39,7 +39,7 @@ connectMng().then(_ => {
     // deleteData();
     // dropSQLTables();
     // dropMongoDBCollection();
-});
+// });
 
 
 }, (err) => {

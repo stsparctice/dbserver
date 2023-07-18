@@ -260,8 +260,6 @@ module.exports = {
      read,
      readAll,
      update,
-     //     updateOne,
-     updateQuotation,
      updateSuppliersBranches,
      countRows,
      join,
