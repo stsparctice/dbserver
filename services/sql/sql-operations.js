@@ -3,9 +3,10 @@ require('dotenv').config();
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getTableFromConfig } = require('../../modules/config/config')
+const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 if (!SQL_DBNAME) {
-     throw new Error('.env file is not valid or is not exsist.')
+     throw notifictions.find(n => n.status == 509)
 }
 
 const create = async function (obj) {
@@ -18,12 +19,13 @@ const create = async function (obj) {
 
      //      console.log({result})
      console.log({ tableName, columns, values })
-     const primarykey = getPrimaryKeyField(tableName)
-     try{
-     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-     return result.recordset;
+     try {
+          const primarykey = getPrimaryKeyField(tableName)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
+          return result.recordset;
      }
-     catch(error){
+
+     catch (error) {
           throw error
      }
 
@@ -108,6 +110,18 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
+     }
+     catch {
+          throw notifictions.find(n => n.status == 400)
+     }
+     // const result = await getPool().request()
+     //      .input('tableName', tableName)
+     //      .input('columns', columns)
+     //      .input('condition', condition)
+     //      .input('n', n)
+     //      .execute(`pro_BasicRead`);
+     try {
+
           // console.log({ tableName, columns, condition, n })
           // console.log({ tableName, columns, condition, n })
           // const result = await getPool().request()
@@ -185,21 +199,32 @@ const update = async function (obj) {
 // };
 // 
 const updateQuotation = async function (obj) {
-     const { Id } = obj;
-     const result = await getPool().request()
-          .input('serialNumber', Id)
-          .execute(`pro_UpdateQuotation`);
-     return result;
+     try {
+          const { Id } = obj;
+          const result = await getPool().request()
+               .input('serialNumber', Id)
+               .execute(`pro_UpdateQuotation`);
+          return result;
+     }
+     catch {
+          throw notifictions.find(n => n.status == 400)
+     }
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode, id } = obj;
-     const result = await getPool().request()
-          .input('name', name)
-          .input('id', id)
-          .input('supplierCode', supplierCode)
-          .execute(`pro_UpdateSuppliersBranches`);
-     return result;
+     try {
+
+          const { name, supplierCode, id } = obj;
+          const result = await getPool().request()
+               .input('name', name)
+               .input('id', id)
+               .input('supplierCode', supplierCode)
+               .execute(`pro_UpdateSuppliersBranches`);
+          return result;
+     }
+     catch {
+          throw notifictions.find(n => n.status == 400)
+     }
 };
 
 const countRows = async function (obj) {

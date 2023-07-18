@@ -12,22 +12,27 @@ router.use(express.json());
 router.use(routerLogger())
 
 router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) => {
-    let obj = {}
-    obj.tableName = req.params.table
-    obj.columns = `${req.params.column}`
-    obj.condition = `${req.params.column} LIKE N'%${req.params.word}%'`
-    if (req.params.condition.trim() != "1=1") {
-        obj.condition += "AND " + req.params.condition
-        // console.log(obj.condition);
+    try {
+
+        let obj = {}
+        obj.tableName = req.params.table
+        obj.columns = `${req.params.column}`
+        obj.condition = `${req.params.column} LIKE '%${req.params.word}%'`
+        if (req.params.condition != "AND 1=1") {
+            obj.condition += "AND " + req.params.condition
+            console.log(obj.condition);
+        }
+        const primarykey = getPrimaryKeyField(obj.tableName)
+        if (primarykey && (primarykey != "Id")) {
+            obj.columns += `,${primarykey}`
+        }
+        obj.n = 10
+        const result = await getDetailsSql(obj);
+        res.status(200).send(result);
     }
-    console.log({ tableName: obj.tableName, column: obj.columns, condition: obj.condition });
-    const primarykey = getPrimaryKeyField(obj.tableName)
-    if (primarykey) {
-        obj.columns += `,${primarykey}`
+    catch (error) {
+        res.status(error.status).send(error.message)
     }
-    obj.n = 10
-    const result = await getDetailsSql(obj);
-    res.status(200).send(result);
 
 })
 
@@ -42,7 +47,7 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
         res.status(200).send(result)
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 
 })
@@ -68,7 +73,7 @@ router.get('/readAllEntity/:entity', async (req, res) => {
         // console.log(table);
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -81,7 +86,7 @@ router.get('/readAll/:entity', async (req, res) => {
     }
     catch (error) {
         console.log(error.message)
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 })
 
@@ -94,7 +99,7 @@ router.post('/readTopN', async (req, res) => {
         res.status(200).send(table);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -106,7 +111,7 @@ router.get('/findRecordById/:entity/:id', async (req, res) => {
         res.status(response.status).send(response.data)
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 })
 
@@ -132,7 +137,7 @@ router.get('/findEntityById/:entity/:id', async (req, res) => {
 
     }
     catch (error) {
-        res.status(500).send(error.message);
+        res.status(error.status).send(error.message);
     }
 
 })
@@ -143,8 +148,8 @@ router.get('/readjoin/:tableName/:column', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        // console.log(error);
-        res.status(404).send(error);
+        console.log(error);
+        res.status(error.status).send(error.message);
     }
 });
 
@@ -169,7 +174,7 @@ router.get('/foreignkeyvalue/:tablename/:field/:id', async (req, res) => {
         res.status(200).send(result);
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 })
 
@@ -179,7 +184,7 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        res.status(404).send(error);
+        res.status(error.status).send(error);
     }
 });
 
@@ -191,7 +196,7 @@ router.post('/countRows', parseTableName(), async (req, res) => {
         res.status(200).send(count);
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -206,7 +211,7 @@ router.get('/readAll/:tbname/:condition', async (req, res) => {
         res.status(200).send(table);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -216,7 +221,7 @@ router.post('/find', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -232,7 +237,7 @@ router.post('/findpolygon', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).send(error.message)
+        res.status(error.status).send(error.message)
     }
 })
 
@@ -244,7 +249,7 @@ router.get('/distinct/:collection/:filter', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -254,7 +259,7 @@ router.post('/aggregate', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -264,7 +269,7 @@ router.get('/countdocuments/:collection', async (req, res) => {
         res.status(200).send({ response });
     }
     catch (error) {
-        res.status(404).send(error.message)
+        res.status(error.status).send(error.message)
     }
 });
 

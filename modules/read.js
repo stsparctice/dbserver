@@ -20,45 +20,54 @@ async function getAllSql(obj) {
         return list;
     }
     catch (error) {
-        console.log(error.message)
         throw error
     }
 };
 
 
 async function readRelatedObjects(tablename, primaryKey, value, column) {
-    column = column.sqlName
-    console.log({ column })
-    let obj = {
-        "tableName": `tbl_${tablename}`,
-        "columns": '*',
-        "condition": `${primaryKey}=${value}`
+    try {
+        column = column.sqlName
+        console.log({ column })
+        let obj = {
+            "tableName": `tbl_${tablename}`,
+            "columns": '*',
+            "condition": `${primaryKey}=${value}`
+        }
+
+        console.log({ tablename })
+        const allData = await read(obj)
+
+        console.log({ allData })
+
+        const refTablename = allData[0].TableName
+        const refPrimaryKeyField = getPrimaryKeyField(refTablename)
+
+        obj = {
+            "tableName": refTablename,
+            "columns": "*",
+            "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
+        }
+        const result = await read(obj)
+        console.log({ result });
+        allData[0].TableName = result
+        return allData
     }
-
-    console.log({ tablename })
-    const allData = await read(obj)
-
-    console.log({ allData })
-
-    const refTablename = allData[0].TableName
-    const refPrimaryKeyField = getPrimaryKeyField(refTablename)
-
-    obj = {
-        "tableName": refTablename,
-        "columns": "*",
-        "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
+    catch (error) {
+        throw error
     }
-    const result = await read(obj)
-    console.log({ result });
-    allData[0].TableName = result
-    return allData
 
 }
 
 async function readFullObjects(tablename) {
     console.log('readFullObjects:', tablename)
-    const result = await getReferencedColumns(tablename)
-    return result
+    try {
+        const result = await getReferencedColumns(tablename)
+        return result
+    }
+    catch (error) {
+        throw error
+    }
 
 }
 
@@ -142,7 +151,6 @@ async function countRowsSql(obj) {
         return count.recordset[0];
     }
     catch (error) {
-        console.log(error.message)
         throw error
     }
 };
@@ -154,8 +162,7 @@ async function getDetailsMng(obj) {
         return response;
     }
     catch (error) {
-        console.log(error.message)
-        throw new Error('Read faild.')
+        throw error
     }
 };
 
@@ -179,7 +186,7 @@ async function getPolygon(obj) {
     }
     catch (error) {
         console.log(error.message)
-        throw new Error('Read faild.')
+        throw error
     }
 }
 

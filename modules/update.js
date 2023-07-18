@@ -10,7 +10,6 @@ async function updateSql(obj) {
         return result;
     }
     catch (error) {
-        console.log(error.message)
         throw error
     }
 };
@@ -53,8 +52,8 @@ async function updateQuotationSql(obj) {
         const result = await updateQuotation(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -63,8 +62,8 @@ async function updateSuppliersBranchesSql(obj) {
         const result = await updateSuppliersBranches(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -74,17 +73,23 @@ async function dropCollectionMng(obj) {
         const response = await mongoCollection.dropCollection(obj);
         return response;
     }
-    catch {
-        throw new Error('Drop faild.')
+    catch (error) {
+        throw error
     }
 };
 
 async function dropDocumentMng(obj) {
-    const { data, collection } = obj;
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.dropOneDocument(data);
-    console.log({ response })
-    return response;
+    try{
+
+        const {data,collection}=obj;
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.dropOneDocument(data);
+        console.log({response})
+        return response;
+    }
+    catch(error){
+        throw error
+    }
 };
 
 

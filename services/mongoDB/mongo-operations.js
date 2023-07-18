@@ -2,6 +2,7 @@ require('dotenv').config();
 const { getClient } = require('./mongo-connection');
 const { MONGO_DB } = process.env;
 const config = require('../../config/DBconfig.json');
+const notifications = require('../../config/serverNotifictionsConfig.json')
 
 class MongoDBOperations {
 
@@ -24,7 +25,7 @@ class MongoDBOperations {
                 result = result.insertedId;
             }
             else {
-                throw new Error('Object is not valid');
+                throw notifications.find(n => n.status == 400)
             }
             return result;
         }
@@ -37,7 +38,7 @@ class MongoDBOperations {
             const result = await getClient().db(this.dbName).collection(this.collectionName).insertMany(array);
             if (result)
                 return result.insertedIds;
-            else{
+            else {
                 throw new Error("Not success");
             }
         }
@@ -64,16 +65,15 @@ class MongoDBOperations {
 
     async updateOne(obj) {
         try {
-
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateOne(obj.filter, obj.set);
             return result;
         }
-        catch (error) {
-            throw error
+        catch {
+            throw notifications.find(n => n.status == 400)
         }
     };
 
-    async updateMany(obj){
+    async updateMany(obj) {
         try {
             const result = await getClient().db(this.dbName).collection(this.collectionName).updateMany(obj.filter, obj.set);
             return result;
