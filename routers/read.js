@@ -37,22 +37,22 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
 
 })
 
-router.get('/exist/:tablename/:field/:value', async (req, res) => {
+// router.get('/exist/:tablename/:field/:value', async (req, res) => {
 
-    try {
-        let { tablename, field, value } = req.params;
-        tablename = parseTBname(tablename);
-        console.log({ tablename });
-        let val = convertFieldType(tablename, field, value)
-        const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
-        res.status(200).send(result)
-    }
-    catch (error) {
-        console.log(error);
-        res.status(error.status).send(error.message)
-    }
+//     try {
+//         let { tablename, field, value } = req.params;
+//         tablename = parseTBname(tablename);
+//         console.log({ tablename });
+//         let val = convertFieldType(tablename, field, value)
+//         const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
+//         res.status(200).send(result)
+//     }
+//     catch (error) {
+//         console.log(error);
+//         res.status(error.status).send(error.message)
+//     }
 
-})
+// })
 
 // router.get('/readAllEntity/:entity', async (req, res) => {
 //     try {
@@ -278,7 +278,7 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
 router.get('/readOne/:entityName/:id', async (req, res) => {
     try {
         const entityName = parseTBname(req.params.entityName);
-        const response = await routeEntityByItsType({ entityName, condition: { Id: req.params.id },topn:1 }, connectTables, getDetailsMng);
+        const response = await routeEntityByItsType({ entityName, condition: { Id: req.params.id }, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -286,14 +286,24 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
     }
 });
 
-router.post('/readOne/:entityName',async(req,res)=>{
+router.get('/readOne/:entityName',async(req,res)=>{
     try {
         const entityName = parseTBname(req.params.entityName);
-        const response = await routeEntityByItsType({ entityName, condition:req.body.condition,topn:1  }, connectTables, getDetailsMng);
+        const response = await routeEntityByItsType({ entityName, condition: req.query, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
-    } 
+    }
     catch (error) {
-        console.log({error});
+        res.status(500).send(error.message);
+    }
+})
+router.post('/readOne/:entityName', async (req, res) => {
+    try {
+        const entityName = parseTBname(req.params.entityName);
+        const response = await routeEntityByItsType({ entityName, condition: req.body.condition, topn: 1 }, connectTables, getDetailsMng);
+        res.status(200).send(response);
+    }
+    catch (error) {
+        console.log({ error });
         res.status(500).send(error.message);
     }
 });
@@ -301,7 +311,7 @@ router.post('/readOne/:entityName',async(req,res)=>{
 router.get('/readMany/:entityName/:n', async (req, res) => {
     try {
         const entityName = parseTBname(req.params.entityName);
-        let response = await routeEntityByItsType({ entityName, topn:req.params.n,condition: req.query }, connectTables, getDetailsMng);
+        let response = await routeEntityByItsType({ entityName, topn: req.params.n, condition: req.query }, connectTables, getDetailsMng);
         res.status(200).send(response)
     }
     catch (error) {
@@ -312,7 +322,7 @@ router.get('/readMany/:entityName/:n', async (req, res) => {
 router.post('/readMany/:entityName', async (req, res) => {
     try {
         const entityName = parseTBname(req.params.entityName);
-        let response = await routeEntityByItsType({ entityName, condition: req.body.condition ,topn:req.body.topn?req.body.topn:100}, connectTables, getDetailsMng);
+        let response = await routeEntityByItsType({ entityName, condition: req.body.condition, topn: req.body.topn ? req.body.topn : 100 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {

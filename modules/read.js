@@ -1,7 +1,9 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
+const { readJoin, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
+const {viewConnectionsTables}=require('../utils/convert_condition');
 const config = require('../config/DBconfig.json');
+
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
@@ -114,7 +116,6 @@ async function connectTables(obj) {
                 }
                 return gr
             }, [])
-
             const newObj = entries.reduce((obj, ent) => {
                 if (ent[0].startsWith('FK')) {
                     return obj
@@ -131,7 +132,7 @@ async function connectTables(obj) {
                     obj[ent[0]] = ent[1]
                 }
                 return obj
-            }, {})
+            }, {});
             items.push(newObj)
         }
         return items;
