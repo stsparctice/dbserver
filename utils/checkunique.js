@@ -1,5 +1,6 @@
 const { getAllSql } = require('../modules/read')
 const uniquesConfig = require('../config/config-uniques.json')
+const notifications = require('../config/serverNotifictionsConfig.json')
 
 async function uniqueValue(field) {
     try {
@@ -20,7 +21,7 @@ async function uniqueValue(field) {
         throw error
     }
 }
-
+//האם בעדכון מקבלים את כל השדות או רק את מה שהתעדכן
 function checkDataIsUnique() {
     return async (req, res, next) => {
         let error
@@ -32,7 +33,10 @@ function checkDataIsUnique() {
             }
         }
         if (error) {
-            res.status(409).send(`Value: ${req.body.values[error.value]} is exsist.`)
+            let description = `Value: ${req.body.values[error.value]} is exsist.`
+            error = notifications.find(n => n.status == 409)
+            error.description = description
+            res.status(error.status).send(error.description)
         }
         else {
             next()
