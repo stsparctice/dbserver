@@ -11,6 +11,7 @@ const { HOST, PORT } = process.env;
 
 const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
+
 connectMng().then(_ => {
     console.log('connect to mongo')
     connectSql().then(_ => {
@@ -34,10 +35,16 @@ connectMng().then(_ => {
     }, (err) => {
         console.log(err.message, 'from connectSql');
     });
+    // deleteData();
+    // dropSQLTables();
+    // dropMongoDBCollection();
+// });
+
 
 }, (err) => {
     console.log(err.message, 'from connectMng');
 });
+
 // });
 const server = http.createServer(app)
 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
     getDetailsWithAggregateMng, getCountDocumentsMng,
-    readWithJoin, readFullObjects, readRelatedObjects, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
+    readWithJoin, readFullObjects, readFullObjectsWithRef, readRelatedObjects, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
 const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName, parseTBname } = require('../utils/parse_name')
@@ -13,6 +13,7 @@ router.use(routerLogger())
 
 router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) => {
     try {
+
 
         let obj = {}
         obj.tableName = req.params.table
@@ -29,6 +30,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.n = 10
         const result = await getDetailsSql(obj);
         res.status(200).send(result);
+
     }
     catch (error) {
         console.log({ error });
