@@ -170,19 +170,19 @@ const update = async function (obj) {
           throw error
      }
 };
-const updateOne = async function (obj) {
-     try {
-          // const tableName = "tbl_Leads"
+// const updateOne = async function (obj) {
+//      try {
+//           // const tableName = "tbl_Leads"
 
-          const { tableName, values, condition } = obj;
-          const tabledata = getSqlTableColumnsType(tableName)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
-          return result;
-     }
-     catch (error) {
-          throw error
-     }
-};
+//           const { tableName, values, condition } = obj;
+//           const tabledata = getSqlTableColumnsType(tableName)
+//           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
+//           return result;
+//      }
+//      catch (error) {
+//           throw error
+//      }
+// };
 // 
 const updateQuotation = async function (obj) {
      const { Id } = obj;
@@ -244,7 +244,7 @@ module.exports = {
      read,
      readAll,
      update,
-     updateOne,
+//     updateOne,
      updateQuotation,
      updateSuppliersBranches,
      countRows,

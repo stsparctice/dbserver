@@ -73,6 +73,16 @@ class MongoDBOperations {
         }
     };
 
+    async updateMany(obj){
+        try {
+            const result = await getClient().db(this.dbName).collection(this.collectionName).updateMany(obj.filter, obj.set);
+            return result;
+        }
+        catch (error) {
+            throw error
+        }
+    }
+
     async countDocuments() {
         try {
             const result = await getClient().db(this.dbName).collection(this.collectionName).countDocuments();
