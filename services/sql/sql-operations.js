@@ -3,9 +3,10 @@ require('dotenv').config();
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getTableFromConfig } = require('../../modules/config/config')
+const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 if (!SQL_DBNAME) {
-     throw new Error('.env file is not valid or is not exsist.')
+     throw notifictions.find(n => n.status == 509)
 }
 
 const create = async function (obj) {
@@ -18,12 +19,13 @@ const create = async function (obj) {
 
      //      console.log({result})
      console.log({ tableName, columns, values })
-     const primarykey = getPrimaryKeyField(tableName)
-     try{
-     const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-     return result.recordset;
+     try {
+          const primarykey = getPrimaryKeyField(tableName)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
+          return result.recordset;
      }
-     catch(error){
+
+     catch (error) {
           throw error
      }
 
@@ -108,12 +110,15 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
-          console.log({obj})
+
+
+          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
      }
-     catch (error) {
-          throw error
+     catch (error){
+          console.log({error});
+          throw notifictions.find(({status}) => status == 400);
      }
 };
 
@@ -148,12 +153,12 @@ const join = async (query = "") => {
 
 const update = async function (obj) {
      try {
-        
+
           obj.condition = buildSqlCondition(obj.entityName, obj.condition)
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
-          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`)
+          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
@@ -161,34 +166,56 @@ const update = async function (obj) {
           throw error
      }
 };
+
+// const updateOne = async function (obj) {
+//      try {
+//           // const tableName = "tbl_Leads"
+
+//           const { tableName, values, condition } = obj;
+//           const tabledata = getSqlTableColumnsType(tableName)
+//           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
+//           return result;
+//      }
+//      catch (error) {
+//           throw error
+//      }
+// };
+// 
+// const updateQuotation = async function (obj) {
+//      try {
+//           const { Id } = obj;
+//           const result = await getPool().request()
+//                .input('serialNumber', Id)
+//                .execute(`pro_UpdateQuotation`);
+//      }
+
 const updateOne = async function (obj) {
      try {
           const { tableName, values, condition } = obj;
           const tabledata = getSqlTableColumnsType(tableName)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
+
           return result;
      }
-     catch (error) {
-          throw error
+     catch {
+          throw notifictions.find(n => n.status == 400)
      }
-};
-// 
-const updateQuotation = async function (obj) {
-     const { Id } = obj;
-     const result = await getPool().request()
-          .input('serialNumber', Id)
-          .execute(`pro_UpdateQuotation`);
-     return result;
 };
 
 const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode, id } = obj;
-     const result = await getPool().request()
-          .input('name', name)
-          .input('id', id)
-          .input('supplierCode', supplierCode)
-          .execute(`pro_UpdateSuppliersBranches`);
-     return result;
+     try {
+
+          const { name, supplierCode, id } = obj;
+          const result = await getPool().request()
+               .input('name', name)
+               .input('id', id)
+               .input('supplierCode', supplierCode)
+               .execute(`pro_UpdateSuppliersBranches`);
+          return result;
+     }
+     catch {
+          throw notifictions.find(n => n.status == 400)
+     }
 };
 
 const countRows = async function (obj) {
@@ -233,7 +260,7 @@ module.exports = {
      read,
      readAll,
      update,
-     updateOne,
+     //     updateOne,
      updateQuotation,
      updateSuppliersBranches,
      countRows,
@@ -241,4 +268,3 @@ module.exports = {
      createNewTable,
      insertColumn
 }
-

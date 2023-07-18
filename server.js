@@ -23,17 +23,17 @@ connectMng().then(_ => {
                         console.log(`http://${HOST}:${PORT}`);
                     });
                 }, (err) => {
-                    console.log(err.message, 'from insertDataToSql');
+                    console.log(err.message, 'from createSpecialProcedures');
                 })
             }, (err) => {
-                console.log(err.message, 'from createSpecialProcedures');
+                console.log(err.message, 'from createProcedures');
             });
         }, (err) => {
-            console.log(err.message, 'from createProcedures');
+            console.log(err.message, 'from createTabels');
         });
 
     }, (err) => {
-        console.log(err.message, 'from createTabels');
+        console.log(err.message, 'from connectSql');
     });
 
     // deleteData();
@@ -41,9 +41,11 @@ connectMng().then(_ => {
     // dropMongoDBCollection();
 });
 
-// }, (err) => {
-//     console.log(err.message, 'from connectSql');
-// });
+
+}, (err) => {
+    console.log(err.message, 'from connectMng');
+});
+
 // });
 const server = http.createServer(app)
 

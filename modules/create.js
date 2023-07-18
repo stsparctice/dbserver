@@ -1,4 +1,4 @@
-const { create, createNewTable, insertColumn } = require('../services/sql/sql-operations');
+const { create, insertColumn } = require('../services/sql/sql-operations');
 // const { checkObjCreate } = require('./check')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
@@ -47,10 +47,10 @@ async function creatNewColumn(obj) {
     const result = await insertColumn(obj)
 }
 
-async function creatSqlTable(obj) {
-    const result = await createNewTable(obj)
-    return result
-}
+// async function creatSqlTable(obj) {
+//     const result = await createNewTable(obj)
+//     return result
+// }
 
 async function insertOne(obj) {
     try {
@@ -76,4 +76,4 @@ async function insertMany(obj) {
     }
 }
 
-module.exports = { createSql, insertManySql, insertOne, creatSqlTable, creatNewColumn ,insertMany};
+module.exports = { createSql, insertManySql, insertOne, creatNewColumn ,insertMany};
