@@ -41,9 +41,10 @@ function parseColumnName() {
     }
 }
 const parseTBname = (entityName) => {
-    let sql = config.find(db => db.database == 'sql');
-    let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
-    let table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);
+    console.log({entityName})
+    let sql = config.find(db => db.database === 'sql');
+    let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
+    let table = tables.find(table => table.MTDTable.name.name.toLowerCase() == entityName.toLowerCase() || table.MTDTable.name.sqlName.toLowerCase() == entityName.toLowerCase());
     if (table) {
         return table.MTDTable.name.sqlName;
     }
@@ -53,7 +54,7 @@ const parseTBname = (entityName) => {
         return collection.mongoName;
     }
     else {
-        throw new Error(`The entity name ${entityName} not exist`);
+        throw new Error(`The entity name ${entityName} does not exist`);
     }
 }
 

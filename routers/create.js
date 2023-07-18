@@ -11,7 +11,7 @@ const { checkDataIsUnique } = require('../utils/checkunique')
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/createOne', parseTableName(), parseColumnName(), async (req, res) => {
+router.post('/createone', parseTableName(), parseColumnName(), async (req, res) => {
     try {
         const response = await routeEntityByItsType(req.body, createSql, insertOne);
         res.status(201).send(response);

@@ -5,12 +5,10 @@ const { SQL_DBNAME } = process.env;
 
 
 function getTableFromConfig(tableName) {
-    console.log({tableName});
     let sql = config.find(db => db.database == 'sql')
     let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
     let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
         tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
-    // console.log(table);
     return table
 }
 
@@ -72,7 +70,9 @@ function parseSQLType(obj, tabledata) {
 }
 
 function parseSQLTypeForColumn(col, tableName) {
+    console.log({tableName, col})
     const tabledata = getSqlTableColumnsType(tableName)
+    console.log({tabledata})
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
     let parse
     try {
@@ -87,6 +87,7 @@ function parseSQLTypeForColumn(col, tableName) {
 
 function buildSqlCondition(tableName, condition) {
     const tablealias = getTableFromConfig(tableName).MTDTable.name.name
+    console.log({condition})
     if (condition) {
         const entries = Object.entries(condition)
         const conditionList = entries.map(c =>
@@ -97,6 +98,7 @@ function buildSqlCondition(tableName, condition) {
     else {
         condition = "1 = 1"
     }
+    console.log({condition})
     return condition
 }
 
@@ -155,7 +157,6 @@ const readJoin = async (baseTableName, baseColumn) => {
 }
 
 const viewConnectionsTables = (tableName, condition = {}) => {
-    console.log("viewConnectionsTables:", tableName)
     const myTable = getTableFromConfig(tableName)
 
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
@@ -164,7 +165,6 @@ const viewConnectionsTables = (tableName, condition = {}) => {
     columns.forEach(column => {
         const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
         const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
-        console.log("viewConnectionsTables:2", tableToJoin)
         const thisTable = getTableFromConfig(tableToJoin);
         const alias = thisTable.MTDTable.name.name;
         columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} as FK_${column.name}_${columnToJoin}`, `${thisTable.MTDTable.defaultColumn} as FK_${column.name}_${thisTable.MTDTable.defaultColumn}`] }];

@@ -1,7 +1,6 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { getTabeColumnName, setFullObj, getTables, readJoin, viewConnectionsTables, getReferencedColumns, getTableAccordingToRef, readRelatedData, getPrimaryKeyField } = require('./config/config');
-const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
+const { getTabeColumnName, parseSQLTypeForColumn, buildSqlCondition, setFullObj, getTables, readJoin, viewConnectionsTables, getReferencedColumns, getTableAccordingToRef, readRelatedData, getPrimaryKeyField } = require('./config/config');
 
 const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
@@ -9,6 +8,8 @@ const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
     try {
+        if(obj.entityName && !obj.tableName)
+        obj.tableName = obj.entityName
         const list = await read(obj);
         return list;
     }
@@ -104,7 +105,9 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(tableName = "", condition = {}) {
     try {
+        console.log({condition})
         const query = viewConnectionsTables(tableName, condition);
+        console.log({query})
         const values = await join(query);
         const items = []
         for (let val of values) {
@@ -151,16 +154,18 @@ async function connectTables(tableName = "", condition = {}) {
 }
 
 async function countRowsSql(obj) {
-    try {
+    console.log({obj})
+    // try {
         obj.condition = buildSqlCondition(obj.tableName, obj.condition)
         console.log({ obj })
         const count = await countRows(obj);
+        console.log({count})
         return count.recordset[0];
-    }
-    catch (error) {
-        console.log(error.message)
-        throw error
-    }
+    // }
+    // catch (error) {
+    //     console.log(error.message)
+    //     throw error
+    // }
 };
 
 async function getDetailsMng(obj) {

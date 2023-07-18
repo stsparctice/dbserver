@@ -14,6 +14,7 @@ async function createSql(obj) {
         return result;
     }
     catch (error) {
+        console.log(error)
         throw error;
     }
 };
@@ -53,11 +54,13 @@ async function creatSqlTable(obj) {
 
 async function insertOne(obj) {
     try {
+        console.log({obj})
         mongoCollection.setCollection(obj.entityName);
         const response = await mongoCollection.insertOne(obj.data);
         return response;
     }
     catch (error) {
+        console.log(error)
         throw error
     }
 };
@@ -68,6 +71,7 @@ async function insertMany(obj) {
         return result;
     }
     catch (error) {
+        console.log(error)
         throw error;
     }
 }

@@ -49,23 +49,15 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
 
 router.get('/readAllEntity/:entity', async (req, res) => {
     try {
-        console.log("router.get('/readAllEntity/:entity', async (req, res) => {gshfghasjglasfdgjahkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkklggghg");
         let obj = {};
         obj['tableName'] = req.params.entity;
+        
         // console.log({ obj })
         const fullObjects = await readFullObjects(req.params.entity)
 
         console.log({ fullObjects })
-        let condition = ''
-        if (req.query) {
-            const entries = Object.entries(req.query)
-            const conditions = entries.map(con => `${req.params.entity}.${con[0]} = ${con[1]}`)
-            condition = conditions.join(' AND ')
-        }
-        condition = condition.length > 0 ? condition : "1=1"
-      
-      
-
+        let condition = req.query
+       
         if (fullObjects.length === 0) {
             const response = await connectTables(req.params.entity, condition)
             res.status(200).send(response)
@@ -98,10 +90,12 @@ router.get('/readAll/:entity', async (req, res) => {
 
 router.post('/readTopN', async (req, res) => {
     try {
+       
         const table = await getDetailsSql(req.body);
         res.status(200).send(table);
     }
     catch (error) {
+        console.log(error)
         res.status(404).send(error.message)
     }
 });
@@ -124,7 +118,8 @@ router.get('/findEntityById/:entity/:id', async (req, res) => {
         const fullObjects = await readFullObjects(req.params.entity)
 
         if (fullObjects.length == 0) {
-            let condition = `${req.params.entity}.${primaryKeyField}=${req.params.id}`
+            let condition = {}
+            condition[primaryKeyField]=req.params.id
             const response = await connectTables(req.params.entity, condition)
 
             res.status(200).send(response)
@@ -194,7 +189,7 @@ router.get('/connectTables/:tableName/:condition', async (req, res) => {
 router.post('/countRows', parseTableName(), async (req, res) => {
     try {
 
-        const count = await countRowsSql(req.body);
+        const count = await countRowsSql({tableName:req.body.entityName, condition: req.body.condition});
         console.log({ count })
         res.status(200).send(count);
     }

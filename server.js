@@ -35,10 +35,11 @@ connectMng().then(_ => {
     }, (err) => {
         console.log(err.message, 'from createTabels');
     });
+
     // deleteData();
     // dropSQLTables();
     // dropMongoDBCollection();
-// });
+});
 
 // }, (err) => {
 //     console.log(err.message, 'from connectSql');
