@@ -5,20 +5,18 @@ const { DBType, getTableFromConfig } = require('../modules/config/config')
 function parseTableName() {
     return (req, res, next) => {
         try {
-            console.log()
-            req.body.entityName = parseDBname(req.body.entityName).entityName
+            req.body.entityName = parseDBname(req.body.entityName).entityName;
             next();
         }
         catch (error) {
-            console.log(error)
-            res.status(500).send(error.message)
+            console.log(error.description)
+            res.status(500).send(error.message);
 
         }
     }
 }
 
 function parseColumnName(values, table) {
-    console.log({ values, table });
     table = getTableFromConfig(table)
     let columns = {}
     let error = [];
@@ -36,18 +34,16 @@ function parseColumnName(values, table) {
         let description = `This column: ${error.join(', ')} does not exsist.`
         error = notifications.find(n => n.status === 514)
         error.description = description
-        console.log(error)
         throw error
     }
-    console.log({ c: columns });
     return columns
 
 }
 const parseColumnNameMiddleware = () => {
     return (req, res, next) => {
         try {
-                req.body.values = parseColumnName(req.body.values, req.body.entityName);
-                next();
+            req.body.values = parseColumnName(req.body.values, req.body.entityName);
+            next();
         }
         catch (error) {
             res.status(error.status).send(error.message);
@@ -76,7 +72,6 @@ const parseListOfColumnsName = () => {
 }
 
 const parseDBname = (entityName) => {
-    console.log({ entityName })
     let sql = config.find(db => db.database === DBType.SQL);
     let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
     let table = tables.find(table => table.MTDTable.name.name.toLowerCase() == entityName.toLowerCase() || table.MTDTable.name.sqlName.toLowerCase() == entityName.toLowerCase());

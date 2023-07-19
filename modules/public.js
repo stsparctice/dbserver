@@ -4,7 +4,7 @@ const notifictaions = require('../config/serverNotifictionsConfig.json')
 
 function checkEntityType(entityName) {
     let table = getTableFromConfig(entityName);
-    console.log({ table });
+    // console.log({ table });
     if (table) {
         return { entityName, type: 'SQL' }
     }
@@ -47,7 +47,7 @@ function parseSQLType(obj, tabledata) {
                     error.description = `Type: ${type} does not exist.`
                     throw error
                 }
-                console.log(obj[keys[i]]);
+                // console.log(obj[keys[i]]);
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
                 str.push(val);
             }
@@ -84,7 +84,7 @@ function parseSQLTypeForColumn(col, tableName) {
 function buildSqlCondition(tableName, condition) {
     try {
         const tablealias = getTableFromConfig(tableName).MTDTable.name.name
-        console.log({ tableName, condition })
+        // console.log({ tableName, condition })
         if (condition) {
             const entries = Object.entries(condition)
             const conditionList = entries.map(c =>

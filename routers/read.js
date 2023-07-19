@@ -4,14 +4,14 @@ const { countRowsSql, getDetailsMng, getCountDocumentsMng,
     connectTables, autoComplete } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
-const {conversionQueryToObject}=require('../utils/convert_condition')
+const { conversionQueryToObject } = require('../utils/convert_condition')
 
 router.use(express.json());
-router.use(routerLogger())
+router.use(routerLogger());
 
-router.get('/auto_complete/:entity/:column', conversionQueryToObject(),async (req, res) => {
+router.get('/auto_complete/:entity/:column', conversionQueryToObject(), async (req, res) => {
     try {
-        console.log({like:req.query.LIKE});
+        console.log({ like: req.query.LIKE });
         const result = await autoComplete({ ...req.params, condition: req.query });
         res.status(200).send(result);
     }
@@ -20,26 +20,9 @@ router.get('/auto_complete/:entity/:column', conversionQueryToObject(),async (re
         res.status(error.status).send(error.message)
     }
 
-})
+});
 
-// router.get('/exist/:tablename/:field/:value', async (req, res) => {
-
-//     try {
-//         let { tablename, field, value } = req.params;
-//         tablename = parseTBname(tablename);
-//         console.log({ tablename });
-//         let val = convertFieldType(tablename, field, value)
-//         const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
-//         res.status(200).send(result)
-//     }
-//     catch (error) {
-//         console.log(error);
-//         res.status(error.status).send(error.message)
-//     }
-
-// })
-
-router.get('/readOne/:entityName/:id', async (req, res) => {
+router.get('/readOne/:entityName/:id', conversionQueryToObject(), async (req, res) => {
     try {
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: { Id: req.params.id }, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
@@ -50,7 +33,7 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
     }
 });
 
-router.get('/readOne/:entityName', async (req, res) => {
+router.get('/readOne/:entityName', conversionQueryToObject(), async (req, res) => {
     try {
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.query, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
@@ -71,13 +54,10 @@ router.post('/readOne/:entityName', async (req, res) => {
     }
 });
 
-router.get('/readMany/:entityName', async (req, res) => {
+router.get('/readMany/:entityName', conversionQueryToObject(), async (req, res) => {
     try {
-        let n = 50
-        if (req.query.n) {
-            n = req.query.n
-            delete req.query.n
-        }
+        let n = req.query.n
+        delete req.query.n
         let response = await routeEntityByItsType({ entityName: req.params.entityName, topn: n, condition: req.query }, connectTables, getDetailsMng);
         res.status(200).send(response)
     }

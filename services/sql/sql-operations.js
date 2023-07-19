@@ -4,7 +4,8 @@ const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 const {  getTableFromConfig } = require('../../modules/config/config')
 const {getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias} = require('../../modules/public')
-const notifictions = require('../../config/serverNotifictionsConfig.json')
+const notifictions = require('../../config/serverNotifictionsConfig.json');
+const { convertToSqlCondition } = require('../../utils/convert_condition');
 
 if (!SQL_DBNAME) {
      throw notifictions.find(n => n.status == 509)
@@ -19,9 +20,9 @@ const create = async function (obj) {
      //      .execute(`pro_BasicCreate`);
 
      //      console.log({result})
-     console.log({ tableName, columns, values })
      try {
           const primarykey = getPrimaryKeyField(tableName)
+          console.log(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
           return result.recordset;
      }
@@ -155,7 +156,7 @@ const join = async (query = "") => {
 const update = async function (obj) {
      try {
 
-          obj.condition = buildSqlCondition(obj.entityName, obj.condition)
+          obj.condition = convertToSqlCondition(getTableFromConfig(obj.entityName), obj.condition)
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')

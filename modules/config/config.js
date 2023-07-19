@@ -10,12 +10,10 @@ const DBType = {
 function getTableFromConfig(tableName) {
 
     try {
-        console.log({ tableName });
         let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
         let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
             tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
-        console.log({ table })
         return table
     }
     catch {

@@ -1,9 +1,8 @@
 const express = require('express');
 const { parseTableName, parseColumnName, parseColumnNameMiddleware } = require('../utils/parse_name');
 const router = express.Router();
-const { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateOne, dropCollectionMng, dropDocumentMng, updateMany } = require('../modules/update');
+const { updateSql, updateOneSql, updateOne, updateMany } = require('../modules/update');
 const { routerLogger } = require('../utils/logger');
-const { ObjectId } = require('mongodb');
 const { checkDataIsUnique } = require('../utils/checkunique');
 const { routeEntityByItsType } = require('../utils/route_entity');
 
@@ -97,7 +96,7 @@ router.use(routerLogger())
 
 router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        const response = await routeEntityByItsType(req.body, updateSql, updateOne)
+        const response = await routeEntityByItsType(req.body, updateOneSql, updateOne)
         res.status(204).send(response)
     } catch (error) {
         console.log(error.description);

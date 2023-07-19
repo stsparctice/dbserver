@@ -1,7 +1,9 @@
+require('dotenv')
 const { getTableFromConfig } = require('../../modules/config/config')
 const { convertToSqlCondition } = require('../../utils/convert_condition');
-const { getAlias, getPrimaryKeyField } = require('../../modules/public');
+const { getPrimaryKeyField } = require('../../modules/public');
 const { parseDBname, parseColumnName } = require('../../utils/parse_name');
+const { SQL_DBNAME } = process.env
 
 const viewConnectionsTables = ({ tableName, condition = {}, topn }) => {
     try {
@@ -45,7 +47,7 @@ const autoCompleteQuery = ({ entity, column }, condition) => {
         obj.tableName = entityName
         let val = {}
         val[column] = ''
-        obj.columns = `${Object.keys(parseColumnName(val,entityName))}, ${getPrimaryKeyField(obj.tableName)}`;
+        obj.columns = `${Object.keys(parseColumnName(val, entityName))}, ${getPrimaryKeyField(obj.tableName)}`;
         console.log({ condition: condition.LIKE });
         obj.condition = convertToSqlCondition(getTableFromConfig(obj.tableName), condition);
         obj.n = 10;

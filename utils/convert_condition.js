@@ -68,6 +68,7 @@ const convertToSqlCondition = (table, condition) => {
             const query = `${tablealias}.${column} LIKE '%${like[key]}%'`;
             return query;
         }
+        console.log({condition});
     let result = buildQuery(condition, "AND");
     result = result.slice(0, result.length - 3);
     return result;
@@ -97,7 +98,11 @@ const removeIndexes = (str) => {
 const conversionQueryToObject = () => {
     return (req, res, next) => {
         const { query } = req
-        console.log({ query })
+        let n = 50
+        if(query.n){
+            n = query.n
+            delete query.n
+        }
         let obj = {}
         let pointer = [obj];
         let i = 0;
@@ -126,6 +131,7 @@ const conversionQueryToObject = () => {
             convert(key, query[key]);
         }
         req.query = obj
+        req.query.n = n
         next()
     }
 }

@@ -45,17 +45,17 @@ async function autoComplete(obj) {
 async function readRelatedObjects(tablename, primaryKey, value, column) {
     try {
         column = column.sqlName
-        console.log({ column })
+        // console.log({ column })
         let obj = {
             "tableName": `tbl_${tablename}`,
             "columns": '*',
             "condition": `${primaryKey}=${value}`
         }
 
-        console.log({ tablename })
+        // console.log({ tablename })
         const allData = await read(obj)
 
-        console.log({ allData })
+        // console.log({ allData })
 
         const refTablename = allData[0].TableName
         const refPrimaryKeyField = getPrimaryKeyField(refTablename)
@@ -66,7 +66,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
         }
         const result = await read(obj)
-        console.log({ result });
+        // console.log({ result });
         allData[0].TableName = result
         return allData
     }
@@ -77,7 +77,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
 }
 
 async function readFullObjects(tablename) {
-    console.log('readFullObjects:', tablename)
+    // console.log('readFullObjects:', tablename)
 
     try {
         const result = await getReferencedColumns(tablename)
@@ -98,7 +98,7 @@ async function readFullObjectsWithRef(table, fullObjects) {
         value[`${fullObjects.name}`] = await read({ tableName: `${value[`${fullObjects.ref}`]}`, columns: '*', condition: `${await getPrimaryKeyField(value[`${fullObjects.ref}`])}='${value[fullObjects.name]}'` })
         return value;
     }
-    console.log({ answer });
+    // console.log({ answer });
     return answer
 }
 
@@ -130,6 +130,16 @@ async function connectTables(obj) {
     try {
         const query = viewConnectionsTables(obj);
         const values = await join(query);
+        const result = mapEntity(values);
+        return result;
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+const mapEntity = (values) => {
+    try {
         const items = []
         for (let val of values) {
             const entries = Object.entries(val)
@@ -165,24 +175,17 @@ async function connectTables(obj) {
             items.push(newObj)
         }
         return items;
-
-    }
-    catch (error) {
-        throw error
+    } catch (error) {
+        throw error;
     }
 }
-
-
 async function countRowsSql(obj) {
-    console.log({ obj })
     try {
-        obj.condition = convertToSqlCondition(obj.tableName, obj.condition)
+        obj.condition = convertToSqlCondition(getTableFromConfig(obj.tableName) , obj.condition)
         const count = await countRows(obj);
-        console.log({ count })
         return count.recordset[0];
     }
     catch (error) {
-        console.log(error)
         throw error
     }
 };
@@ -200,24 +203,18 @@ async function getDetailsMng(obj) {
 
 async function getPolygon(obj) {
     try {
-        console.log({ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.find({ filter: obj.filter });
-        // console.log(/)
         let areas = []
         for (let i = 0; i < response.length; i++) {
             const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
-            console.log({ response2 })
             if (response2.length > 0) {
                 areas.push(response[i])
             }
         }
-        console.log('areas')
-        console.log(areas)
         return areas;
     }
     catch (error) {
-        console.log(error.message)
         throw error
     }
 }
