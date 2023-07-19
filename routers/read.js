@@ -277,7 +277,7 @@ router.get('/auto_complete/:entity/:column/:word/:condition', async (req, res) =
 
 router.get('/readOne/:entityName/:id', async (req, res) => {
     try {
-        const response = await routeEntityByItsType({  entityName:req.params.entityName, condition: { Id: req.params.id }, topn: 1 }, connectTables, getDetailsMng);
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: { Id: req.params.id }, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -287,7 +287,7 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
 
 router.get('/readOne/:entityName', async (req, res) => {
     try {
-        const response = await routeEntityByItsType({  entityName:req.params.entityName, condition: req.query, topn: 1 }, connectTables, getDetailsMng);
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.query, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -296,7 +296,7 @@ router.get('/readOne/:entityName', async (req, res) => {
 })
 router.post('/readOne/:entityName', async (req, res) => {
     try {
-        const response = await routeEntityByItsType({  entityName:req.params.entityName, condition: req.body.condition, topn: 1 }, connectTables, getDetailsMng);
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.body.condition, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -312,7 +312,7 @@ router.get('/readMany/:entityName', async (req, res) => {
             n = req.query.n
             delete req.query.n
         }
-        let response = await routeEntityByItsType({ entityName:req.params.entityName, topn: n, condition: req.query }, connectTables, getDetailsMng);
+        let response = await routeEntityByItsType({ entityName: req.params.entityName, topn: n, condition: req.query }, connectTables, getDetailsMng);
         res.status(200).send(response)
     }
     catch (error) {
@@ -323,7 +323,7 @@ router.get('/readMany/:entityName', async (req, res) => {
 
 router.post('/readMany/:entityName', async (req, res) => {
     try {
-        let response = await routeEntityByItsType({  entityName:req.params.entityName, condition: req.body.condition, topn: req.body.topn ? req.body.topn : 100 }, connectTables, getDetailsMng);
+        let response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.body.condition, topn: req.body.topn ? req.body.topn : 100 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -333,13 +333,13 @@ router.post('/readMany/:entityName', async (req, res) => {
 
 router.post('/count/:entityName', async (req, res) => {
     try {
-        let response = await routeEntityByItsType({  entityName:req.params.entityName, condition: req.body.condition }, countRowsSql, getCountDocumentsMng);
+        let response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.body.condition }, countRowsSql, getCountDocumentsMng);
         res.status(200).send(response);
     }
     catch (error) {
         res.status(500).send(error.message);
     }
-    
+
 });
 
 module.exports = router;

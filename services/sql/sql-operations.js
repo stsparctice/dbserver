@@ -254,10 +254,10 @@ const countRows = async function (obj) {
 //      return values;
 // };
 
-
-//      _ = await getPool().request().query(`use ${SQL_DBNAME}
-//      DROP TABLE ${tableName}`);
-// }
+async function drop(name){
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     DROP TABLE ${tableName}`);
+}
 async function updateColumn(obj){
      console.log('update column');
      _ = await getPool().request().query(`use ${SQL_DBNAME}
@@ -275,5 +275,7 @@ module.exports = {
      countRows,
      join,
      createNewTable,
-     insertColumn
+     insertColumn,
+     drop,
+     updateColumn
 }

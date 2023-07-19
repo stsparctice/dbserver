@@ -10,6 +10,7 @@ const routeEntityByItsType = async (data, sql, mongo) => {
         let {type} = dbObject
         let result;
         if (type === DBType.SQL) {
+            console.log( data.tableName,'  data.tableName');
             data.tableName = dbObject.entityName
             result = await sql(data);
             console.log({result})

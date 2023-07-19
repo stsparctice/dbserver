@@ -773,7 +773,7 @@
                             {
                                 "name": "PreferredPaymentDate",
                                 "sqlName": "PreferredPaymentDate",
-                                "type": "int"
+                                "type": "DATETIME NOT NULL"
                             },
                             {
                                 "name": "Ovligo",
