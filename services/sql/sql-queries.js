@@ -1,6 +1,9 @@
 const { getTableFromConfig } = require('../../modules/config/config')
 const { convertToSqlCondition } = require('../../utils/convert_condition');
-const viewConnectionsTables = (tableName, condition = {}, topn) => {
+const { getAlias, getPrimaryKeyField } = require('../../modules/public');
+const { parseDBname, parseColumnName } = require('../../utils/parse_name');
+
+const viewConnectionsTables = ({ tableName, condition = {}, topn }) => {
     try {
         console.log({ tableName });
         const myTable = getTableFromConfig(tableName)
@@ -17,7 +20,7 @@ const viewConnectionsTables = (tableName, condition = {}, topn) => {
         });
         if (Object.keys(condition).length > 0) {
 
-            let conditionString = convertToSqlCondition(getAlias(tableName), condition);
+            let conditionString = convertToSqlCondition(getTableFromConfig(tableName), condition);
 
             join = `${join} WHERE ${conditionString}`;
         }
@@ -35,10 +38,23 @@ const viewConnectionsTables = (tableName, condition = {}, topn) => {
     }
 }
 
-const autoComplete = ({ tableName, columns, condition }) => {
-    if (condition !== "AND 1=1") {
-        condition += "AND" + condition
+const autoCompleteQuery = ({ entity, column }, condition) => {
+    try {
+        let obj = {}
+        const { entityName } = parseDBname(entity);
+        obj.tableName = entityName
+        let val = {}
+        val[column] = ''
+        obj.columns = `${Object.keys(parseColumnName(val,entityName))}, ${getPrimaryKeyField(obj.tableName)}`;
+        console.log({ condition: condition.LIKE });
+        obj.condition = convertToSqlCondition(getTableFromConfig(obj.tableName), condition);
+        obj.n = 10;
+        return obj;
+    }
+    catch (error) {
+        console.log(error);
+        throw error
     }
 }
 
-module.exports = { viewConnectionsTables, autoComplete };
+module.exports = { viewConnectionsTables, autoCompleteQuery };

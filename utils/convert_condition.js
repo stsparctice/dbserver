@@ -1,52 +1,73 @@
-const { parseSQLTypeForColumn } = require('../modules/public')
+const { getTabeColumnName } = require('../modules/config/config');
+const { parseSQLTypeForColumn, getAlias } = require('../modules/public')
+const { parseColumnName, parseDBname } = require('./parse_name')
 require('dotenv');
-const convertToSqlCondition = (tableName, condition) => {
+const convertToSqlCondition = (table, condition) => {
+    const tableName = table.MTDTable.name.sqlName;
+    const tablealias = getAlias(table.MTDTable.name.sqlName);
     const buildQuery = (condition, operator) => {
         try {
             let query = ``
             for (let key in condition) {
-                if (key === 'AND') {
-                    query = `${query} (${buildOrAnd(condition[key], "AND")}) ${operator}`;
-                }
-                else {
-                    if (key === 'OR') {
+                switch (key) {
+                    case 'AND':
+                        query = `${query} (${buildOrAnd(condition[key], "AND")}) ${operator}`;
+                        break;
+                    case 'OR':
                         query = `${query} (${buildOrAnd(condition[key], "OR")}) ${operator}`;
-                    }
-                    else {
-                        if (key === 'BETWEEN') {
-                            query = `${query} (${buildBetween(condition[key])}) ${operator}`
-                        }
-                        else {
-                            query = `${query} ${tableName}.${key} = ${parseSQLTypeForColumn({ name: key, value: condition[key] }, tableName)} ${operator}`;
-                        }
+                        break
+                    case 'BETWEEN':
+                        query = `${query} (${buildBetween(condition[key])}) ${operator}`
+                        break
+                    case 'LIKE':
+                        query = `${query} (${buildLike(condition[key])}) ${operator}`
+                        break
+                    default:
+                        let val = {}
+                        val[key] = ''
+                        let column =  Object.keys(parseColumnName(val, tableName))
+                        query = `${query} ${tablealias}.${column} = ${parseSQLTypeForColumn({ name: key, value: condition[key] }, tableName)} ${operator}`;
+                        break;
                     }
                 }
+                return query;
+            }
+            catch (error) {
+                console.log(error);
+            }
+            
+            
+        }
+        const buildOrAnd = (array, operator) => {
+            let query = ``;
+            for (let item of array) {
+                if (array.indexOf(item) === array.length - 1) {
+                    query = `${query} ${buildQuery(item, "")}`
+                }
+                else
+                query = `${query} ${buildQuery(item, operator)}`
             }
             return query;
         }
-        catch (error) {
-            console.log(error);
+        const buildBetween = (between) => {
+            console.log({between});
+            const key = Object.keys(between[0])[0];
+            let val = {}
+            val[key] = ''
+            let column = Object.keys(parseColumnName(val, tableName))
+            const query = `${tablealias}.${column} BETWEEN ${between[0][key][0]} AND ${between[0][key][1]}`;
+            return query;
+            
         }
-
-
-    }
-    const buildOrAnd = (array, operator) => {
-        let query = ``;
-        for (let item of array) {
-            if (array.indexOf(item) === array.length - 1) {
-                query = `${query} ${buildQuery(item, "")}`
-            }
-            else
-                query = `${query} ${buildQuery(item, operator)}`
+        const buildLike = (like) => {
+            like = like[0];
+            const key = Object.keys(like)[0];
+            let val = {}
+            val[key] = ''
+            let column = Object.keys(parseColumnName(val, tableName))[0]
+            const query = `${tablealias}.${column} LIKE '%${like[key]}%'`;
+            return query;
         }
-        return query;
-    }
-    const buildBetween = (between) => {
-        const key = Object.keys(between)[0];
-        const query = `${tableName}.${key} BETWEEN ${between[key][0]} AND ${between[key][1]}`;
-        return query;
-
-    }
     let result = buildQuery(condition, "AND");
     result = result.slice(0, result.length - 3);
     return result;
@@ -64,4 +85,49 @@ const convertToMongoFilter = (condition) => {
     return filter
 }
 
-module.exports = { convertToMongoFilter ,convertToSqlCondition}
+const removeIndexes = (str) => {
+    let s = '';
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] >= '0' && str[i] <= '9')
+            return s;
+        s += str[i]
+    }
+    return s;
+}
+const conversionQueryToObject = () => {
+    return (req, res, next) => {
+        const { query } = req
+        console.log({ query })
+        let obj = {}
+        let pointer = [obj];
+        let i = 0;
+        const convert = async (key, value) => {
+            if (key.includes('start')) {
+                pointer[i][value] = []
+                if (i == pointer.length - 1)
+                    pointer.push(pointer[i][value])
+                else
+                    pointer[i + 1] = pointer[i][value]
+                i++;
+                return;
+            }
+            if (key.includes('end')) {
+                i--;
+                return;
+            }
+            else {
+                let object = {}
+                object[removeIndexes(key)] = value
+                pointer[i].push(object)
+                return;
+            }
+        }
+        for (const key in query) {
+            convert(key, query[key]);
+        }
+        req.query = obj
+        next()
+    }
+}
+
+module.exports = { convertToMongoFilter, convertToSqlCondition, conversionQueryToObject }

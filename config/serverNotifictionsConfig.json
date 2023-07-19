@@ -107,7 +107,7 @@
     {
         "message":"Fix .env File",
         "status":509,
-        "description":".env file is not valid or is not exsist."
+        "description":".env file is not valid or does not exsist."
     },
     {
         "message":"Check Table Name",

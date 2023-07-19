@@ -4,7 +4,9 @@ const { SQL_DBNAME } = process.env;
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
 // const { convertToSqlCondition } = require('../../utils/convert_condition');
 
-
+const DBType = {
+    SQL: 'sql', MONGO: 'mongoDB'
+}
 function getTableFromConfig(tableName) {
 
     try {
@@ -223,5 +225,6 @@ module.exports = {
     getTableFromConfig,
     readJoin, readRelatedData,
     getReferencedColumns, convertFieldType, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn,
+    DBType,
     getCollectionsFromConfig,
 };

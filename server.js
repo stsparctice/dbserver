@@ -35,6 +35,7 @@ connectMng().then(_ => {
     }, (err) => {
         console.log(err.message, 'from connectSql');
     });
+
     // deleteData();
     // dropSQLTables();
     // dropMongoDBCollection();

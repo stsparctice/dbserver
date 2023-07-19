@@ -3,7 +3,7 @@ require('dotenv').config();
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
 const {  getTableFromConfig } = require('../../modules/config/config')
-const {getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn} = require('../../modules/public')
+const {getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias} = require('../../modules/public')
 const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 if (!SQL_DBNAME) {
@@ -113,13 +113,13 @@ const read = async function (obj) {
           const { tableName, columns, condition, n } = obj;
 
 
-          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
+          console.log(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
+          const result = await getPool().request().query(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getAlias(tableName)} WHERE ${condition}`);
           return result.recordset;
      }
-     catch (error){
-          console.log({error});
-          throw notifictions.find(({status}) => status == 400);
+     catch (error) {
+          console.log({ error });
+          throw notifictions.find(({ status }) => status == 400);
      }
 };
 
@@ -163,6 +163,7 @@ const update = async function (obj) {
           return result;
      }
      catch (error) {
+          console.log(error)
           throw error
      }
 };
@@ -187,6 +188,7 @@ const update = async function (obj) {
 //           const result = await getPool().request()
 //                .input('serialNumber', Id)
 //                .execute(`pro_UpdateQuotation`);
+//      }
 
 const updateOne = async function (obj) {
      try {
@@ -224,9 +226,8 @@ const countRows = async function (obj) {
           //      .input('tableName', tableName)
           //      .input('condition', condition)
           //      .execute(`pro_CountRows`);
-
+          console.log({ func: 'countRows', tableName, condition })
           const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) as countRows FROM ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} WHERE ${condition}`)
-          // console.log({ count: result })
           return result;
      }
      catch (error) {
@@ -259,11 +260,9 @@ module.exports = {
      read,
      readAll,
      update,
-     //     updateOne,
      updateSuppliersBranches,
      countRows,
      join,
      createNewTable,
      insertColumn
 }
-
