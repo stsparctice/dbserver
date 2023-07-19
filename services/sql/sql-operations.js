@@ -116,9 +116,9 @@ const read = async function (obj) {
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
      }
-     catch (error){
-          console.log({error});
-          throw notifictions.find(({status}) => status == 400);
+     catch (error) {
+          console.log({ error });
+          throw notifictions.find(({ status }) => status == 400);
      }
 };
 
@@ -163,6 +163,7 @@ const update = async function (obj) {
           return result;
      }
      catch (error) {
+          console.log(error)
           throw error
      }
 };
@@ -225,9 +226,8 @@ const countRows = async function (obj) {
           //      .input('tableName', tableName)
           //      .input('condition', condition)
           //      .execute(`pro_CountRows`);
-
+          console.log({ func: 'countRows', tableName, condition })
           const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) as countRows FROM ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} WHERE ${condition}`)
-          console.log({ count: result })
           return result;
      }
      catch (error) {

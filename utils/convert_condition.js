@@ -64,9 +64,8 @@ const convertToMongoFilter = (condition) => {
     }
     return subFilter
 }
-const viewConnectionsTables = (tableName, condition = {}, topn) => {
+const viewConnectionsTables = ({tableName, condition = {}, topn}) => {
     try {
-        console.log({ tableName });
         const myTable = getTableFromConfig(tableName)
         const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
         let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];

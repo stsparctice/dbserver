@@ -83,9 +83,9 @@ class MongoDBOperations {
         }
     }
 
-    async countDocuments() {
+    async countDocuments(query={}) {
         try {
-            const result = await getClient().db(this.dbName).collection(this.collectionName).countDocuments();
+            const result = await getClient().db(this.dbName).collection(this.collectionName).countDocuments(query);
             return result;
         }
         catch (error) {

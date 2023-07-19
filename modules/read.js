@@ -118,8 +118,8 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(obj) {
     try {
-        console.log({condition})
-        const query = viewConnectionsTables(tableName, condition);
+        console.log({obj})
+        const query = viewConnectionsTables(obj);
         console.log({query})
         const values = await join(query);
         const items = []
@@ -169,12 +169,12 @@ async function countRowsSql(obj) {
     console.log({obj})
     try {
         obj.condition = buildSqlCondition(obj.tableName, obj.condition)
-        console.log({ obj })
         const count = await countRows(obj);
         console.log({count})
         return count.recordset[0];
     }
     catch (error) {
+        console.log(error)
         throw error
     }
 };
@@ -236,10 +236,10 @@ async function getDetailsWithDistinct(collection, filter) {
     }
 };
 
-async function getCountDocumentsMng(collection) {
+async function getCountDocumentsMng(collection, query={}) {
     try {
         mongoCollection.setCollection(collection);
-        const response = await mongoCollection.countDocuments();
+        const response = await mongoCollection.countDocuments(query);
         return response;
     }
     catch (error) {
