@@ -111,6 +111,8 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
+
+
           console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
           return result.recordset;
@@ -164,6 +166,7 @@ const update = async function (obj) {
           throw error
      }
 };
+
 // const updateOne = async function (obj) {
 //      try {
 //           // const tableName = "tbl_Leads"
@@ -178,12 +181,19 @@ const update = async function (obj) {
 //      }
 // };
 // 
-const updateQuotation = async function (obj) {
+// const updateQuotation = async function (obj) {
+//      try {
+//           const { Id } = obj;
+//           const result = await getPool().request()
+//                .input('serialNumber', Id)
+//                .execute(`pro_UpdateQuotation`);
+
+const updateOne = async function (obj) {
      try {
-          const { Id } = obj;
-          const result = await getPool().request()
-               .input('serialNumber', Id)
-               .execute(`pro_UpdateQuotation`);
+          const { tableName, values, condition } = obj;
+          const tabledata = getSqlTableColumnsType(tableName)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
+
           return result;
      }
      catch {
@@ -250,7 +260,6 @@ module.exports = {
      readAll,
      update,
      //     updateOne,
-     updateQuotation,
      updateSuppliersBranches,
      countRows,
      join,

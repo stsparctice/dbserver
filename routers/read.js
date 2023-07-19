@@ -14,6 +14,7 @@ router.use(routerLogger())
 router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) => {
     try {
 
+
         let obj = {}
         obj.tableName = req.params.table
         obj.columns = `${req.params.column}`
@@ -29,6 +30,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         obj.n = 10
         const result = await getDetailsSql(obj);
         res.status(200).send(result);
+
     }
     catch (error) {
         console.log(error.description);
