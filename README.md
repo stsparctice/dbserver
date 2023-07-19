@@ -1,7 +1,5 @@
 # dbserver
-
 .env file
-
 SQL_SERVER =  "TB1-10\NEW_SQL"
 SQL_DBNAME = "Buyton"
 SQL_USERNAME = "project"

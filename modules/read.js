@@ -2,7 +2,7 @@ const { read, readAll, countRows, join } = require('../services/sql/sql-operatio
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
 const { readJoin, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
-const {viewConnectionsTables}=require('../utils/convert_condition');
+const { viewConnectionsTables } = require('../utils/convert_condition');
 
 const config = require('../config/DBconfig.json');
 
@@ -11,8 +11,8 @@ const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
     try {
-        if(obj.entityName && !obj.tableName)
-        obj.tableName = obj.entityName
+        if (obj.entityName && !obj.tableName)
+            obj.tableName = obj.entityName
         const list = await read(obj);
         return list;
     }
@@ -118,9 +118,9 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(obj) {
     try {
-        console.log({obj})
+        console.log({ obj })
         const query = viewConnectionsTables(obj);
-        console.log({query})
+        console.log({ query })
         const values = await join(query);
         const items = []
         for (let val of values) {
@@ -166,11 +166,11 @@ async function connectTables(obj) {
 
 
 async function countRowsSql(obj) {
-    console.log({obj})
+    console.log({ obj })
     try {
         obj.condition = buildSqlCondition(obj.tableName, obj.condition)
         const count = await countRows(obj);
-        console.log({count})
+        console.log({ count })
         return count.recordset[0];
     }
     catch (error) {
@@ -236,7 +236,7 @@ async function getDetailsWithDistinct(collection, filter) {
     }
 };
 
-async function getCountDocumentsMng(collection, query={}) {
+async function getCountDocumentsMng(collection, query = {}) {
     try {
         mongoCollection.setCollection(collection);
         const response = await mongoCollection.countDocuments(query);
