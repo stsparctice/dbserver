@@ -1,11 +1,13 @@
 const config = require('../../config/DBconfig.json')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
-const notifictaions = require('../../config/serverNotifictionsConfig.json')
+const notifictaions = require('../../config/serverNotifictionsConfig.json');
+// const { convertToSqlCondition } = require('../../utils/convert_condition');
 
 
 function getTableFromConfig(tableName) {
     try {
+        console.log({ tableName });
         let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
         let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||

@@ -3,6 +3,7 @@ const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { readJoin, readRelatedData } = require('./config/config');
 const { viewConnectionsTables, getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./public')
 const config = require('../config/DBconfig.json');
+
 const mongoCollection = MongoDBOperations;
 
 async function getDetailsSql(obj) {
@@ -115,7 +116,6 @@ async function connectTables(obj) {
                 }
                 return gr
             }, [])
-
             const newObj = entries.reduce((obj, ent) => {
                 if (ent[0].startsWith('FK')) {
                     return obj
@@ -132,7 +132,7 @@ async function connectTables(obj) {
                     obj[ent[0]] = ent[1]
                 }
                 return obj
-            }, {})
+            }, {});
             items.push(newObj)
         }
         return items;
