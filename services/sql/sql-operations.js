@@ -2,8 +2,8 @@ require('dotenv').config();
 
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const { getPrimaryKeyField } = require('../../modules/config/config')
-
+const { getPrimaryKeyField } = require('../../modules/config/config');
+const { config } = require('dotenv');
 const create = async function (obj) {
      try {
           const { tableName, columns, values } = obj;
@@ -81,7 +81,7 @@ const insertColumn = async function (obj) {
 
 const createNewTable = async function (obj) {
      try {
-          // console.log(obj);
+          console.log({ obj });
           let str = ''
           obj.columns.forEach(element => {
                str += `${element.name} ${element.type},`
@@ -218,19 +218,19 @@ const updateSuppliersBranches = async function (obj) {
 };
 
 const countRows = async function (obj) {
-     try{
-     const { tableName, condition } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('condition', condition)
-     //      .execute(`pro_CountRows`);
-     const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
-     console.log({ count: result })
-     return result;
-}
-catch(error){
-     throw error
-}
+     try {
+          const { tableName, condition } = obj;
+          // const result = await getPool().request()
+          //      .input('tableName', tableName)
+          //      .input('condition', condition)
+          //      .execute(`pro_CountRows`);
+          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
+          console.log({ count: result })
+          return result;
+     }
+     catch (error) {
+          throw error
+     }
 }
 
 function setValues(obj) {
@@ -271,7 +271,20 @@ async function buildcolumns(obj) {
      columns = columns.substring(0, columns.length - 1);
      return { columns, values };
 };
+async function drop(tableName) {
+     console.log('drop table from sql seccessfully');
 
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     DROP TABLE ${tableName}`);
+}
+async function updateColumn(obj){
+     console.log('update column');
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     UPDATE ${obj.table}
+     SET ${obj.column} = 1000`);
+
+
+}
 module.exports = {
      create,
      read,
@@ -283,5 +296,7 @@ module.exports = {
      countRows,
      join,
      createNewTable,
-     insertColumn
+     insertColumn,
+     drop,
+     updateColumn
 };

@@ -9,6 +9,8 @@ const create_router = require('./routers/create');
 const read_router = require('./routers/read');
 const update_router = require('./routers/update');
 const config_router= require('./routers/config');
+const delete_router= require('./routers/delete');
+
 const a= require('./routers/a');
 app.set('view engine', 'ejs');
 
@@ -25,6 +27,7 @@ app.use('/login', login_router);
 app.use('/create', create_router);
 app.use('/read', read_router);
 app.use('/update', update_router);
+app.use('/delete',delete_router);
 app.use('/config', config_router);
 app.use('/a', a);
 

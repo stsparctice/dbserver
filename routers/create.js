@@ -3,7 +3,7 @@ const router = express.Router();
 const { createSql, insertManySql, createMng, creatSqlTable } = require('../modules/create');
 const { routerLogger } = require('../utils/logger');
 
-const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
+// const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
 router.use(express.json());
