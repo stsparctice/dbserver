@@ -1,19 +1,22 @@
-require('dotenv');
-const { SQL_DBNAME } = process.env;
 const config = require('../../config/DBconfig.json')
 const types = require('./config-objects')
+require('dotenv');
+const { SQL_DBNAME } = process.env;
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
+// const { convertToSqlCondition } = require('../../utils/convert_condition');
 
 const DBType = {
-    SQL:'sql', MONGO:'mongoDB'
+    SQL: 'sql', MONGO: 'mongoDB'
 }
-
 function getTableFromConfig(tableName) {
+
     try {
-        let sql = config.find(db => db.database == DBType.SQL)
+        console.log({ tableName });
+        let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
         let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
             tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+        console.log({ table })
         return table
     }
     catch {
@@ -23,23 +26,24 @@ function getTableFromConfig(tableName) {
     }
 
 
-   
+
 }
 
 function getCollectionsFromConfig(collectionName) {
-    let mongo = config.find(db => db.database === DBType.MONGO);
+    let mongo = config.find(db => db.database === 'mongoDB');
     let collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
     return collection
 }
 
 function checkEntityType(entityName) {
     let table = getTableFromConfig(entityName);
+    console.log({ table });
     if (table) {
-        return { entityName, type: DBType.SQL }
+        return { entityName, type: 'SQL' }
     }
     let collection = getCollectionsFromConfig(entityName);
     if (collection) {
-        return { entityName, type: DBType.MONGO };
+        return { entityName, type: 'mongoDB' };
     }
     else {
         throw new Error(`the entityName : ${entityName} is not exist`);
@@ -92,7 +96,6 @@ function parseSQLType(obj, tabledata) {
 }
 
 function parseSQLTypeForColumn(col, tableName) {
-    console.log({tableName, col})
     const tabledata = getSqlTableColumnsType(tableName)
     console.log({ col });
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
@@ -172,6 +175,7 @@ const readJoin = async (baseTableName, baseColumn) => {
             for (let table of connectionTable) {
                 let tableJoin = table.MTDTable.name.sqlName;
                 let alias = table.MTDTable.name.name;
+                console.log({ tableJoin });
                 let columns = table.columns.map(({ name }) => { return name });
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
@@ -199,6 +203,7 @@ const readJoin = async (baseTableName, baseColumn) => {
     console.log(result);
     return result;
 }
+
 
 
 function getPrimaryKeyField(tablename) {
@@ -232,13 +237,15 @@ function getReferencedColumns(tablename) {
         throw error
     }
 
-  
+
 }
 function setFullObj(parentTable, refTable) {
     console.log({ parentTable }, { refTable });
     // let table = getTableFromConfig(parentTable)
     // const f = `select ${refTable.ref} from ${parentTable}`
     // let table2 = getTableFromConfig(refTable)
+    // console.log({ table });
+    // console.log({ table2 });
     // table2 = table2.columns.map(col => { col.name })
     // table.columns.filter(col => {
     //     if (col.sqlName == refTable.name) {
@@ -333,16 +340,15 @@ function getTabeColumnName(tablename) {
 }
 
 module.exports = {
-    DBType,
-      getTabeColumnName,
-    getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType, getPrimaryKeyField,
-      getTableFromConfig,
+
+    getTabeColumnName,
+    getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType, getPrimaryKeyField, viewConnectionsTables,
+    getTableFromConfig,
     getSqlTableColumnsType, buildSqlCondition,
     parseSQLType, parseSQLTypeForColumn, readJoin, readRelatedData,
     getReferencedColumns, convertFieldType, getPrimaryKeyField, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn,
     checkEntityType,
-
-  
+    DBType,
     getCollectionsFromConfig,
     getAlias
 };
