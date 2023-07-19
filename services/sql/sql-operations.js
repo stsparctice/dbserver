@@ -2,8 +2,10 @@ require('dotenv').config();
 
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getTableFromConfig } = require('../../modules/config/config')
-const notifictions = require('../../config/serverNotifictionsConfig.json')
+const {  getTableFromConfig } = require('../../modules/config/config')
+const {getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias} = require('../../modules/public')
+const notifictions = require('../../config/serverNotifictionsConfig.json');
+const { convertToSqlCondition } = require('../../utils/convert_condition');
 
 if (!SQL_DBNAME) {
      throw notifictions.find(n => n.status == 509)
@@ -18,9 +20,9 @@ const create = async function (obj) {
      //      .execute(`pro_BasicCreate`);
 
      //      console.log({result})
-     console.log({ tableName, columns, values })
      try {
           const primarykey = getPrimaryKeyField(tableName)
+          console.log(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
           return result.recordset;
      }
@@ -112,8 +114,8 @@ const read = async function (obj) {
           const { tableName, columns, condition, n } = obj;
 
 
-          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
+          console.log(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
+          const result = await getPool().request().query(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getAlias(tableName)} WHERE ${condition}`);
           return result.recordset;
      }
      catch (error) {
@@ -154,11 +156,10 @@ const join = async (query = "") => {
 const update = async function (obj) {
      try {
 
-          obj.condition = buildSqlCondition(obj.entityName, obj.condition)
+          obj.condition = convertToSqlCondition(getTableFromConfig(obj.entityName), obj.condition)
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
-          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }

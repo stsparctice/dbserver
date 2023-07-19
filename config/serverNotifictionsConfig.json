@@ -65,6 +65,11 @@
         "description": "This response is sent when a request conflicts with the current state of the server. "
     },
     {
+        "message": "Misdirected Request",
+        "status": 421,
+        "description": "The request was directed at a server that is not able to produce a response. This can be sent by a server that is not configured to produce responses for the combination of scheme and authority that are included in the request URI."
+    },
+    {
         "message": "Locked",
         "status": 423,
         "description": "The resource that is being accessed is locked."
@@ -83,6 +88,11 @@
         "message":"Internal Server Error",
         "status":500,
         "description":"The server has encountered a situation it does not know how to handle."
+    },
+    {
+        "message":"Bad Gateway",
+        "status":502,
+        "description":"This error response means that the server, while working as a gateway to get a response needed to handle the request, got an invalid response."
     },
     {
         "message":"Gateway Timeout",
@@ -117,6 +127,11 @@
     {
         "message":"Check Field Name",
         "status":515,
+        "description":""
+    },
+    {
+        "message":"Check Entity Name",
+        "status":516,
         "description":""
     }
 ]

@@ -1,99 +1,139 @@
-const { parseSQLTypeForColumn, getTableFromConfig, getAlias } = require('../modules/config/config')
+const { getTabeColumnName } = require('../modules/config/config');
+const { parseSQLTypeForColumn, getAlias } = require('../modules/public')
+const { parseColumnName, parseDBname } = require('./parse_name')
 require('dotenv');
-const { SQL_DBNAME } = process.env;
-const convertToSqlCondition = (tableName, condition) => {
+const convertToSqlCondition = (table, condition) => {
+    const tableName = table.MTDTable.name.sqlName;
+    const tablealias = getAlias(table.MTDTable.name.sqlName);
     const buildQuery = (condition, operator) => {
         try {
             let query = ``
             for (let key in condition) {
-                if (key === 'AND') {
-                    query = `${query} (${buildOrAnd(condition[key], "AND")}) ${operator}`;
-                }
-                else {
-                    if (key === 'OR') {
+                switch (key) {
+                    case 'AND':
+                        query = `${query} (${buildOrAnd(condition[key], "AND")}) ${operator}`;
+                        break;
+                    case 'OR':
                         query = `${query} (${buildOrAnd(condition[key], "OR")}) ${operator}`;
-                    }
-                    else {
-                        if (key === 'BETWEEN') {
-                            query = `${query} (${buildBetween(condition[key])}) ${operator}`
-                        }
-                        else {
-                            query = `${query} ${tableName}.${key} = ${parseSQLTypeForColumn({ name: key, value: condition[key] }, tableName)} ${operator}`;
-                        }
+                        break
+                    case 'BETWEEN':
+                        query = `${query} (${buildBetween(condition[key])}) ${operator}`
+                        break
+                    case 'LIKE':
+                        query = `${query} (${buildLike(condition[key])}) ${operator}`
+                        break
+                    default:
+                        let val = {}
+                        val[key] = ''
+                        let column =  Object.keys(parseColumnName(val, tableName))
+                        query = `${query} ${tablealias}.${column} = ${parseSQLTypeForColumn({ name: key, value: condition[key] }, tableName)} ${operator}`;
+                        break;
                     }
                 }
+                return query;
+            }
+            catch (error) {
+                console.log(error);
+            }
+            
+            
+        }
+        const buildOrAnd = (array, operator) => {
+            let query = ``;
+            for (let item of array) {
+                if (array.indexOf(item) === array.length - 1) {
+                    query = `${query} ${buildQuery(item, "")}`
+                }
+                else
+                query = `${query} ${buildQuery(item, operator)}`
             }
             return query;
         }
-        catch (error) {
-            console.log(error);
+        const buildBetween = (between) => {
+            console.log({between});
+            const key = Object.keys(between[0])[0];
+            let val = {}
+            val[key] = ''
+            let column = Object.keys(parseColumnName(val, tableName))
+            const query = `${tablealias}.${column} BETWEEN ${between[0][key][0]} AND ${between[0][key][1]}`;
+            return query;
+            
         }
-
-
-    }
-    const buildOrAnd = (array, operator) => {
-        let query = ``;
-        for (let item of array) {
-            if (array.indexOf(item) === array.length - 1) {
-                query = `${query} ${buildQuery(item, "")}`
-            }
-            else
-                query = `${query} ${buildQuery(item, operator)}`
+        const buildLike = (like) => {
+            like = like[0];
+            const key = Object.keys(like)[0];
+            let val = {}
+            val[key] = ''
+            let column = Object.keys(parseColumnName(val, tableName))[0]
+            const query = `${tablealias}.${column} LIKE '%${like[key]}%'`;
+            return query;
         }
-        return query;
-    }
-    const buildBetween = (between) => {
-        const key = Object.keys(between)[0];
-        const query = `${tableName}.${key} BETWEEN ${between[key][0]} AND ${between[key][1]}`;
-        return query;
-
-    }
+        console.log({condition});
     let result = buildQuery(condition, "AND");
     result = result.slice(0, result.length - 3);
     return result;
 }
 const convertToMongoFilter = (condition) => {
-    let subFilter = {}
+    let filter = {}
     for (let key in condition) {
         if (condition[key] instanceof Array) {
-            subFilter[`$${key.toLowerCase()}`] = condition[key].map(o => convertToMongoFilter(o))
+            filter[`$${key.toLowerCase()}`] = condition[key].map(o => convertToMongoFilter(o))
         }
         else {
-            subFilter[key] = condition[key]
+            filter[key] = condition[key]
         }
     }
-    return subFilter
+    return filter
 }
-const viewConnectionsTables = ({tableName, condition = {}, topn}) => {
-    try {
-        const myTable = getTableFromConfig(tableName)
-        const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-        let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];
-        let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
-        columns.forEach(column => {
-            const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
-            const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
-            const thisTable = getTableFromConfig(tableToJoin);
-            const alias = thisTable.MTDTable.name.name;
-            columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} as FK_${column.name}_${columnToJoin}`, `${thisTable.MTDTable.defaultColumn} as FK_${column.name}_${thisTable.MTDTable.defaultColumn}`] }];
-            join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
-        });
-        if (Object.keys(condition).length > 0) {
 
-            let conditionString = convertToSqlCondition(getAlias(tableName), condition);
-
-            join = `${join} WHERE ${conditionString}`;
+const removeIndexes = (str) => {
+    let s = '';
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] >= '0' && str[i] <= '9')
+            return s;
+        s += str[i]
+    }
+    return s;
+}
+const conversionQueryToObject = () => {
+    return (req, res, next) => {
+        const { query } = req
+        let n = 50
+        if(query.n){
+            n = query.n
+            delete query.n
         }
-        let select = ``;
-        columnsSelect.forEach(cs => {
-            cs.columnsName.forEach(cn => {
-                select = `${select} ${cs.tableName}.${cn},`;
-            })
-        })
-        select = select.slice(0, select.length - 1);
-        return `use ${SQL_DBNAME} SELECT TOP ${topn} ${select} FROM ${join}`;
-    } catch (error) {
-        console.log(error);
+        let obj = {}
+        let pointer = [obj];
+        let i = 0;
+        const convert = async (key, value) => {
+            if (key.includes('start')) {
+                pointer[i][value] = []
+                if (i == pointer.length - 1)
+                    pointer.push(pointer[i][value])
+                else
+                    pointer[i + 1] = pointer[i][value]
+                i++;
+                return;
+            }
+            if (key.includes('end')) {
+                i--;
+                return;
+            }
+            else {
+                let object = {}
+                object[removeIndexes(key)] = value
+                pointer[i].push(object)
+                return;
+            }
+        }
+        for (const key in query) {
+            convert(key, query[key]);
+        }
+        req.query = obj
+        req.query.n = n
+        next()
     }
 }
-module.exports = { convertToMongoFilter,  viewConnectionsTables }
+
+module.exports = { convertToMongoFilter, convertToSqlCondition, conversionQueryToObject }

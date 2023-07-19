@@ -5,7 +5,6 @@ const notifications = require('../config/serverNotifictionsConfig.json')
 async function uniqueValue(field) {
     try {
         let list = uniquesConfig.find(u => Object.keys(u.fields).find(f => f == field.table && u.fields[f] == field.name))
-        console.log({ list });
         if (!list || (list.allowNulls == true && field.value == null)) {
             return
         }
@@ -26,7 +25,6 @@ function checkDataIsUnique() {
     return async (req, res, next) => {
         let error
         for (let value of Object.keys(req.body.values)) {
-            console.log({ value });
             let check = await uniqueValue({ table: req.body.tableName, name: value, value: req.body.values[value] })
             if (check == false) {
                 error = { value }
