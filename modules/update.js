@@ -1,5 +1,5 @@
 const { update, updatOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
-const { parseSQLTypeForColumn, getSqlTableColumnsType } = require('./config/config')
+// const { parseSQLTypeForColumn, getSqlTableColumnsType } = require('./config/config')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 

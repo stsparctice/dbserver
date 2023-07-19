@@ -100,6 +100,7 @@ router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDat
         const response = await routeEntityByItsType(req.body, updateSql, updateOne)
         res.status(204).send(response)
     } catch (error) {
+        console.log(error.description);
         res.status(error.status).send(error.message)
     }
 })
@@ -110,6 +111,7 @@ router.put('/updatemany', parseTableName(), parseColumnNameMiddleware(), checkDa
         res.status(204).send(response);
     } 
     catch (error) {
+        console.log(error.description);
         res.status(error.status).send(error.message);
     }
 })

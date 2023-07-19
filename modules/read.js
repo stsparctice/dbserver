@@ -1,6 +1,7 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, viewConnectionsTables, getReferencedColumns, readRelatedData, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./config/config');
+const { readJoin, readRelatedData } = require('./config/config');
+const { viewConnectionsTables, getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./public')
 const config = require('../config/DBconfig.json');
 const mongoCollection = MongoDBOperations;
 
@@ -96,8 +97,8 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(obj) {
     try {
-        const query = viewConnectionsTables(obj.entityName, obj.condition,obj.topn);
-        console.log({query});
+        const query = viewConnectionsTables(obj.entityName, obj.condition, obj.topn);
+        console.log({ query });
         const values = await join(query);
         const items = []
         for (let val of values) {

@@ -3,7 +3,7 @@ const router = express.Router();
 const { getDetailsSql, getAllSql, countRowsSql, getDetailsMng,
     getDetailsWithAggregateMng, getCountDocumentsMng,
     readWithJoin, readFullObjects, readRelatedObjects, connectTables, getDetailsWithDistinct, getPolygon } = require('../modules/read');
-const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/config/config')
+const { getPrimaryKeyField, getForeignTableAndColumn, convertFieldType } = require('../modules/public')
 const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName, parseTBname } = require('../utils/parse_name')
 const { routeEntityByItsType } = require('../utils/route_entity')
@@ -31,7 +31,7 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
         res.status(200).send(result);
     }
     catch (error) {
-        console.log({ error });
+        console.log(error.description);
         res.status(error.status).send(error.message)
     }
 
@@ -48,7 +48,7 @@ router.get('/exist/:tablename/:field/:value', async (req, res) => {
         res.status(200).send(result)
     }
     catch (error) {
-        console.log(error);
+        console.log(error.description);
         res.status(error.status).send(error.message)
     }
 
@@ -282,7 +282,8 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        res.status(500).send(error.message);
+        console.log(error.description)
+        res.status(error.status).send(error.message);
     }
 });
 
@@ -293,8 +294,8 @@ router.post('/readOne/:entityName',async(req,res)=>{
         res.status(200).send(response);
     } 
     catch (error) {
-        console.log({error});
-        res.status(500).send(error.message);
+        console.log(error.description);
+        res.status(error.status).send(error.message);
     }
 });
 
@@ -305,7 +306,8 @@ router.get('/readMany/:entityName/:n', async (req, res) => {
         res.status(200).send(response)
     }
     catch (error) {
-        res.status(500).send(error.message)
+        console.log(error.description);
+        res.status(error.status).send(error.message)
     }
 });
 
@@ -316,7 +318,8 @@ router.post('/readMany/:entityName', async (req, res) => {
         res.status(200).send(response);
     }
     catch (error) {
-        res.status(500).send(error.message);
+        console.log(error.description);
+        res.status(error.status).send(error.message);
     }
 })
 

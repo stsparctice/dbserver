@@ -39,7 +39,7 @@ class MongoDBOperations {
             if (result)
                 return result.insertedIds;
             else {
-                throw new Error("Not success");
+                throw notifications.find(n => n.status === 500);
             }
         }
         catch (error) {

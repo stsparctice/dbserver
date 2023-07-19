@@ -11,6 +11,7 @@ router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async
         res.status(204).send(response);
     }
     catch (error) {
+        console.log(error.description);
         res.status(error.status).send(error.message);
     }
 });
@@ -21,6 +22,7 @@ router.delete('/deletemany', parseTableName(), parseColumnNameMiddleware(), asyn
         res.status(404).send(response);
     }
     catch (error) {
+        console.log(error.description);
         res.status(error.status).send(error.message);
     }
 })

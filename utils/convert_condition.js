@@ -34,15 +34,15 @@ const convertToSqlQuery = (condition) => {
 }
 
 const convertToMongoFilter = (condition) => {
-    let subFilter = {}
+    let filter = {}
     for (let key in condition) {
         if (condition[key] instanceof Array) {
-            subFilter[`$${key.toLowerCase()}`] = condition[key].map(o => convertToMongoFilter(o))
+            filter[`$${key.toLowerCase()}`] = condition[key].map(o => convertToMongoFilter(o))
         }
         else {
-            subFilter[key] = condition[key]
+            filter[key] = condition[key]
         }
     }
-    return subFilter
+    return filter
 }
 module.exports = { convertToMongoFilter, convertToSqlQuery }

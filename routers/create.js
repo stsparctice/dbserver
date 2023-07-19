@@ -17,18 +17,19 @@ router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDa
         res.status(201).send(response);
     }
     catch (error) {
-        console.log({error});
+        console.log(error.description);
         res.status(500).send(error.message);
     }
 });
 
 router.post('/createmany', parseTableName(), parseListOfColumnsName(),checkDataIsUnique(), async (req, res) => {
     try {
-
+        
         const response = await routeEntityByItsType(req.body, insertManySql, insertMany);
         res.status(201).send(response);
     }
     catch (error) {
+        console.log(error.description);
         res.status(error.status).send(error.message);
     }
 });

@@ -2,7 +2,8 @@ require('dotenv').config();
 
 const { getPool } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getTableFromConfig } = require('../../modules/config/config')
+const {  getTableFromConfig } = require('../../modules/config/config')
+const {getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn} = require('../../modules/public')
 const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 if (!SQL_DBNAME) {

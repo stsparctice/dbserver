@@ -90,7 +90,10 @@ const parseTBname = (entityName) => {
         return collection.mongoName;
     }
     else {
-        throw new Error(`The entity name ${entityName} not exist`);
+        let description = `The entity name ${entityName} not exist`
+        let error = notifications.find(n=>n.status===516)
+        error.description=description
+        throw error;
     }
 }
 
