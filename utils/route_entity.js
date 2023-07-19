@@ -1,4 +1,4 @@
-const { convertToMongoFilter, convertToSqlQuery } = require('./convert_condition')
+const { convertToMongoFilter } = require('./convert_condition')
 const { checkEntityType } = require('../modules/public')
 
 const routeEntityByItsType = async (data, sql, mongo) => {

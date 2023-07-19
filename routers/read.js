@@ -39,20 +39,6 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
 
 // router.get('/exist/:tablename/:field/:value', async (req, res) => {
 
-<<<<<<< HEAD
-    try {
-        let { tablename, field, value } = req.params;
-        tablename = parseTBname(tablename);
-        console.log({ tablename });
-        let val = convertFieldType(tablename, field, value)
-        const result = await getDetailsSql({ tableName: tablename, columns: '*', condition: `${field} = ${val}` })
-        res.status(200).send(result)
-    }
-    catch (error) {
-        console.log(error.description);
-        res.status(error.status).send(error.message)
-    }
-=======
 //     try {
 //         let { tablename, field, value } = req.params;
 //         tablename = parseTBname(tablename);
@@ -65,7 +51,6 @@ router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) =>
 //         console.log(error);
 //         res.status(error.status).send(error.message)
 //     }
->>>>>>> 035994c5e17488a0901b2b10c06663b1445bd038
 
 // })
 

@@ -1,8 +1,8 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { readJoin, readRelatedData } = require('./config/config');
-const { viewConnectionsTables, getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./public')
-const config = require('../config/DBconfig.json');
+const { readJoin, readRelatedData ,getTableFromConfig} = require('./config/config');
+const { viewConnectionsTables, getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./public');
+const {convertToSqlCondition}=require('../utils/convert_condition');
 
 const mongoCollection = MongoDBOperations;
 
@@ -96,6 +96,7 @@ async function readWithJoin(tableName, column) {
         throw error
     }
 }
+
 async function connectTables(obj) {
     try {
         const query = viewConnectionsTables(obj.entityName, obj.condition, obj.topn);
