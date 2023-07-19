@@ -22,15 +22,32 @@ const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
                     app.listen(PORT, HOST, () => {
                         console.log(`http://${HOST}:${PORT}`);
                     });
+                }, (err) => {
+                    console.log(err.message, 'from createSpecialProcedures');
                 })
+            }, (err) => {
+                console.log(err.message, 'from createProcedures');
             });
+        }, (err) => {
+            console.log(err.message, 'from createTabels');
         });
-        // deleteData();
-        // dropSQLTables();
-        // dropMongoDBCollection();
+
+    }, (err) => {
+        console.log(err.message, 'from connectSql');
     });
 
-// });
+    // deleteData();
+    // dropSQLTables();
+    // dropMongoDBCollection();
 // });
 
+
+
+// });
 const server = http.createServer(app)
+
+
+
+// deleteData();
+        // dropSQLTables();
+        // dropMongoDBCollection();

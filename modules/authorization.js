@@ -1,8 +1,12 @@
 require('dotenv').config();
+const notifictions = require('../config/serverNotifictionsConfig.json')
 
 const { ADMIN_NAME, ADMIN_PASSWORD } = process.env;
 
 const checkmember = obj => {
+    if (!ADMIN_NAME || !ADMIN_PASSWORD) {
+        throw notifictions.find(n => n.status == 509)
+    }
     if (obj.password === ADMIN_PASSWORD && obj.username === ADMIN_NAME) {
         obj.role = 'admin';
     }

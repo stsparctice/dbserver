@@ -1,23 +1,31 @@
-const express = require('express');
-const router = express.Router();
-const {delTableConfig} =require('../modules/delete')
+const { routeEntityByItsType } = require('../utils/route_entity')
 
+const express = require('express')
+const { updateOne, updateSql, updateMany } = require('../modules/update');
+const { parseColumnNameMiddleware, parseTableName } = require('../utils/parse_name');
+const router = express.Router();
 router.use(express.json());
 
-router.post('/delTable', async (req, res)=> {
-    // console.log("in router");
-    // console.log(req.body," req");
+router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
-        const result = await delTableConfig(req.body);
-        res.status(200).send(result);
+        console.log('delete', new Date().toISOString())
+        let response = await routeEntityByItsType(req.body, updateSql, updateOne);
+        console.log({response})
+        res.status(204).send();
     }
     catch (error) {
-        // console.log("errrrroooooooorrrrrrrrrrr");
-        res.send(error.message)
+        res.status(error.status).send(error.message);
     }
 });
 
-module.exports=router
+router.delete('/deletemany', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
+    try {
+        let response = await routeEntityByItsType(req.body, updateSql, updateMany);
+        res.status(204).send(response);
+    }
+    catch (error) {
+        res.status(error.status).send(error.message);
+    }
+})
 
-
-
+module.exports = router;

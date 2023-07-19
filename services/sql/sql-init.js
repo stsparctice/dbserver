@@ -2,7 +2,8 @@ require('dotenv').config();
 const path = require('path')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection');
-const config=require('../../config.json');
+const config = require('../../config/DBconfig.json');
+const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 
 function buildColumns(details) {
@@ -15,11 +16,14 @@ function buildColumns(details) {
 };
 
 async function createTables() {
+    if (!SQL_DBNAME) {
+        throw notifictions.find(n => n.status == 509)
+    }
 
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
     let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
-    
+
     for (let j = 0; j < tables.length; j++) {
         let table = tables[j];
         _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](

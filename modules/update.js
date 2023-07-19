@@ -1,38 +1,57 @@
-const { update,updateOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
+const { update, updatOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
+const { parseSQLTypeForColumn, getSqlTableColumnsType } = require('./config/config')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 
 async function updateSql(obj) {
     try {
+
         const result = await update(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 async function updateOneSql(obj) {
-    const result = await updateOne(obj);
-    return result;
+    try {
+
+        const result = await update(obj);
+        return result;
+    }
+    catch (error) {
+        throw error
+    }
 };
-async function updateMng(obj) {
+async function updateOne(obj) {
     try {
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateOne(obj);
         return response;
     }
-    catch {
-        throw new Error('Update falid.')
+    catch (error) {
+        throw error
     }
 };
+
+async function updateMany(obj) {
+    try {
+        mongoCollection.setCollection(obj.collection);
+        const response = await mongoCollection.updateMany(obj);
+        return response;
+    }
+    catch (error) {
+        throw error
+    }
+}
 
 async function updateQuotationSql(obj) {
     try {
         const result = await updateQuotation(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -41,8 +60,8 @@ async function updateSuppliersBranchesSql(obj) {
         const result = await updateSuppliersBranches(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -52,18 +71,24 @@ async function dropCollectionMng(obj) {
         const response = await mongoCollection.dropCollection(obj);
         return response;
     }
-    catch {
-        throw new Error('Drop faild.')
+    catch (error) {
+        throw error
     }
 };
 
 async function dropDocumentMng(obj) {
-    const {data,collection}=obj;
-    console.log("data in dropDocumentMng",data);
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.dropDocument(data);
-    return response;
+    try{
+
+        const {data,collection}=obj;
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.dropOneDocument(data);
+        console.log({response})
+        return response;
+    }
+    catch(error){
+        throw error
+    }
 };
 
 
-module.exports = { updateSql,updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng ,dropCollectionMng};
+module.exports = { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateOne, updateMany, dropCollectionMng, dropDocumentMng };

@@ -1,20 +1,15 @@
 const convertToSQLString = (value) => {
-    console.log({ value })
     let special = ["'", "&", "%", "#", "$"]
     const sqlStrings = []
     const split = value.split('')
     if (split.some(ch => special.includes(ch))) {
-        console.log({ split })
         for (let i = 0; i < split.length; i++) {
-        let word=''
-            console.log({ i })
+            let word = ''
             while (i < split.length && special.indexOf(split[i]) == -1) {
-                console.log({i, val:split[i]})
                 word += split[i]
                 i++
             }
             sqlStrings.push(`N'${word}'`)
-            console.log(`N'${word}'`)
             if (i < split.length && special.indexOf(split[i]) != -1) {
                 sqlStrings.push(`char(${split[i].charCodeAt()})`)
             }
@@ -52,6 +47,7 @@ const types = {
     DATETIME: {
         typeNodeName: 'Date',
         parseNodeTypeToSqlType: (Date) => {
+
             return `'${Date}'`
         }
     },
@@ -59,19 +55,29 @@ const types = {
     INT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            return number
+           
+            if (isNaN(number)|| number=='')
+                return 0
+            else
+                return number
         }
     },
     REAL: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            return number
+            if (isNaN(number)|| number=='')
+                return 0
+            else
+                return number
         }
     },
     FLOAT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            return number
+            if (isNaN(number)|| number=='')
+                return 0
+            else
+                return number
         }
     }
 }

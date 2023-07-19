@@ -1,49 +1,103 @@
-const config = require('../config.json')
+const config = require('../config/DBconfig.json')
+const notifications = require('../config/serverNotifictionsConfig.json')
+const {DBType, getTableFromConfig} = require('../modules/config/config')
 
 function parseTableName() {
     return (req, res, next) => {
-        console.log({ body: req.body })
-        let sql = config.find(db => db.database == 'sql')
-        let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        let table = tables.find(table => table.MTDTable.name.sqlName.toLowerCase() == req.body.tableName.toLowerCase() || table.MTDTable.name.name.toLowerCase() == req.body.tableName.toLowerCase())
-        if (table) {
-            req.body.tableName = table.MTDTable.name.sqlName
-            next()
+        try {
+            console.log()
+            req.body.entityName = parseDBname(req.body.entityName).entityName
+            next();
+        }
+        catch (error) {
+            console.log(error)
+            res.status(500).send(error.message)
+
+        }
+    }
+}
+
+function parseColumnName(values, table) {
+
+    let columns = {}
+    let error = [];
+    for (let name in values) {
+        let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() || column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
+        //😡 לסדר בהתאם לצורה השפויה
+        if (column) {
+            columns[column.sqlName] = values[name]
         }
         else {
-            res.status(404).send('This table does not exsist.')
+            error = [...error, name];
         }
     }
-}
+    if (error.length > 0) {
+        let description = `This column: ${error.join(', ')} does not exsist.`
+        error = notifications.find(n => n.status === 514)
+        error.description = description
+        console.log(error)
+        throw error
+    }
+    return columns
 
-function parseColumnName() {
+}
+const parseColumnNameMiddleware = () => {
     return (req, res, next) => {
-        console.log({ body: req.body })
-        let sql = config.find(db => db.database == 'sql')
-        let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        let table = tables.find(table => table.MTDTable.name.sqlName.trim() == req.body.tableName || table.MTDTable.name.sqlName == req.body.tableName)
-        console.log(table.columns.map(c=>({name:c.name, sql:c.sqlName})))
-        let columns = {}
-        let error = undefined
-        for (let name of Object.keys(req.body.values)) {
-            let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() || column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
-            if (column) {
-                columns[column.sqlName.toLowerCase()] = req.body.values[name.toLowerCase()]
+        try {
+            const table = getTableFromConfig(req.body.entityName)
+            if (table) {
+                req.body.values = parseColumnName(req.body.values, table);
+                next();
             }
             else {
-                console.log({name})
-                error =name
-                // res.status(404).send(`This column: ${name} does not exsist.`)
+                
+                const error = notifications.find(({ status }) => status === 513);
+                
+                res.status(error.status).send(error.message);
             }
         }
-        // req.body.columns = columns
-        console.log(req.body)
-        console.log({error})
-        if (error)
-            res.status(404).send(`This column: ${error} does not exsist.`)
-        else
-            next()
+        catch (error) {
+            res.status(error.status).send(error.message);
+        }
+    }
+}
+const parseListOfColumnsName = () => {
+    return (req, res, next) => {
+        try {
+            let sql = config.find(db => db.database == DBType.SQL)
+            let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+            let table = tables.find(table => table.MTDTable.name.sqlName.trim() == req.body.entityName || table.MTDTable.name.sqlName == req.body.entityName)
+            if (table) {
+                req.body.values = req.body.values.map(obj => parseColumnName(obj, table))
+                next()
+            }
+            else {
+                throw notifications.find(n => n.status === 409)
+            }
+        }
+        catch (error) {
+            res.status(error.status).send(error.message)
+        }
+
     }
 }
 
-module.exports = { parseTableName, parseColumnName }
+const parseDBname = (entityName) => {
+    console.log({entityName})
+    let sql = config.find(db => db.database === DBType.SQL);
+    let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
+    let table = tables.find(table => table.MTDTable.name.name.toLowerCase() == entityName.toLowerCase() || table.MTDTable.name.sqlName.toLowerCase() == entityName.toLowerCase());
+    if (table) {
+        return {type: DBType.SQL, entityName :table.MTDTable.name.sqlName}
+    }
+    const mongo = config.find(db => db.database === DBType.MONGO);
+    const collection = mongo.collections.find(({ name }) => name === entityName);
+    if (collection) {
+        return {type: DBType.MONGO, entityName :collection.mongoName};
+    }
+    else {
+        throw new Error(`The entity name ${entityName} does not exist`);
+    }
+}
+
+module.exports = { parseTableName, parseColumnName, parseDBname, parseListOfColumnsName ,parseColumnNameMiddleware}
