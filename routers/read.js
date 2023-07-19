@@ -56,8 +56,12 @@ router.post('/readOne/:entityName', async (req, res) => {
 
 router.get('/readMany/:entityName', conversionQueryToObject(), async (req, res) => {
     try {
-        let n = req.query.n
-        delete req.query.n
+        let n = 50
+        if (req.query.n) {
+            n = req.query.n
+            delete req.query.n
+        }
+
         let response = await routeEntityByItsType({ entityName: req.params.entityName, topn: n, condition: req.query }, connectTables, getDetailsMng);
         res.status(200).send(response)
     }

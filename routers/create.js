@@ -13,6 +13,7 @@ router.use(routerLogger())
 
 router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
+        console.log(req.body,' req.body')
         const response = await routeEntityByItsType(req.body, createSql, insertOne);
         res.status(201).send(response);
     }

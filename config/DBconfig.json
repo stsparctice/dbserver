@@ -1036,7 +1036,7 @@
                             {
                                 "name": "SupplierCode",
                                 "sqlName": "SupplierCode",
-                                "type": "INT NOT NULL FOREIGN KEY(SupplierCode) REFERENCES tbl_Suppliers(Id) "
+                                "type": "INT NOT NULL FOREIGN KEY(SupplierCode) REFERENCES tbl_Suppliers(Id)"
                             },
                             {
                                 "name": "BranchName",
@@ -1268,7 +1268,7 @@
                             {
                                 "name": "ordererCode",
                                 "sqlName": "OrdererCode",
-                                "type": "INT FOREIGN KEY(OrdererCode) REFERENCES tbl_Orderers(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY(OrdererCode) REFERENCES tbl_Orderers(Id)"
                             },
                             {
                                 "name": "address",
@@ -1278,7 +1278,7 @@
                             {
                                 "name": "clientCode",
                                 "sqlName": "ClientCode",
-                                "type": "INT FOREIGN KEY(ClientCode) REFERENCES tbl_Clients(Id) NULL"
+                                "type": "INT NULL FOREIGN KEY(ClientCode) REFERENCES tbl_Clients(Id)"
                             },
                             {
                                 "name": "mapReferenceLongitude",
@@ -1319,7 +1319,7 @@
                             {
                                 "name": "pouringType",
                                 "sqlName": "PouringType",
-                                "type": "INT FOREIGN KEY(PouringType) REFERENCES tbl_PouringsTypes(Id) NULL"
+                                "type": "INT NULL FOREIGN KEY(PouringType) REFERENCES tbl_PouringsTypes(Id)"
                             },
                             {
                                 "name": "pouringTypesComments",
@@ -1334,7 +1334,7 @@
                             {
                                 "name": "statusLead",
                                 "sqlName": "StatusLead",
-                                "type": "INT FOREIGN KEY(StatusLead) REFERENCES tbl_StatusesLead(Id) NULL"
+                                "type": "INT NULL FOREIGN KEY(StatusLead) REFERENCES tbl_StatusesLead(Id)"
                             },
                             {
                                 "name": "orderNumber",
@@ -1492,6 +1492,116 @@
                                 "name": "DisabledDate",
                                 "sqlName": "DisabledDate",
                                 "type": "DATETIME NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PriceList",
+                                "sqlName": "tbl_PriceList"
+                            },
+                            "description": "table that contains all the priceList of the products",
+                            "defaultColumn": "Name"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "Name",
+                                "sqlName": "Name",
+                                "type": "NVARCHAR(50) NOT NULL UNIQUE"
+                            },
+                            {
+                                "name": "Pumps",
+                                "sqlName": "Pumps",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Beton",
+                                "sqlName": "Beton",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "sqlName": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "sqlName": "UserName",
+                                "type": "NVARCHAR(50) NOT NULL"
+                            },
+                            {
+                                "name": "Finish",
+                                "sqlName": "Finish",
+                                "type": "BIT NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "PricelistForProducts",
+                                "sqlName": "tbl_PricelistForProducts"
+                            },
+                            "description": "table that contacts  between products to their priclist",
+                            "defaultColumn": "ProductId"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "PriceListId",
+                                "sqlName": "PriceListId",
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PriceList(Id)"
+                            },
+                            {
+                                "name": "ProductId",
+                                "sqlName": "ProductId",
+                                "type": "NVARCHAR NOT NULL",
+                                "reference": "TableName"
+                            },
+                            {
+                                "name": "tableName",
+                                "sqlName": "TableName",
+                                "type": "NVARCHAR(50)"
+                            },
+                            {
+                                "name": "Price",
+                                "sqlName": "Price",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "Discount",
+                                "sqlName": "Discount",
+                                "type": "FLOAT NOT NULL"
+                            },
+                            {
+                                "name": "AddedDate",
+                                "sqlName": "AddedDate",
+                                "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "UserName",
+                                "sqlName": "UserName",
+                                "type": "NVARCHAR (50) NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT NOT NULL"
                             }
                         ]
                     },
@@ -1861,12 +1971,12 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PriceList(Id)"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id)"
                             },
                             {
                                 "name": "AreaId",
@@ -1914,7 +2024,7 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PriceList(Id)"
                             },
                             {
                                 "name": "ProductId",
@@ -1977,12 +2087,12 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PriceList(Id)"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id)"
                             },
                             {
                                 "name": "Distance",
@@ -2030,12 +2140,12 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PriceList(Id)"
                             },
                             {
                                 "name": "ProductId",
                                 "sqlName": "ProductId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PricelistForProducts(Id)"
                             },
                             {
                                 "name": "TransportDiff",
@@ -2078,12 +2188,12 @@
                             {
                                 "name": "PriceListId",
                                 "sqlName": "PriceListId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_PriceList(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_PriceList(Id)"
                             },
                             {
                                 "name": "SupplierOrClient",
                                 "sqlName": "SupplierOrClient",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_Suppliers(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_Suppliers(Id)"
                             },
                             {
                                 "name": "DeBIT",
@@ -2141,12 +2251,12 @@
                             {
                                 "name": "parentId",
                                 "sqlName": "ParentId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "childId",
                                 "sqlName": "ChildId",
-                                "type": "INT FOREIGN KEY REFERENCES tbl_Pumps(Id) NOT NULL"
+                                "type": "INT NOT NULL FOREIGN KEY REFERENCES tbl_Pumps(Id)"
                             },
                             {
                                 "name": "disable",

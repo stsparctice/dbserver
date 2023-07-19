@@ -87,7 +87,7 @@ const insertColumn = async function (obj) {
 
 const createNewTable = async function (obj) {
      try {
-          // console.log(obj);
+          console.log({ obj });
           let str = ''
           obj.columns.forEach(element => {
                str += `${element.name} ${element.type},`
@@ -255,7 +255,18 @@ const countRows = async function (obj) {
 //      return values;
 // };
 
+async function drop(name){
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     DROP TABLE ${tableName}`);
+}
+async function updateColumn(obj){
+     console.log('update column');
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     UPDATE ${obj.table}
+     SET ${obj.column} = 1000`);
 
+
+}
 module.exports = {
      create,
      read,
@@ -265,5 +276,7 @@ module.exports = {
      countRows,
      join,
      createNewTable,
-     insertColumn
+     insertColumn,
+     drop,
+     updateColumn
 }

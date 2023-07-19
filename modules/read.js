@@ -1,9 +1,15 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
+
 const { readJoin, readRelatedData, getTableFromConfig } = require('./config/config');
 const { getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, buildSqlCondition } = require('./public');
 const { viewConnectionsTables, autoCompleteQuery } = require('../services/sql/sql-queries')
 const { convertToSqlCondition } = require('../utils/convert_condition');
+
+
+
+const config = require('../config/DBconfig.json');
+
 
 const mongoCollection = MongoDBOperations;
 
@@ -128,7 +134,10 @@ async function readWithJoin(tableName, column) {
 
 async function connectTables(obj) {
     try {
+
         const query = viewConnectionsTables(obj);
+
+
         const values = await join(query);
         const result = mapEntity(values);
         return result;
@@ -180,9 +189,11 @@ const mapEntity = (values) => {
     }
 }
 async function countRowsSql(obj) {
+
     try {
         obj.condition = convertToSqlCondition(getTableFromConfig(obj.tableName) , obj.condition)
         const count = await countRows(obj);
+
         return count.recordset[0];
     }
     catch (error) {
@@ -241,7 +252,9 @@ async function getDetailsWithDistinct(collection, filter) {
     }
 };
 
+
 async function getCountDocumentsMng({ collection, condition = {} }) {
+
     try {
         mongoCollection.setCollection(collection);
         const response = await mongoCollection.countDocuments(condition);

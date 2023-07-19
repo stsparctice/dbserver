@@ -219,10 +219,12 @@ function getTabeColumnName(tablename) {
 module.exports = {
 
     getTabeColumnName,
+
     getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType,
     getTableFromConfig,
     readJoin, readRelatedData,
     getReferencedColumns, convertFieldType, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn,
     DBType,
     getCollectionsFromConfig,
+
 };
