@@ -13,13 +13,6 @@ if (!SQL_DBNAME) {
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('columns', columns)
-     //      .input('values', values)
-     //      .execute(`pro_BasicCreate`);
-
-     //      console.log({result})
      try {
           const primarykey = getPrimaryKeyField(tableName)
           console.log(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`);
@@ -62,28 +55,6 @@ const insertColumn = async function (obj) {
      }
 }
 
-
-
-// obj:
-// {
-//      "MTDTable": {
-//          "name": {
-//              "name": "unitOfMeasure",
-//              "sqlName": "tbl_unitOfMeasure"
-//          },
-//          "description": "a normalization table of unitsOfMeasure"
-//      },
-//      "columns": [
-//          {
-//              "name": "id",
-//              "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-//          },
-//          {
-//              "name": "measure",
-//              "type": "NVARCHAR(20) NOT NULL "
-//          }
-//      ]
-//  },
 
 const createNewTable = async function (obj) {
      try {
@@ -169,64 +140,9 @@ const update = async function (obj) {
      }
 };
 
-// const updateOne = async function (obj) {
-//      try {
-//           // const tableName = "tbl_Leads"
-
-//           const { tableName, values, condition } = obj;
-//           const tabledata = getSqlTableColumnsType(tableName)
-//           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
-//           return result;
-//      }
-//      catch (error) {
-//           throw error
-//      }
-// };
-// 
-// const updateQuotation = async function (obj) {
-//      try {
-//           const { Id } = obj;
-//           const result = await getPool().request()
-//                .input('serialNumber', Id)
-//                .execute(`pro_UpdateQuotation`);
-//      }
-
-const updateOne = async function (obj) {
-     try {
-          const { tableName, values, condition } = obj;
-          const tabledata = getSqlTableColumnsType(tableName)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} SET ${values} WHERE ${condition}`)
-
-          return result;
-     }
-     catch {
-          throw notifictions.find(n => n.status == 400)
-     }
-};
-
-const updateSuppliersBranches = async function (obj) {
-     try {
-
-          const { name, supplierCode, id } = obj;
-          const result = await getPool().request()
-               .input('name', name)
-               .input('id', id)
-               .input('supplierCode', supplierCode)
-               .execute(`pro_UpdateSuppliersBranches`);
-          return result;
-     }
-     catch {
-          throw notifictions.find(n => n.status == 400)
-     }
-};
-
 const countRows = async function (obj) {
      try {
           const { tableName, condition } = obj;
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('condition', condition)
-          //      .execute(`pro_CountRows`);
           console.log({ func: 'countRows', tableName, condition })
           const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) as countRows FROM ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} WHERE ${condition}`)
           return result;
@@ -236,28 +152,9 @@ const countRows = async function (obj) {
      }
 }
 
-// function setValues(obj) {
-//      let values = "";
-//      for (let key in obj) {
-//           values += `${key} = `;
-//           if (typeof (obj[key]) === 'string') {
-//                values += `N'${obj[key]}'`;
-//           }
-//           else {
-//                if (typeof (obj[key]) === 'boolean')
-//                     values += `'${obj[key]}'`;
-//                else
-//                     values += obj[key];
-//           };
-//           values += ' , ';
-//      };
-//      values = values.substring(0, values.length - 2);
-//      return values;
-// };
-
 async function drop(name){
      _ = await getPool().request().query(`use ${SQL_DBNAME}
-     DROP TABLE ${tableName}`);
+     DROP TABLE ${name}`);
 }
 async function updateColumn(obj){
      console.log('update column');
@@ -272,7 +169,6 @@ module.exports = {
      read,
      readAll,
      update,
-     updateSuppliersBranches,
      countRows,
      join,
      createNewTable,

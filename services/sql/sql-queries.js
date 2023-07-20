@@ -5,7 +5,7 @@ const { getPrimaryKeyField } = require('../../modules/public');
 const { parseDBname, parseColumnName } = require('../../utils/parse_name');
 const { SQL_DBNAME } = process.env
 
-const viewConnectionsTables = ({ tableName, condition = {}, topn }) => {
+const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) => {
     try {
         console.log({ tableName });
         const myTable = getTableFromConfig(tableName)
@@ -33,7 +33,9 @@ const viewConnectionsTables = ({ tableName, condition = {}, topn }) => {
             })
         })
         select = select.slice(0, select.length - 1);
-        return `USE ${SQL_DBNAME} SELECT TOP ${topn} ${select} FROM ${join}`;
+        const primaryKey = getPrimaryKeyField(tableName);
+        join = `${join} ORDER BY ${primaryKey} ASC OFFSET ${skip} ROWS FETCH NEXT ${topn} ROWS ONLY`
+        return `USE ${SQL_DBNAME} SELECT ${select} FROM ${join}`;
     } catch (error) {
         console.log(error);
         throw error;

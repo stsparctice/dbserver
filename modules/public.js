@@ -2,24 +2,6 @@ const types = require('./config/config-objects')
 const { getTableFromConfig, getCollectionsFromConfig } = require('./config/config')
 const notifictaions = require('../config/serverNotifictionsConfig.json')
 
-function checkEntityType(entityName) {
-    let table = getTableFromConfig(entityName);
-    // console.log({ table });
-    if (table) {
-        return { entityName, type: 'SQL' }
-    }
-    let collection = getCollectionsFromConfig(entityName);
-    if (collection) {
-        return { entityName, type: 'mongoDB' };
-    }
-    else {
-        let description = `the entityName : ${entityName} is not exist`
-        let error = notifictaions.find(n => n.status === 516)
-        error.description = description
-        throw error;
-    }
-}
-
 function getSqlTableColumnsType(tablename) {
     try {
         const table = getTableFromConfig(tablename)
@@ -81,26 +63,6 @@ function parseSQLTypeForColumn(col, tableName) {
     return val
 }
 
-function buildSqlCondition(tableName, condition) {
-    try {
-        const tablealias = getTableFromConfig(tableName).MTDTable.name.name
-        // console.log({ tableName, condition })
-        if (condition) {
-            const entries = Object.entries(condition)
-            const conditionList = entries.map(c =>
-                `${tablealias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, tableName)}`
-            )
-            condition = conditionList.join(' AND ')
-        }
-        else {
-            condition = "1 = 1"
-        }
-        return condition
-    }
-    catch (error) {
-        throw error
-    }
-}
 
 
 
@@ -197,10 +159,19 @@ const getAlias = (tableName) => {
     const tablealias = getTableFromConfig(tableName).MTDTable.name.name;
     return tablealias;
 }
+const getDefaultColumn = (tableName) => {
+    const defaultColumn = getTableFromConfig(tableName).MTDTable.defaultColumn;
+    return defaultColumn
 
+}
+const getColumnAlias = (tableName, column) => {
+    const table = getTableFromConfig(tableName);
+    const alias = table.columns.find(({ sqlName }) => sqlName === column).name;
+    return alias;
+}
 module.exports = {
     getSqlTableColumnsType,
-    buildSqlCondition,
+    getDefaultColumn,
     parseSQLType,
     parseSQLTypeForColumn,
     getReferencedColumns,
@@ -209,5 +180,5 @@ module.exports = {
     getAlias,
     getObjectWithFeildNameForPrimaryKey,
     getForeignTableAndColumn,
-    checkEntityType
+    getColumnAlias
 }
