@@ -8,7 +8,6 @@ router.use(express.json());
 
 router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
-        console.log('delete', new Date().toISOString())
         let response = await routeEntityByItsType(req.body, updateSql, updateOne);
         console.log({response})
         res.status(204).send();

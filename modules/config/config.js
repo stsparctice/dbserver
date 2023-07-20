@@ -1,8 +1,7 @@
-const config = require('../../config/DBconfig.json')
 require('dotenv');
 const { SQL_DBNAME } = process.env;
+const config = require('../../config/DBconfig.json')
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
-// const { convertToSqlCondition } = require('../../utils/convert_condition');
 
 const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'

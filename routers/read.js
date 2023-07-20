@@ -4,15 +4,16 @@ const { countRowsSql, getDetailsMng, getCountDocumentsMng,
     connectTables, autoComplete } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
-const { conversionQueryToObject } = require('../utils/convert_condition')
+const { convertQueryToObject } = require('../utils/convert_condition')
 
 router.use(express.json());
 router.use(routerLogger());
 
-router.get('/auto_complete/:entity/:column', conversionQueryToObject(), async (req, res) => {
+router.get('/auto_complete/:entity/:column', async (req, res) => {
     try {
         console.log({ like: req.query.LIKE });
-        const result = await autoComplete({ ...req.params, condition: req.query });
+        const condition = convertQueryToObject(req.query)
+        const result = await autoComplete({ ...req.params, condition });
         res.status(200).send(result);
     }
     catch (error) {
@@ -22,9 +23,10 @@ router.get('/auto_complete/:entity/:column', conversionQueryToObject(), async (r
 
 });
 
-router.get('/readOne/:entityName/:id', conversionQueryToObject(), async (req, res) => {
+router.get('/readOne/:entityName/:id',  async (req, res) => {
     try {
-        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: { Id: req.params.id }, topn: 1 }, connectTables, getDetailsMng);
+        const condition = convertQueryToObject(req.query)
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: { Id: req.params.id, ...condition }, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -33,9 +35,10 @@ router.get('/readOne/:entityName/:id', conversionQueryToObject(), async (req, re
     }
 });
 
-router.get('/readOne/:entityName', conversionQueryToObject(), async (req, res) => {
+router.get('/readOne/:entityName',  async (req, res) => {
     try {
-        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.query, topn: 1 }, connectTables, getDetailsMng);
+        const condition = convertQueryToObject(req.query)
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition, topn: 1 }, connectTables, getDetailsMng);
         res.status(200).send(response);
     }
     catch (error) {
@@ -54,19 +57,21 @@ router.post('/readOne/:entityName', async (req, res) => {
     }
 });
 
-router.get('/readMany/:entityName', conversionQueryToObject(), async (req, res) => {
+router.get('/readMany/:entityName', async (req, res) => {
+   
     try {
         let n = 50
         if (req.query.n) {
             n = req.query.n
-            delete req.query.n
+            req.query = [req.query].map(({ n, ...rest }) => rest)[0]
         }
-
-        let response = await routeEntityByItsType({ entityName: req.params.entityName, topn: n, condition: req.query }, connectTables, getDetailsMng);
+        const condition = convertQueryToObject(req.query)
+        console.log({condition})
+        let response = await routeEntityByItsType({ entityName: req.params.entityName, topn: n, condition }, connectTables, getDetailsMng);
         res.status(200).send(response)
     }
     catch (error) {
-        console.log(error.description);
+        console.log(error);
         res.status(error.status).send(error.message)
     }
 });

@@ -1,7 +1,8 @@
+require('dotenv');
 const { getTabeColumnName } = require('../modules/config/config');
 const { parseSQLTypeForColumn, getAlias } = require('../modules/public')
 const { parseColumnName, parseDBname } = require('./parse_name')
-require('dotenv');
+
 const convertToSqlCondition = (table, condition) => {
     const tableName = table.MTDTable.name.sqlName;
     const tablealias = getAlias(table.MTDTable.name.sqlName);
@@ -87,6 +88,7 @@ const convertToMongoFilter = (condition) => {
 }
 
 const removeIndexes = (str) => {
+    console.log({str})
     let s = '';
     for (let i = 0; i < str.length; i++) {
         if (str[i] >= '0' && str[i] <= '9')
@@ -95,18 +97,11 @@ const removeIndexes = (str) => {
     }
     return s;
 }
-const conversionQueryToObject = () => {
-    return (req, res, next) => {
-        const { query } = req
-        let n = 50
-        if(query.n){
-            n = query.n
-            delete query.n
-        }
-        let obj = {}
-        let pointer = [obj];
+const convertQueryToObject = (query) => {
+        let pointer = [];
         let i = 0;
         const convert = async (key, value) => {
+            console.log({key, value})
             if (key.includes('start')) {
                 pointer[i][value] = []
                 if (i == pointer.length - 1)
@@ -123,17 +118,19 @@ const conversionQueryToObject = () => {
             else {
                 let object = {}
                 object[removeIndexes(key)] = value
-                pointer[i].push(object)
+                pointer[i]=object
                 return;
             }
         }
         for (const key in query) {
+            
             convert(key, query[key]);
+            i++
         }
-        req.query = obj
-        req.query.n = n
-        next()
-    }
+
+        let condition = pointer.reduce((obj, item)=>({...obj, ...item}), {})
+        return condition
+      
 }
 
-module.exports = { convertToMongoFilter, convertToSqlCondition, conversionQueryToObject }
+module.exports = { convertToMongoFilter, convertToSqlCondition, convertQueryToObject }
