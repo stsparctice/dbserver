@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { SQL_SERVER, SQL_DBNAME, SQL_USERNAME, SQL_PASSWORD, SQL_PORT } = process.env;
 const sql = require('mssql');
+const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 const poolConfig = () => ({
     // driver: SQL_PORT,
@@ -20,7 +21,7 @@ const poolConfig = () => ({
 let pool;
 const connectSql = async () => {
     if (!poolConfig().server || !poolConfig().user || !poolConfig().password) {
-        throw new Error('.env file is not valid or is not exsist.')
+        throw notifictions.find(n => n.status == 509)
     }
     if (!pool) {
         

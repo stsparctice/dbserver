@@ -14,13 +14,8 @@ const convertToSQLString = (value) => {
                 sqlStrings.push(`char(${split[i].charCodeAt()})`)
             }
         }
-
         const concat = `concat(${sqlStrings.join(',')})`
-
         return concat
-
-
-
     }
 
     return `N'${value}'`

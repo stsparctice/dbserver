@@ -13,32 +13,36 @@ const { deleteSQLData, dropSQLTables } = require('./services/sql/sql-helpers');
 const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 
 // connectMng().then(_ => {
-console.log('connect to mongo')
-connectSql().then(_ => {
-    createTables().then(_ => {
-        createProcedures().then(_ => {
-            createSpecialProcedures().then(_ => {
-                insertDataToSql();
-                app.listen(PORT, HOST, () => {
-                    console.log(`http://${HOST}:${PORT}`);
-                });
+    console.log('connect to mongo')
+    connectSql().then(_ => {
+        createTables().then(_ => {
+            createProcedures().then(_ => {
+                createSpecialProcedures().then(_ => {
+                    insertDataToSql();
+                    app.listen(PORT, HOST, () => {
+                        console.log(`http://${HOST}:${PORT}`);
+                    });
+                }, (err) => {
+                    console.log(err.message, 'from createSpecialProcedures');
+                })
             }, (err) => {
-                console.log(err.message, 'from insertDataToSql');
-            })
+                console.log(err.message, 'from createProcedures');
+            });
         }, (err) => {
-            console.log(err.message, 'from createSpecialProcedures');
+            console.log(err.message, 'from createTabels');
         });
+
     }, (err) => {
-        console.log(err.message, 'from createProcedures');
+        console.log(err.message, 'from connectSql');
     });
 
-}, (err) => {
-    console.log(err.message, 'from createTabels');
-    // });
+    // deleteData();
+    // dropSQLTables();
+    // dropMongoDBCollection();
+// });
 
-}, (err) => {
-    console.log(err.message, 'from connectSql');
-});
+
+
 // });
 const server = http.createServer(app)
 
