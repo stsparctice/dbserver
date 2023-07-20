@@ -8,7 +8,7 @@ const { routerLogger } = require('../utils/logger');
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
 const { ObjectId } = require('mongodb');
 router.use(express.json());
-router.use(routerLogger())
+// router.use(routerLogger())
 
 router.get('/auto_complete/:table/:column/:word/:condition', async (req, res) => {
     let obj = {}
@@ -209,6 +209,7 @@ router.post('/distinct', async (req, res) => {
 
 router.post('/aggregate', async (req, res) => {
     try {
+        console.log('aggregate #####',req.body);
         const response = await getDetailsWithAggregateMng(req.body);
         res.status(200).send(response);
     }

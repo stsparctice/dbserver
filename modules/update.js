@@ -53,7 +53,7 @@ async function startt(obj) {
         console.log('%%%%%%%%%%%%%%%%%%',{ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.createIndex();
-        console.log('rrrrrrrrrrrrrrrrrrr');
+        console.log('rrrrrrrrrrrrrrrrrrr',response);
         return response;
     }
     catch {

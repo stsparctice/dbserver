@@ -7,7 +7,7 @@ const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules
 const { parseColumnName, parseTableName } = require('../utils/parse_name')
 
 router.use(express.json())
-router.use(routerLogger())
+// router.use(routerLogger())
 
 router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
     try {

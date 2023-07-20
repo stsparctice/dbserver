@@ -71,10 +71,26 @@ class MongoDBOperations {
     };
 
     async aggregate(array = []) {
+        // array=[{
+        //     $geoNear:
+        //     {
+        //         near:
+        //         {
+        //             type: "Point",
+        //             coordinates: { lat: 31.2712026, lng: 35.2130481 }
+        //         },
+        //         distanceField: "calculatedDist",
+        //         maxDistance: 4500,
+        //         spherical: true
+        //     }
+        // },
+        // {
+        //     $match: { $expr: { $gte: [radius, calculatedDist], type: 'raduis' } }
+        // }]
         try {
-            console.log("tttttttttttttttt",array);
-            const result = await getClient().db(this.dbName).collection(this.collectionName).aggregate(array)
-            console.log("*-*-*-*-*-*-*-*-",result);
+            console.log("tttttttttttttttt");
+            const result = await getClient().db(this.dbName).collection(this.collectionName).getIndexes()
+            console.log("*-*-*-*-*-*-*-*-", result);
             return result;
         }
         catch (error) {
@@ -84,7 +100,8 @@ class MongoDBOperations {
 
     async createIndex() {
         try {
-            const result = await getClient().db(this.dbName).collection(this.collectionName).createIndex({ point: "2dsphere" }, { partialFilterExpression:{ type: 'point' }  });
+            const result = await getClient().db(this.dbName).collection('areas').createIndex({ point: "2dsphere" },{ partialFilterExpression: { type: { $in: ['point', 'radius', 'city'] } } })
+            // await getClient().db(this.dbName).collection('areas').createIndex({ point: "2dsphere" },{ partialFilterExpression: { type: { $in: ['point', 'radius', 'city'] } } })
             console.log('create index---', result);
             return result;
         }

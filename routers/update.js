@@ -22,6 +22,7 @@ router.post('/update', parseTableName(), parseColumnName(), async (req, res) => 
 router.post('/createIndex', async (req,res) => {
     console.log('ccrree',req.body);
     const y = await startt(req.body)
+    console.log(y);
     res.send(y.data)
 })
 router.post('/updateOne', async (req, res) => {

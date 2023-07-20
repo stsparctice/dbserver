@@ -112,7 +112,6 @@ async function getDetailsWithDistinct(obj) {
 
 async function getDetailsWithAggregateMng(obj) {
     try {
-        console.log("__________________",obj.aggregate,obj.collection);
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.aggregate(obj.aggregate);
         return response;
