@@ -1,72 +1,65 @@
-const { update, updateOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
-const { parseSQLTypeForColumn, getSqlTableColumnsType } = require('./config/config')
+const { update, updatOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
+// const { parseSQLTypeForColumn, getSqlTableColumnsType } = require('./config/config')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
+const { getPrimaryKeyField } = require('./public');
 const mongoCollection = MongoDBOperations;
+const notifications = require('../config/serverNotifictionsConfig.json')
 
 async function updateSql(obj) {
     try {
-        // console.log({ obj })
-        let tabledata = getSqlTableColumnsType(obj.tableName)
-
-        if (obj.condition) {
-            const entries = Object.entries(obj.condition)
-            console.log({ entries });
-            const conditionList = entries.map(c =>
-                `${c[0]} = ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, tabledata)}`
-            )
-            if (entries.length > 1)
-                obj.condition = conditionList.join(' AND ')
-        }
-        else {
-            obj.condition = "1 = 1";
-        }
-        // console.log({ l: obj.condition })
         const result = await update(obj);
         console.log({ result });
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
 async function updateOneSql(obj) {
-    const result = await updateOne(obj);
-    return result;
-};
-
-async function updateMng(obj) {
     try {
-        console.log({ obj })
+        const primarykey = getPrimaryKeyField(obj.entityName);
+        console.log({primarykey});
+        if (!obj.condition[primarykey]) {
+            throw notifications.find(n => n.status === 400)
+        }
+        const result = await update(obj);
+        return result;
+    }
+    catch (error) {
+        throw error
+    }
+};
+async function updateOne(obj) {
+    try {
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.updateOne(obj);
         console.log('rrrrrrrrrrrrrrrrrrr');
         return response;
     }
-    catch {
-        throw new Error('Update falid.')
+    catch (error) {
+        throw error
     }
 };
 
-async function startt(obj) {
+async function updateMany(obj) {
     try {
-        console.log('%%%%%%%%%%%%%%%%%%',{ obj })
         mongoCollection.setCollection(obj.collection);
-        const response = await mongoCollection.createIndex();
-        console.log('rrrrrrrrrrrrrrrrrrr',response);
+        const response = await mongoCollection.updateMany(obj);
         return response;
     }
-    catch {
-        throw new Error('Update falid.')
+    catch (error) {
+        throw error
     }
-};
+}
+
 async function updateQuotationSql(obj) {
     try {
         const result = await updateQuotation(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -75,8 +68,8 @@ async function updateSuppliersBranchesSql(obj) {
         const result = await updateSuppliersBranches(obj);
         return result;
     }
-    catch {
-        throw new Error('Update faild.')
+    catch (error) {
+        throw error
     }
 };
 
@@ -86,19 +79,23 @@ async function dropCollectionMng(obj) {
         const response = await mongoCollection.dropCollection(obj);
         return response;
     }
-    catch {
-        throw new Error('Drop faild.')
+    catch (error) {
+        throw error
     }
 };
 
 async function dropDocumentMng(obj) {
-    const { data, collection } = obj;
-    console.log("data in dropDocumentMng", data);
-    mongoCollection.setCollection(collection);
-    const response = await mongoCollection.dropOneDocument(data);
-    console.log({ response })
-    return response;
+    try {
+
+        const { data, collection } = obj;
+        mongoCollection.setCollection(collection);
+        const response = await mongoCollection.dropOneDocument(data);
+        return response;
+    }
+    catch (error) {
+        throw error
+    }
 };
 
 
-module.exports = {startt, updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateMng, dropCollectionMng, dropDocumentMng };
+module.exports = { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateOne, updateMany, dropCollectionMng, dropDocumentMng };

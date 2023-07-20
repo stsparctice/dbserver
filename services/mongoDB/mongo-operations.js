@@ -1,36 +1,51 @@
 require('dotenv').config();
 const { getClient } = require('./mongo-connection');
 const { MONGO_DB } = process.env;
-const config = require('../../config.json');
+const config = require('../../config/DBconfig.json');
+const notifications = require('../../config/serverNotifictionsConfig.json')
 
 class MongoDBOperations {
 
     constructor(collectionName, dbName = MONGO_DB) {
         this.collectionName = collectionName;
         this.dbName = dbName;
-        this.collections = config[1]['mongodb'];
+        this.collections = config.find(({ database }) => database === "mongoDB").collections;
     };
 
     async setCollection(collection) {
-        this.collectionName = collection
+        this.collectionName = collection;
     };
 
     async insertOne(obj = null) {
         try {
             let result;
             if (obj) {
+                console.log({ obj });
                 result = await getClient().db(this.dbName).collection(this.collectionName).insertOne(obj);
                 result = result.insertedId;
             }
             else {
-                throw new Error('Object is not valid.')
+                throw notifications.find(n => n.status == 400)
             }
-            return result.toString();
+            return result;
         }
         catch (error) {
-            throw (error)
+            throw error
         }
     };
+    async insertMany(array) {
+        try {
+            const result = await getClient().db(this.dbName).collection(this.collectionName).insertMany(array);
+            if (result)
+                return result.insertedIds;
+            else {
+                throw notifications.find(n => n.status === 500);
+            }
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 
     async find(obj = {}) {
 
@@ -38,7 +53,7 @@ class MongoDBOperations {
         sort[obj.sort] = 1;
         // console.log('hi')
         try {
-            const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.filter).sort(sort).toArray();
+            const result = await getClient().db(this.dbName).collection(this.collectionName).find(obj.condition).sort(sort).toArray();
             // console.log({ result })
             return result;
         }
@@ -55,14 +70,24 @@ class MongoDBOperations {
             console.log('after', result);
             return result;
         }
-        catch (error) {
-            throw (error)
+        catch {
+            throw notifications.find(n => n.status == 400)
         }
     };
 
-    async countDocuments() {
+    async updateMany(obj) {
         try {
-            const result = await getClient().db(this.dbName).collection(this.collectionName).countDocuments();
+            const result = await getClient().db(this.dbName).collection(this.collectionName).updateMany(obj.filter, obj.set);
+            return result;
+        }
+        catch (error) {
+            throw error
+        }
+    }
+
+    async countDocuments(query={}) {
+        try {
+            const result = await getClient().db(this.dbName).collection(this.collectionName).countDocuments(query);
             return result;
         }
         catch (error) {
@@ -88,9 +113,7 @@ class MongoDBOperations {
         //     $match: { $expr: { $gte: [radius, calculatedDist], type: 'raduis' } }
         // }]
         try {
-            console.log("tttttttttttttttt");
             const result = await getClient().db(this.dbName).collection(this.collectionName).getIndexes()
-            console.log("*-*-*-*-*-*-*-*-", result);
             return result;
         }
         catch (error) {
@@ -179,12 +202,7 @@ class MongoDBOperations {
                         type: "Point", coordinates: Object.values(point.point)
                     }
                 });
-                // result = result.insertedId;
-                console.log({ insertresult })
                 const arrayPoints = array.map((p) => Object.values(p))
-                console.log({ arrayPoints })
-                // console.log({'104':[arrayPoints[104], arrayPoints[105]]})
-                // console.log({'104':[arrayPoints[106], arrayPoints[107]]})
                 const searchresult = await getClient().db(this.dbName).collection('points').find(
                     {
                         pos: {
@@ -193,18 +211,13 @@ class MongoDBOperations {
                                     type: "MultiPolygon",
                                     coordinates: [
                                         [arrayPoints]
-                                    ],
-                                    // crs: {
-                                    //     type: "name",
-                                    //     properties: { name: "urn:x-mongodb:crs:strictwinding:EPSG:4326" }
-                                    // }
+                                    ]
                                 }
                             }
                         }
 
                     }
                 ).toArray()
-                console.log({ searchresult })
                 await this.dropCollection('points')
                 return searchresult
             }

@@ -1,4 +1,4 @@
-const config = require('../config.json');
+const config = require('../config/DBconfig.json');
 const fs = require('fs');
 
 async function updateConfigInFiled(tableName, columnObj) {
@@ -7,7 +7,7 @@ async function updateConfigInFiled(tableName, columnObj) {
         if (m.database.includes('sql')) {
             const index = m.dbobjects[1].list.findIndex(item => item.MTDTable.name.name == tableName)
             m.dbobjects[1].list[index].columns.push(columnObj)
-            fs.writeFileSync('config2.json', JSON.stringify(n));
+            fs.writeFileSync('config.json', JSON.stringify(n));
         }
     })
 }
