@@ -1,0 +1,21 @@
+[
+    {
+        "entity": "pricelist",
+        "tables": []
+    },
+    {
+        "entity": "areas",
+        "tables": [],
+        "collections": []
+    },
+    {
+        "entity": "leads",
+        "tables": [
+            "Leads",
+            "moreProductsItems",
+            "PouringsTypes",
+            "Orderers",
+            "StatusesLead"
+        ]
+    }
+]

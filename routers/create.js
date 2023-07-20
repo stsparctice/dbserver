@@ -1,57 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const { createSql, insertManySql, createMng, creatSqlTable } = require('../modules/create');
+const { createSql, insertManySql, insertOne, insertMany } = require('../modules/create');
 const { routerLogger } = require('../utils/logger');
 
-const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
-const { parseColumnName, parseTableName } = require('../utils/parse_name')
+// const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
+const { parseColumnName, parseTableName, parseColumnNameMiddleware, parseListOfColumnsName } = require('../utils/parse_name');
+const { routeEntityByItsType } = require('../utils/route_entity');
+const { checkDataIsUnique } = require('../utils/checkunique')
 
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/create', parseTableName(), parseColumnName(), async (req, res) => {
-    // try {
-    //     const result = await createSql(req.body);
-    //     if (result)
-    //         res.status(201).send(result);
-    //     else
-    //         res.status(500).send(false)
-    // }
-    // catch(error){
-    //     res.status(500).send(error.message)
-    // }
-    console.log("i am in roter");
-    console.log(req.body);
-    const result = await createSql(req.body);
-    if (result) {
-        res.status(201).send(result);
-    }
-    else {
-        res.status(500).send(false)
-    }
-
-
-});
-
-router.post('/createManySql', parseTableName(),  async (req, res) => {
-    // const result = await insertManySql(req.body);
-    // res.status(200).send(result);
-    
+router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        const result = await insertManySql(req.body);
-        res.status(201).send(result);
+        console.log(req.body,' req.body')
+        const response = await routeEntityByItsType(req.body, createSql, insertOne);
+        res.status(201).send(response);
     }
     catch (error) {
-        console.log(error);
+        console.log(error.description);
         res.status(500).send(error.message);
-
     }
 });
 
-
-router.post('/insertone', async (req, res) => {
-    const result = await createMng(req.body);
-    res.status(200).send(result);
+router.post('/createmany', parseTableName(), parseListOfColumnsName(),checkDataIsUnique(), async (req, res) => {
+    try {
+        
+        const response = await routeEntityByItsType(req.body, insertManySql, insertMany);
+        res.status(201).send(response);
+    }
+    catch (error) {
+        console.log(error.description);
+        res.status(error.status).send(error.message);
+    }
 });
 
-module.exports = router
+module.exports = router;

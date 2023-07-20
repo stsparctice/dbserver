@@ -1,0 +1,137 @@
+[
+    {
+        "message": "Ok",
+        "status": 200,
+        "description": "The request succeeded."
+    },
+    {
+        "message": "Created",
+        "status": 201,
+        "description": "The request succeeded, and a new resource was created as a result."
+    },
+    {
+        "message": "Accepted",
+        "status": 202,
+        "description": "The request has been received but not yet acted upon."
+    },
+    {
+        "message": "No Content",
+        "status": 204,
+        "description": "There is no content to send for this request, but the headers may be useful."
+    },
+    {
+        "message": "Reset Content",
+        "status": 205,
+        "description": "Tells the user agent to reset the document which sent this request."
+    },
+    {
+        "message": "Moved Permantly",
+        "status": 301,
+        "description": "The URL of the requested resource has been changed permanently. The new URL is given in the response."
+    },
+    {
+        "message": "Not Modified",
+        "status": 304,
+        "description": "This is used for caching purposes. It tells the client that the response has not been modified, so the client can continue to use the same cached version of the response."
+    },
+    {
+        "message": "Bad Requeste",
+        "status": 400,
+        "description": "The server cannot or will not process the request."
+    },
+    {
+        "message": "Forbidden",
+        "status": 403,
+        "description": "The client does not have access rights to the content;"
+    },
+    {
+        "message": "Not Found",
+        "status": 404,
+        "description": "The server cannot find the requested resource. In the browser, this means the URL is not recognized. In an API, this can also mean that the endpoint is valid but the resource itself does not exist."
+    },
+    {
+        "message": "Method Not Allowed",
+        "status": 407,
+        "description": "The request method is known by the server but is not supported by the target resource. For example, an API may not allow calling DELETE to remove a resource."
+    },
+    {
+        "message": "Request Timeout",
+        "status": 408,
+        "description": "This response is sent on an idle connection by some servers, even without any previous request by the client. It means that the server would like to shut down this unused connection. "
+    },
+    {
+        "message": "Conflict",
+        "status": 409,
+        "description": "This response is sent when a request conflicts with the current state of the server. "
+    },
+    {
+        "message": "Misdirected Request",
+        "status": 421,
+        "description": "The request was directed at a server that is not able to produce a response. This can be sent by a server that is not configured to produce responses for the combination of scheme and authority that are included in the request URI."
+    },
+    {
+        "message": "Locked",
+        "status": 423,
+        "description": "The resource that is being accessed is locked."
+    },
+    {
+        "message": "Failed Dependency",
+        "status": 424,
+        "description": "The request failed due to failure of a previous request."
+    },
+    {
+        "message": "Too Many Requets",
+        "status": 429,
+        "description":"The user has sent too many requests in a given amount of time ('rate limiting')."
+    },
+    {
+        "message":"Internal Server Error",
+        "status":500,
+        "description":"The server has encountered a situation it does not know how to handle."
+    },
+    {
+        "message":"Bad Gateway",
+        "status":502,
+        "description":"This error response means that the server, while working as a gateway to get a response needed to handle the request, got an invalid response."
+    },
+    {
+        "message":"Gateway Timeout",
+        "status":504,
+        "description":"This error response is given when the server is acting as a gateway and cannot get a response in time."
+    },
+    {
+        "message":"Loop Detected (WebDAV)",
+        "status":508,
+        "description":"The server detected an infinite loop while processing the request."
+    },
+    {
+        "message":"Fix .env File",
+        "status":509,
+        "description":".env file is not valid or does not exsist."
+    },
+    {
+        "message":"Check Table Name",
+        "status":512,
+        "description":""
+    },
+    {
+        "message":"Check Type Name",
+        "status":513,
+        "description":""
+    },
+    {
+        "message":"Check Column Name",
+        "status":514,
+        "description":""
+    },
+    {
+        "message":"Check Field Name",
+        "status":515,
+        "description":""
+    },
+    {
+        "message":"Check Entity Name",
+        "status":516,
+        "description":""
+    }
+]
