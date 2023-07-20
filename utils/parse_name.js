@@ -10,7 +10,7 @@ function parseTableName() {
         }
         catch (error) {
             console.log(error.description)
-            res.status(500).send(error.message);
+            res.status(error.status).send(error.message);
 
         }
     }
@@ -74,7 +74,7 @@ const parseListOfColumnsName = () => {
 const parseDBname = (entityName) => {
     let sql = config.find(db => db.database === DBType.SQL);
     let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
-    let table = tables.find(table => table.MTDTable.name.name.toLowerCase() == entityName.toLowerCase() || table.MTDTable.name.sqlName.toLowerCase() == entityName.toLowerCase());
+    let table = tables.find(table => table.MTDTable.name.name == entityName);
     if (table) {
         return { type: DBType.SQL, entityName: table.MTDTable.name.sqlName }
     }
