@@ -31,5 +31,8 @@
     "url": "U:\\\\Buyton project\\\\node"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.6.1"
+  }
 }

@@ -15,7 +15,7 @@ const operators = {
 const convertToSqlCondition = (table, condition) => {
     const tableName = table.MTDTable.name.sqlName;
     const tablealias = getAlias(table.MTDTable.name.sqlName);
-    const buildQuery = (condition, operator, sign) => {
+    const buildQuery = (condition, operator, sign='=') => {
         try {
             let query = ``
             for (let key in condition) {
@@ -60,8 +60,9 @@ const convertToSqlCondition = (table, condition) => {
 
 
     }
-    const buildOrAndGteLte = (array, operator, sign) => {
+    const buildOrAndGteLte = (array, operator, sign = '=') => {
         let query = ``;
+        console.log({array,operator, sign})
         for (let item of array) {
             if (array.indexOf(item) === array.length - 1) {
                 query = `${query} ${buildQuery(item, "", sign)}`
@@ -69,6 +70,7 @@ const convertToSqlCondition = (table, condition) => {
             else
                 query = `${query} ${buildQuery(item, operator, sign)}`
         }
+        console.log({query})
         return query;
     }
     const buildBetween = (between) => {
@@ -77,11 +79,12 @@ const convertToSqlCondition = (table, condition) => {
         val[key] = ''
         let column = Object.keys(parseColumnName(val, tableName))
         const query = `${tablealias}.${column} BETWEEN ${between[0][key]} AND ${between[1][key]}`;
+        console.log({query})
         return query;
 
     }
     const buildLike = (like) => {
-        
+
         const key = Object.keys(like[0]);
         let val = {};
         val[key] = '';
@@ -96,6 +99,7 @@ const convertToSqlCondition = (table, condition) => {
         }, "")
         let column = Object.keys(parseColumnName(val, tableName))[0];
         const query = `${tablealias}.${column} LIKE '${str}' `;
+        console.log({query})
         return query;
     }
     let result = buildQuery(condition, "AND");
@@ -116,7 +120,6 @@ const convertToMongoFilter = (condition) => {
 }
 
 const removeIndexes = (str) => {
-    console.log({ str })
     let s = '';
     for (let i = 0; i < str.length; i++) {
         if (str[i] >= '0' && str[i] <= '9')
@@ -125,45 +128,88 @@ const removeIndexes = (str) => {
     }
     return s;
 }
-const convertQueryToObject = (query) => {
-    // דוגמאות לשימוש בcondition 
-    //  {"condition":{"LIKE":[{"OrdererName":"*37"},{"OrdererName":"י"},{"OrdererName":"*37"}]}}
-    // {condition:{"AND":[{racheli:1},{michali:2},OR:[{sarit:5},{bilha:25},{BETWEEN:{michal:5,michal:25}}]],"LIKE":[{miri:('%').charCodeAt()},{miri:"א"}]}}
-    let obj = {}
-    let pointer = [obj];
-    let i = 0;
-    const convert = async (key, value) => {
-        console.log({ key, value })
-        if (key.includes('start')) {
-            pointer[i][value] = []
-            if (i == pointer.length - 1)
-                pointer.push(pointer[i][value])
-            else
-                pointer[i + 1] = pointer[i][value]
-            i++;
-            return;
-        }
-        if (key.includes('end')) {
-            i--;
-            return;
-        }
-        else {
-            let object = {}
-            object[removeIndexes(key)] = value
-            pointer[i].push(object)
-            return;
+// const convertQueryToObject = (query) => {
+//     // דוגמאות לשימוש בcondition 
+//     //  {"condition":{"LIKE":[{"OrdererName":"*37"},{"OrdererName":"י"},{"OrdererName":"*37"}]}}
+//     // {condition:{"AND":[{racheli:1},{michali:2},OR:[{sarit:5},{bilha:25},{BETWEEN:{michal:5,michal:25}}]],"LIKE":[{miri:('%').charCodeAt()},{miri:"א"}]}}
+//     // and the simple condition doesnt work - condition:{"miri": "x"}
+//     let obj = {}
+//     // let pointer = [];
+//     let i = 0;
+//     const convert =  (key, value) => {
+//         if (key.includes('start')) {
+//             pointer[i][value] = []
+//             if (i == pointer.length - 1)
+//                 pointer.push(pointer[i][value])
+//             else
+//                 pointer[i + 1] = pointer[i][value]
+//             i++;
+//             return;
+//         }
+//         if (key.includes('end')) {
+//             i--;
+//             return;
+//         }
+//         else {
+//             let object = {}
+//             object[removeIndexes(key)] = value
+//             pointer[i].push(object)
+//             return;
+//         }
+//     }
+//     for (const key in query) {
+//         convert(key, query[key]);
+//     }
+
+//     // let condition = pointer.reduce((obj, item)=>({...obj, ...item}), {})
+//     return obj
+
+// }
+const buildQuertObject = (arr, start, obj) => {
+    console.log({ obj })
+    for (let i = start; i < arr.length; i++) {
+        for (const key in arr[i]) {
+            console.log({ key })
+            switch (key) {
+                case 'start':
+                    obj = {}
+                    obj[arr[i][key]] = buildQuertObject(arr, i + 1, [])
+                    console.log({ obj })
+                    return obj
+                case 'end':
+                    return obj;
+                default:
+                    let newobj = {}
+                    newobj[removeIndexes(key)] = arr[i][key]
+                    obj = [...obj, newobj]
+                    break;
+            }
         }
     }
-    for (const key in query) {
-
-        convert(key, query[key]);
-        // i++
-    }
-
-    // let condition = pointer.reduce((obj, item)=>({...obj, ...item}), {})
     return obj
 
 }
+
+const convertQueryToObject = (query) => {
+    const queryArray = Object.entries(query).reduce((arr, entry) => arr = [...arr, Object.fromEntries([entry])], [])
+    console.log(queryArray)
+    let queryMap = buildQuertObject(queryArray, 0, [])
+    console.log({ queryMap })
+    if(queryMap.length>0){
+        queryMap = queryMap.reduce((reduceObj, q)=>{
+            let key= Object.keys(q)
+            let obj = {}
+            obj[key]= q[key]
+            return {...reduceObj, ...obj}
+        }, {})
+    }
+    console.log(queryMap)
+    return queryMap
+}
+
+
+
+
 
 
 module.exports = { convertToMongoFilter, convertToSqlCondition, convertQueryToObject }

@@ -31,7 +31,7 @@ function parseColumnName(values, table) {
         }
     }
     if (error.length > 0) {
-        let description = `This column: ${error.join(', ')} does not exsist.`
+        let description = `This column: ${error.join(', ')} does not exist.`
         error = notifications.find(n => n.status === 514)
         error.description = description
         throw error
@@ -74,7 +74,7 @@ const parseListOfColumnsName = () => {
 const parseDBname = (entityName) => {
     let sql = config.find(db => db.database === DBType.SQL);
     let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
-    let table = tables.find(table => table.MTDTable.name.name == entityName);
+    let table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);
     if (table) {
         return { type: DBType.SQL, entityName: table.MTDTable.name.sqlName }
     }
@@ -84,7 +84,7 @@ const parseDBname = (entityName) => {
         return { type: DBType.MONGO, entityName: collection.mongoName };
     }
     else {
-        let description = `The entity name ${entityName} not exist`
+        let description = `The entity name ${entityName} does not exist`
         let error = notifications.find(n => n.status === 516)
         error.description = description
         throw error;
