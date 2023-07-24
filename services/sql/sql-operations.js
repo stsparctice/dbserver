@@ -1,11 +1,13 @@
 require('dotenv').config();
 
-const { getPool } = require('./sql-connection');
+const { getPool, newTransaction } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const {  getTableFromConfig } = require('../../modules/config/config')
-const {getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias} = require('../../modules/public')
+const { getTableFromConfig, DBType } = require('../../modules/config/config')
+const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, getSqlTableColumnsType, parseSQLType } = require('../../modules/public')
 const notifictions = require('../../config/serverNotifictionsConfig.json');
 const { convertToSqlCondition } = require('../../utils/convert_condition');
+const { parseDBname, parseColumnName } = require('../../utils/parse_name');
+const mssql = require('mssql');
 
 if (!SQL_DBNAME) {
      throw notifictions.find(n => n.status == 509)
@@ -45,7 +47,7 @@ const insertColumn = async function (obj) {
      // console.log(obj);
      try {
           _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
-     (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName} AND COLUMN_NAME=${OBJ.columns.name}') 
+     (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName} AND COLUMN_NAME=${obj.columns.name}') 
      ALTER TABLE ${obj.tableName} ADD ${obj.column.name} ${obj.column.type}
      ELSE PRINT('NO')`)
           return 'success_column'
@@ -109,7 +111,53 @@ const readAll = async function (obj) {
           throw error
      }
 };
+const transactionCreate = async (data) => {
+     const { statement, transaction } = await newTransaction()
+     statement.input('db', mssql.NVarChar(50))
+     try {
+          await transaction.begin()
 
+          for (let record of data) {
+               let dbObject = parseDBname(record.entityName)
+               let { type, entityName } = dbObject
+               if (type === DBType.SQL) {
+                    let tabledata = getSqlTableColumnsType(entityName)
+                    let primarykey = getPrimaryKeyField(entityName)
+                    record.values = record.values.map(obj => parseColumnName(obj, entityName))
+
+                    for (let iterator of record.values) {
+                         let arr = parseSQLType(iterator, tabledata)
+                         try {
+                              console.log(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
+                              console.log({ statement })
+                              await statement.prepare(`USE @db INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
+                              console.log({ statement })
+                              await statement.execute({ 'db': SQL_DBNAME })
+                              await statement.unprepare();
+                         }
+                         finally {
+                              // await statement.unprepare();
+                         }
+                         // await statement.unprepare();
+                    }
+                    console.log(transaction);
+               }
+               await transaction.commit()
+
+
+          }
+          if (type === DBType.MONGO) {
+
+          }
+
+     }
+
+     catch (error) {
+          console.log({ error });
+          await transaction.rollback();
+     }
+
+}
 const join = async (query = "") => {
      try {
           const result = await getPool().request().query(query.trim());
@@ -152,11 +200,11 @@ const countRows = async function (obj) {
      }
 }
 
-async function drop(name){
+async function drop(name) {
      _ = await getPool().request().query(`use ${SQL_DBNAME}
      DROP TABLE ${name}`);
 }
-async function updateColumn(obj){
+async function updateColumn(obj) {
      console.log('update column');
      _ = await getPool().request().query(`use ${SQL_DBNAME}
      UPDATE ${obj.table}
@@ -174,5 +222,6 @@ module.exports = {
      createNewTable,
      insertColumn,
      drop,
-     updateColumn
+     updateColumn,
+     transactionCreate
 }

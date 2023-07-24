@@ -3,7 +3,7 @@ const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
 const { readJoin, getTableFromConfig } = require('./config/config');
 const { getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, getAlias, getDefaultColumn, getColumnAlias } = require('./public');
-const { viewConnectionsTables, autoCompleteQuery } = require('../services/sql/sql-queries')
+const { viewConnectionsTables, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
 const { convertToSqlCondition } = require('../utils/convert_condition');
 
 
@@ -128,40 +128,51 @@ async function readWithJoin(tableName, column) {
 
 async function connectTables(obj) {
     try {
-
         const query = viewConnectionsTables(obj);
         const values = await join(query);
-
-        const result = mapEntity(values);
+        const res = await selectReferenceColumn(values, obj.tableName);
+        const result = mapEntity(res);
         return result;
     }
     catch (error) {
         throw error
     }
 }
-const selectReferenceColumn = (values, tableName) => {
-    // אני באמצע הפונקציה והיא תקועה פה נא לא לגעת בה בבקשה 
+const selectReferenceColumn = async (values, tableName) => {
     const columnReference = getReferencedColumns(tableName)
     let tablesJoin = []
     columnReference.map(({ ref }) => {
-        tablesJoin = [...tablesJoin, ...values.reduce((state, val) => { return state.includes(parseDBname(val[ref]).entityName) ? [...state] : [...state, parseDBname(val[ref]).entityName] }, [])];
+        tablesJoin = [...tablesJoin, ...values.reduce((state, val) => val[ref] !== null ? state.includes(parseDBname(val[ref]).entityName) ? [...state] : [...state, parseDBname(val[ref]).entityName] : [...state], [])];
     });
-    console.log({ tablesJoin });
-    const  alias = getAlias(tableName);
-    let join = `${tableName}`;
+    const alias = getAlias(tableName);
+    let query = `${tableName} ${alias}`;
     let columns = ``
     columnReference.map(({ name, ref }) => {
-        columns = `${alias}.${name},${alias}.${ref}`
+        columns = `${alias}.${getPrimaryKeyField(tableName)}, ${alias}.${name}, ${alias}.${ref}`
         tablesJoin.map((table) => {
             const currentAlias = getAlias(table);
             const defaultColumn = getDefaultColumn(table);
             const primaryKey = getPrimaryKeyField(table);
-            columns = `${columns},${currentAlias}.${primaryKey} AS FK_${getColumnAlias(table,primaryKey)} ,${currentAlias}.${defaultColumn} AS FK_${getColumnAlias(table,defaultColumn)}`;
-            join = `${join} LEFT JOIN ${currentAlias} ON ${alias}.${name} = ${currentAlias}.${getPrimaryKeyField(table)}`
+            columns = `${columns},${currentAlias}.${primaryKey} AS FK_${currentAlias}_${getColumnAlias(table, primaryKey)} ,${currentAlias}.${defaultColumn} AS FK_${currentAlias}_${getColumnAlias(table, defaultColumn)}`;
+            query = `${query} LEFT JOIN ${table} ${currentAlias} ON ${convertType({ tableName: alias, column: name }, { tableName: currentAlias, column: getPrimaryKeyField(table) })}`
         })
     })
-    join = `SELECT ${columns} FROM ${join}`
+    query = `SELECT ${columns} FROM ${query}`;
+    const res = await join(query);
+    values.map((v) => {
+       const find= res.find((r) => r[getPrimaryKeyField(tableName)] === v[getPrimaryKeyField(tableName)])
+       console.log({find});
+       for(let key in find){
+            if((v[key]===null||v[key]===undefined)&&find[key]!==null){
+                v[key]=find[key]
+            }
+       }
+    })
+    console.log(values);
+    return values;
+
 }
+
 const mapEntity = (values) => {
     try {
         const items = []

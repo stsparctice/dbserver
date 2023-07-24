@@ -6,14 +6,15 @@ const { routerLogger } = require('../utils/logger');
 // const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
 const { parseColumnName, parseTableName, parseColumnNameMiddleware, parseListOfColumnsName } = require('../utils/parse_name');
 const { routeEntityByItsType } = require('../utils/route_entity');
-const { checkDataIsUnique } = require('../utils/checkunique')
+const { checkDataIsUnique } = require('../utils/checkunique');
+const { transactionCreate } = require('../services/sql/sql-operations');
 
 router.use(express.json());
 router.use(routerLogger())
 
 router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        console.log(req.body,' req.body')
+        console.log(req.body, ' req.body')
         const response = await routeEntityByItsType(req.body, createSql, insertOne);
         res.status(201).send(response);
     }
@@ -23,9 +24,9 @@ router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDa
     }
 });
 
-router.post('/createmany', parseTableName(), parseListOfColumnsName(),checkDataIsUnique(), async (req, res) => {
+router.post('/createmany', parseTableName(), parseListOfColumnsName(), checkDataIsUnique(), async (req, res) => {
     try {
-        
+
         const response = await routeEntityByItsType(req.body, insertManySql, insertMany);
         res.status(201).send(response);
     }
@@ -35,6 +36,18 @@ router.post('/createmany', parseTableName(), parseListOfColumnsName(),checkDataI
     }
 });
 
+router.post('/createManyEntities', async (req, res) => {
+    try {
+        const obj = [{ entityName: "Leads", values: [
+            {supplyDate:new Date(2023, 6, 24).toISOString(),ordererCode:1,AddedDate:new Date(2023, 6, 24).toISOString(),Disable:1},
+            {supplyDate:new Date(2023, 6, 24).toISOString(),ordererCode:1,AddedDate:new Date(2023, 6, 24).toISOString(),Disable:0}] }]
+        await transactionCreate(obj)
+        res.send()
+    }
+    catch (error) {
+        throw error
+    }
+})
 
 
 module.exports = router;
