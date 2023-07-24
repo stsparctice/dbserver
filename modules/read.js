@@ -77,7 +77,6 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
 }
 
 async function readFullObjects(tablename) {
-    // console.log('readFullObjects:', tablename)
 
     try {
         const result = await getReferencedColumns(tablename)
@@ -98,7 +97,6 @@ async function readFullObjectsWithRef(table, fullObjects) {
         value[`${fullObjects.name}`] = await read({ tableName: `${value[`${fullObjects.ref}`]}`, columns: '*', condition: `${await getPrimaryKeyField(value[`${fullObjects.ref}`])}='${value[fullObjects.name]}'` })
         return value;
     }
-    // console.log({ answer });
     return answer
 }
 

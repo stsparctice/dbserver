@@ -3,7 +3,7 @@ async function searchPointIntoArea(data, point) {
     if (data[0].areas[0].location != undefined) {
         //point and radius
         const result = await mongo_collection_geo.geoWithinInCircle(data[0].areas[0].location.coordinates, data[0].areas[0].radius)
-        console.log("result in circle", result);
+        // console.log("result in circle", result);
 
         if (result.length > 0) {
             return true
@@ -15,14 +15,14 @@ async function searchPointIntoArea(data, point) {
     else {
         //polygon
         const result = await mongo_collection_geo.geoWithInPolygon(data[0].areas[0].coordinates)
-        console.log("result in polygon", result);
+        // console.log("result in polygon", result);
 
         if (result.length > 0) {
-            console.log("good!!!!!!!!!!");
+            // console.log("good!!!!!!!!!!");
             return true
         }
         else {
-            console.log("bad!!!!!!!!!!");
+            // console.log("bad!!!!!!!!!!");
             return false
         }
     }
