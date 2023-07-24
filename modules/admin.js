@@ -11,24 +11,18 @@ async function updateConfigInFiled(tableName, columnObj) {
         }
     })
 }
+// async function updateConfig2(object) {
+//     let n = config
+//     let i = n.find(m => {
+//         if (m.database.includes('sql')) {
+//             m.dbobjects[1].list.push(object)
+//         }
+//     })
 
+//     // fs.writeFileSync('configCreate.json', JSON.stringify(n))
+//     fs.writeFileSync('config.json', JSON.stringify(n))
 
-async function updateConfig2(object) {
-    let n = config
-    let i = n.find(m => {
-        if (m.database.includes('sql')) {
-            m.dbobjects[1].list.push(object)
-        }
-    })
-
-    // fs.writeFileSync('configCreate.json', JSON.stringify(n))
-    fs.writeFileSync('config.json', JSON.stringify(n))
-
-};
-
-
-
-
+// };
 async function updateConfig(object) {
     if (object.db === 'sql') {
         let db = config.find(db => db[object.db] !== undefined)
@@ -59,5 +53,6 @@ async function updateConfig(object) {
 
     }
 };
+// updateConfig2
 
-module.exports = { updateConfig ,updateConfigInFiled,updateConfig2};
+module.exports = { updateConfig ,updateConfigInFiled,};

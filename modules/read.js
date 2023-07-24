@@ -57,7 +57,6 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
         }
         const result = await read(obj)
-        console.log({ result });
         allData[0].TableName = result
         return allData
     }
@@ -68,7 +67,6 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
 }
 
 async function readFullObjects(tablename) {
-    console.log('readFullObjects:', tablename)
 
     try {
         const result = await getReferencedColumns(tablename)
@@ -89,7 +87,6 @@ async function readFullObjectsWithRef(table, fullObjects) {
         value[`${fullObjects.name}`] = await read({ tableName: `${value[`${fullObjects.ref}`]}`, columns: '*', condition: `${await getPrimaryKeyField(value[`${fullObjects.ref}`])}='${value[fullObjects.name]}'` })
         return value;
     }
-    console.log({ answer });
     return answer
 }
 
@@ -118,7 +115,6 @@ async function readWithJoin(tableName, column) {
 }
 async function connectTables(obj) {
     try {
-        console.log({obj})
         const query = viewConnectionsTables(obj);
         console.log({query})
         const values = await join(query);
@@ -192,14 +188,12 @@ async function getDetailsMng(obj) {
 
 async function getPolygon(obj) {
     try {
-        console.log({ obj })
         mongoCollection.setCollection(obj.collection);
         const response = await mongoCollection.find({ filter: obj.filter });
         // console.log(/)
         let areas = []
         for (let i = 0; i < response.length; i++) {
             const response2 = await mongoCollection.geoWithInPolygon(response[i].points, obj.point)
-            console.log({ response2 })
             if (response2.length > 0) {
                 areas.push(response[i])
             }

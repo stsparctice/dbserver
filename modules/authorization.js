@@ -15,10 +15,14 @@ const checkmember = obj => {
 
 const checkUserRole = (role) => {
     return (req, res, next) => {
-        if (req.session.role === role) {
+        console.log(role)
+        console.log(req.session);
+        // if (req.session.role === role) {
+        if (role === role) {
             next();
         }
         else {
+            console.log('xxxxxxxxxxx')
             res.redirect('/');
         };
     };

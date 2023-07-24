@@ -11,12 +11,12 @@ const DBType = {
 function getTableFromConfig(tableName) {
 
     try {
-        console.log({ tableName });
+        // console.log({ tableName });
         let sql = config.find(db => db.database == 'sql')
         let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
         let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
             tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
-        console.log({ table })
+        // console.log({ table })
         return table
     }
     catch {
@@ -37,7 +37,7 @@ function getCollectionsFromConfig(collectionName) {
 
 function checkEntityType(entityName) {
     let table = getTableFromConfig(entityName);
-    console.log({ table });
+    // console.log({ table });
     if (table) {
         return { entityName, type: 'SQL' }
     }
@@ -77,7 +77,7 @@ function parseSQLType(obj, tabledata) {
                     error.description = `Type: ${type} does not exist.`
                     throw error
                 }
-                console.log(obj[keys[i]]);
+                // console.log(obj[keys[i]]);
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
                 str.push(val);
             }
@@ -97,7 +97,7 @@ function parseSQLType(obj, tabledata) {
 
 function parseSQLTypeForColumn(col, tableName) {
     const tabledata = getSqlTableColumnsType(tableName)
-    console.log({ col });
+    // console.log({ col });
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
     let parse
     try {
@@ -119,7 +119,7 @@ const getAlias = (tableName) => {
 function buildSqlCondition(tableName, condition) {
     try {
         const tablealias = getTableFromConfig(tableName).MTDTable.name.name
-        console.log({ tableName, condition })
+        // console.log({ tableName, condition })
         if (condition) {
             const entries = Object.entries(condition)
             const conditionList = entries.map(c =>
@@ -160,7 +160,7 @@ const readJoin = async (baseTableName, baseColumn) => {
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
-        console.log({ connectionTable });
+        // console.log({ connectionTable });
 
         let join = '';
         if (tableName === myTableNameSQL) {
@@ -175,7 +175,7 @@ const readJoin = async (baseTableName, baseColumn) => {
             for (let table of connectionTable) {
                 let tableJoin = table.MTDTable.name.sqlName;
                 let alias = table.MTDTable.name.name;
-                console.log({ tableJoin });
+                // console.log({ tableJoin });
                 let columns = table.columns.map(({ name }) => { return name });
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
@@ -200,7 +200,7 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    console.log(result);
+    // console.log(result);
     return result;
 }
 
@@ -240,7 +240,7 @@ function getReferencedColumns(tablename) {
 
 }
 function setFullObj(parentTable, refTable) {
-    console.log({ parentTable }, { refTable });
+    // console.log({ parentTable }, { refTable });
     // let table = getTableFromConfig(parentTable)
     // const f = `select ${refTable.ref} from ${parentTable}`
     // let table2 = getTableFromConfig(refTable)
@@ -264,7 +264,7 @@ function getTableAccordingToRef(tablename) {
     // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
     // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
     let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
-    console.log({ columns });
+    // console.log({ columns });
     return columns
 
 }
@@ -342,7 +342,7 @@ function getTabeColumnName(tablename) {
 module.exports = {
 
     getTabeColumnName,
-    getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType, getPrimaryKeyField, viewConnectionsTables,
+    getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType, getPrimaryKeyField,
     getTableFromConfig,
     getSqlTableColumnsType, buildSqlCondition,
     parseSQLType, parseSQLTypeForColumn, readJoin, readRelatedData,

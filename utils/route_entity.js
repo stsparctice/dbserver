@@ -12,7 +12,6 @@ const routeEntityByItsType = async (data, sql, mongo) => {
         if (type === DBType.SQL) {
             data.tableName = dbObject.entityName
             result = await sql(data);
-            console.log({result})
         }
         if (type === DBType.MONGO) {
             if (data.condition) {
@@ -24,7 +23,6 @@ const routeEntityByItsType = async (data, sql, mongo) => {
         return result;
     }
     catch (error) {
-        console.log(error)
         throw error;
     }
 }

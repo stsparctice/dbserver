@@ -5,9 +5,9 @@ const { SQL_DBNAME } = process.env;
 const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getTableFromConfig } = require('../../modules/config/config')
 const notifictions = require('../../config/serverNotifictionsConfig.json')
 
-if (!SQL_DBNAME) {
-     throw notifictions.find(n => n.status == 509)
-}
+// if (!SQL_DBNAME) {
+//      throw notifictions.find(n => n.status == 509)
+// }
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
@@ -18,7 +18,6 @@ const create = async function (obj) {
      //      .execute(`pro_BasicCreate`);
 
      //      console.log({result})
-     console.log({ tableName, columns, values })
      try {
           const primarykey = getPrimaryKeyField(tableName)
           const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
@@ -30,9 +29,6 @@ const create = async function (obj) {
      }
 
 }
-
-
-
 // obj:
 // {
 //      "tableName": "clients",
@@ -59,9 +55,6 @@ const insertColumn = async function (obj) {
           throw error
      }
 }
-
-
-
 // obj:
 // {
 //      "MTDTable": {
@@ -82,10 +75,8 @@ const insertColumn = async function (obj) {
 //          }
 //      ]
 //  },
-
 const createNewTable = async function (obj) {
      try {
-          // console.log(obj);
           let str = ''
           obj.columns.forEach(element => {
                str += `${element.name} ${element.type},`
@@ -100,7 +91,6 @@ const createNewTable = async function (obj) {
           throw error
      }
 }
-
 const read = async function (obj) {
      try {
           if (!Object.keys(obj).includes("condition")) {
@@ -121,7 +111,6 @@ const read = async function (obj) {
           throw notifictions.find(({ status }) => status == 400);
      }
 };
-
 const readAll = async function (obj) {
      try {
           if (!Object.keys(obj).includes("condition")) {
@@ -136,7 +125,6 @@ const readAll = async function (obj) {
           throw error
      }
 };
-
 const join = async (query = "") => {
      try {
           const result = await getPool().request().query(query.trim());
@@ -149,8 +137,6 @@ const join = async (query = "") => {
           throw error
      }
 };
-
-
 const update = async function (obj) {
      try {
 
@@ -158,7 +144,7 @@ const update = async function (obj) {
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
-          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
+          // console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
@@ -167,7 +153,6 @@ const update = async function (obj) {
           throw error
      }
 };
-
 // const updateOne = async function (obj) {
 //      try {
 //           // const tableName = "tbl_Leads"
@@ -189,7 +174,6 @@ const update = async function (obj) {
 //                .input('serialNumber', Id)
 //                .execute(`pro_UpdateQuotation`);
 //      }
-
 const updateOne = async function (obj) {
      try {
           const { tableName, values, condition } = obj;
@@ -202,7 +186,6 @@ const updateOne = async function (obj) {
           throw notifictions.find(n => n.status == 400)
      }
 };
-
 const updateSuppliersBranches = async function (obj) {
      try {
 
@@ -218,7 +201,6 @@ const updateSuppliersBranches = async function (obj) {
           throw notifictions.find(n => n.status == 400)
      }
 };
-
 const countRows = async function (obj) {
      try {
           const { tableName, condition } = obj;
@@ -253,8 +235,17 @@ const countRows = async function (obj) {
 //      values = values.substring(0, values.length - 2);
 //      return values;
 // };
-
-
+async function drop(tableName){
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     DROP TABLE ${tableName}`);
+     console.log('delat tbl in sql');
+}
+async function updateColumn(obj){
+     console.log('update column');
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     UPDATE ${obj.table}
+     SET ${obj.column} = 1000`);
+}
 module.exports = {
      create,
      read,
@@ -264,5 +255,7 @@ module.exports = {
      countRows,
      join,
      createNewTable,
-     insertColumn
+     insertColumn,
+     drop,
+     updateColumn
 }
