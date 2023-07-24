@@ -60,5 +60,25 @@ const autoCompleteQuery = ({ entity, column }, condition) => {
         throw error
     }
 }
+const convertType = (column1, column2) => {
+    const table1 = getTableFromConfig(parseDBname(column1.tableName).entityName);
+    const current1 = table1.columns.find(({ sqlName }) => sqlName === column1.column);
+    const table2 = getTableFromConfig(parseDBname(column2.tableName).entityName);
+    const current2 = table2.columns.find(({ sqlName }) => sqlName === column2.column);
+    let result = ``
+    if (current1.type.toLowerCase().includes('nvarchar') && current2.type.toLowerCase().includes('int'))
+        result = `${column1.tableName}.${column2.column} = CONVERT(NVARCHAR,${column2.tableName}.${column2.column})`;
+    else {
 
-module.exports = { viewConnectionsTables, autoCompleteQuery };
+        if (current1.type.toLowerCase().includes('int') && current2.type.toLowerCase().includes('nvarchar')) {
+            result = `CONVERT(NVARCHAR,${column1.tableName}.${column1.column}) = ${column2.tableName}.${column2.column}`
+        }
+        else {
+            result=`${column1.tableName}.${column1.column} = ${column2.tableName}.${column2.column}`
+        }
+    }
+    return result;
+
+}
+
+module.exports = { viewConnectionsTables, autoCompleteQuery,convertType };

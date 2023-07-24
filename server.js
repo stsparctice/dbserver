@@ -37,7 +37,7 @@ const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
     });
 
     // deleteData();
-    // dropSQLTables();
+    
     // dropMongoDBCollection();
 // });
 
@@ -50,6 +50,8 @@ const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 >>>>>>> adminDBserver
 
 // });
+
+
 const server = http.createServer(app)
 
 

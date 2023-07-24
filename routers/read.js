@@ -73,7 +73,6 @@ router.get('/readMany/:entityName', async (req, res) => {
 
         }
         const condition = convertQueryToObject(req.query)
-        console.log({ condition })
         let response = await routeEntityByItsType({ entityName: req.params.entityName, topn: n, condition }, connectTables, getDetailsMng);
         res.status(200).send(response)
     }
