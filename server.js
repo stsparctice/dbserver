@@ -37,13 +37,15 @@ const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
     });
 
     // deleteData();
-    // dropSQLTables();
+    
     // dropMongoDBCollection();
 // });
 
 
 
 // });
+
+
 const server = http.createServer(app)
 
 

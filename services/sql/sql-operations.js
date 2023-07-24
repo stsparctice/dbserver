@@ -113,7 +113,7 @@ const readAll = async function (obj) {
 };
 const transactionCreate = async (data) => {
      const { statement, transaction } = await newTransaction()
-     statement.input('db', mssql.NVarChar(50))
+     // statement.input('db', mssql.NVarChar(50))
      try {
           await transaction.begin()
 
@@ -129,10 +129,8 @@ const transactionCreate = async (data) => {
                          let arr = parseSQLType(iterator, tabledata)
                          try {
                               console.log(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
-                              console.log({ statement })
-                              await statement.prepare(`USE @db INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
-                              console.log({ statement })
-                              await statement.execute({ 'db': SQL_DBNAME })
+                              await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
+                              await statement.execute()
                               await statement.unprepare();
                          }
                          finally {
@@ -140,14 +138,14 @@ const transactionCreate = async (data) => {
                          }
                          // await statement.unprepare();
                     }
-                    console.log(transaction);
+                    // console.log(transaction);
                }
                await transaction.commit()
 
 
-          }
-          if (type === DBType.MONGO) {
-
+               if (type === DBType.MONGO) {
+     
+               }
           }
 
      }

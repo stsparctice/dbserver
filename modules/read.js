@@ -129,6 +129,7 @@ async function readWithJoin(tableName, column) {
 async function connectTables(obj) {
     try {
         const query = viewConnectionsTables(obj);
+        console.log({query});
         const values = await join(query);
         const res = await selectReferenceColumn(values, obj.tableName);
         const result = mapEntity(res);
