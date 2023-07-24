@@ -64,7 +64,7 @@ const readJoin = async (baseTableName, baseColumn) => {
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
-        console.log({ connectionTable });
+        // console.log({ connectionTable });
 
         let join = '';
         if (tableName === myTableNameSQL) {
@@ -79,7 +79,7 @@ const readJoin = async (baseTableName, baseColumn) => {
             for (let table of connectionTable) {
                 let tableJoin = table.MTDTable.name.sqlName;
                 let alias = table.MTDTable.name.name;
-                console.log({ tableJoin });
+                // console.log({ tableJoin });
                 let columns = table.columns.map(({ name }) => { return name });
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
@@ -104,7 +104,7 @@ const readJoin = async (baseTableName, baseColumn) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    console.log(result);
+    // console.log(result);
     return result;
 }
 
@@ -128,7 +128,7 @@ function getReferencedColumns(tablename) {
 
 }
 function setFullObj(parentTable, refTable) {
-    console.log({ parentTable }, { refTable });
+    // console.log({ parentTable }, { refTable });
     // let table = getTableFromConfig(parentTable)
     // const f = `select ${refTable.ref} from ${parentTable}`
     // let table2 = getTableFromConfig(refTable)
@@ -152,7 +152,7 @@ function getTableAccordingToRef(tablename) {
     // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
     // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
     let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
-    console.log({ columns });
+    // console.log({ columns });
     return columns
 
 }
