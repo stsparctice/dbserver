@@ -39,7 +39,7 @@ router.post('/createmany', parseTableName(), parseListOfColumnsName(), checkData
 router.post('/createManyEntities', async (req, res) => {
     try {
         const obj = [{ entityName: "Leads", values: [
-            {supplyDate:new Date(2023, 6, 24).toISOString(),ordererCode:1,AddedDate:new Date(2023, 6, 24).toISOString(),Disable:1},
+            {supplyDate:new Date(2023, 6, 24).toISOString(),ordererCode:1,AddedDate:new Date(2023, 6, 24).toISOString(),Disable:0},
             {supplyDate:new Date(2023, 6, 24).toISOString(),ordererCode:1,AddedDate:new Date(2023, 6, 24).toISOString(),Disable:0}] }]
         await transactionCreate(obj)
         res.send()

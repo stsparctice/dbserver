@@ -113,7 +113,7 @@ const readAll = async function (obj) {
 };
 const transactionCreate = async (data) => {
      const { statement, transaction } = await newTransaction()
-     statement.input('db', mssql.NVarChar(50))
+     let result = []
      try {
           await transaction.begin()
 
@@ -128,34 +128,23 @@ const transactionCreate = async (data) => {
                     for (let iterator of record.values) {
                          let arr = parseSQLType(iterator, tabledata)
                          try {
-                              console.log(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
-                              console.log({ statement })
-                              await statement.prepare(`USE @db INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
-                              console.log({ statement })
-                              await statement.execute({ 'db': SQL_DBNAME })
-                              await statement.unprepare();
+                              await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
+                              const ans = await statement.execute();
+                              result = [...result, { tableName: entityName, primaryKey: ans.recordset[0] }]
                          }
                          finally {
-                              // await statement.unprepare();
+                              await statement.unprepare();
                          }
-                         // await statement.unprepare();
                     }
-                    console.log(transaction);
                }
-               await transaction.commit()
-
-
+               await transaction.commit();
           }
-          if (type === DBType.MONGO) {
-
-          }
-
      }
-
      catch (error) {
-          console.log({ error });
           await transaction.rollback();
+          result = []
      }
+     console.log(result);
 
 }
 const join = async (query = "") => {
