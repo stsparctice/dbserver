@@ -7,27 +7,38 @@ const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
 function getTableFromConfig(tableName) {
-
     try {
-        let sql = config.find(db => db.database == 'sql')
-        let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        let table = tables.find(tbl => tbl.MTDTable.name.sqlName.toLowerCase() == tableName.toLowerCase() ||
-            tbl.MTDTable.name.name.toLowerCase() == tableName.toLowerCase())
+        let tables
+        try {
+            let sql = config.find(db => db.database == 'sql')
+            tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+        }
+        catch {
+            let error = notifictaions.find(({ status }) => status === 500)
+            error.description += '(check the config file).'
+            throw error
+        }
+        let table = tables.find(tbl => tbl.MTDTable.name.sqlName == tableName)
+        if (!table) {
+            let error = notifictaions.find(n => n.status == 512)
+            error.description = `Table: ${tableName} does not exsist.`
+            throw error
+        }
         return table
     }
-    catch {
-        let error = notifictaions.find(n => n.status == 512)
-        error.description = `Table: ${tableName} is not exsist.`
+    catch (error) {
         throw error
     }
-
-
-
 }
 
 function getCollectionsFromConfig(collectionName) {
     let mongo = config.find(db => db.database === 'mongoDB');
     let collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
+    if (!collection) {
+        let error = notifictaions.find(n => n.status === 517)
+        error.description = `Collection: ${collectionName} does not exsist.`
+        throw error
+    }
     return collection
 }
 
@@ -97,17 +108,18 @@ const readJoin = async (baseTableName, baseColumn) => {
     return result;
 }
 
-function readRelatedData(tablename, id) {
-    // let sql = config.find(db => db.database == 'sql')
-    // let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-    // let x = tables.find(table => (table.MTDTable.name.name.toLowerCase() == tablename.toLowerCase()))
-}
+
 
 function getReferencedColumns(tablename) {
 
     try {
         const table = getTableFromConfig(tablename)
         let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
+        if (!columns) {
+            let error = notifictaions.find(n => n.status == 514)
+            error.description = `: ${collectionName} does not exsist.`
+            throw error
+        }
         return columns
     } catch (error) {
         throw error
@@ -131,10 +143,10 @@ function setFullObj(parentTable, refTable) {
     // let columns = table.columns.filter(col => col.sqlName == b.ref).map()
 }
 
-function getTables(tablename) {
-    const table = getTableFromConfig(tablename)
-    return table
-}
+// function getTables(tablename) {
+//     const table = getTableFromConfig(tablename)
+//     return table
+// }
 function getTableAccordingToRef(tablename) {
     const table = getTableFromConfig(tablename)
     // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
@@ -219,9 +231,9 @@ module.exports = {
 
     getTabeColumnName,
 
-    getReferencedColumns, getTableAccordingToRef, getTables, setFullObj, convertFieldType,
+    getReferencedColumns, getTableAccordingToRef, setFullObj, convertFieldType,
     getTableFromConfig,
-    readJoin, readRelatedData,
+    readJoin,
     getReferencedColumns, convertFieldType, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn,
     DBType,
     getCollectionsFromConfig,

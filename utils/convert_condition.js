@@ -2,74 +2,106 @@ require('dotenv');
 const { getTabeColumnName } = require('../modules/config/config');
 const { parseSQLTypeForColumn, getAlias } = require('../modules/public')
 const { parseColumnName, parseDBname } = require('./parse_name')
-
+const operators = {
+    AND: "AND",
+    OR: "OR",
+    BETWEEN: "BETWEEN",
+    LIKE: "LIKE",
+    GT: "GT",
+    LT: "LT",
+    GTE: "GTE",
+    LTE: "LTE"
+}
 const convertToSqlCondition = (table, condition) => {
     const tableName = table.MTDTable.name.sqlName;
     const tablealias = getAlias(table.MTDTable.name.sqlName);
-    const buildQuery = (condition, operator) => {
+    const buildQuery = (condition, operator, sign='=') => {
         try {
             let query = ``
             for (let key in condition) {
                 switch (key) {
-                    case 'AND':
-                        query = `${query} (${buildOrAnd(condition[key], "AND")}) ${operator}`;
+                    case operators.AND:
+                        query = `${query} (${buildOrAndGteLte(condition[key], key)}) ${operator}`;
                         break;
-                    case 'OR':
-                        query = `${query} (${buildOrAnd(condition[key], "OR")}) ${operator}`;
+                    case operators.OR:
+                        query = `${query} (${buildOrAndGteLte(condition[key], key)}) ${operator}`;
                         break
-                    case 'BETWEEN':
-                        query = `${query} (${buildBetween(condition[key])}) ${operator}`
+                    case operators.BETWEEN:
+                        query = `${query} (${buildBetween(condition[key])}) ${operator}`;
                         break
-                    case 'LIKE':
-                        query = `${query} (${buildLike(condition[key])}) ${operator}`
-                        break
+                    case operators.LIKE:
+                        query = `${query} (${buildLike(condition[key])}) ${operator}`;
+                        break;
+                    case operators.GT:
+                        query = `${query} (${buildOrAndGteLte(condition[key], "", ">")}) ${operator}`;
+                        break;
+                    case operators.GTE:
+                        query = `${query} (${buildOrAndGteLte(condition[key], "", ">=")}) ${operator}`;
+                        break;
+                    case operators.LTE:
+                        query = `${query} (${buildOrAndGteLte(condition[key], "", "<=")}) ${operator}`;
+                        break;
+                    case operators.LT:
+                        query = `${query} (${buildOrAndGteLte(condition[key], "", "<")}) ${operator}`;
+                        break;
                     default:
                         let val = {}
                         val[key] = ''
-                        let column =  Object.keys(parseColumnName(val, tableName))
-                        query = `${query} ${tablealias}.${column} = ${parseSQLTypeForColumn({ name: key, value: condition[key] }, tableName)} ${operator}`;
+                        let column = Object.keys(parseColumnName(val, tableName))
+                        query = `${query} ${tablealias}.${column} ${sign} ${parseSQLTypeForColumn({ name: key, value: condition[key] }, tableName)} ${operator}`;
                         break;
-                    }
                 }
-                return query;
-            }
-            catch (error) {
-                console.log(error);
-            }
-            
-            
-        }
-        const buildOrAnd = (array, operator) => {
-            let query = ``;
-            for (let item of array) {
-                if (array.indexOf(item) === array.length - 1) {
-                    query = `${query} ${buildQuery(item, "")}`
-                }
-                else
-                query = `${query} ${buildQuery(item, operator)}`
             }
             return query;
         }
-        const buildBetween = (between) => {
-            console.log({between});
-            const key = Object.keys(between[0])[0];
-            let val = {}
-            val[key] = ''
-            let column = Object.keys(parseColumnName(val, tableName))
-            const query = `${tablealias}.${column} BETWEEN ${between[0][key][0]} AND ${between[0][key][1]}`;
-            return query;
-            
+        catch (error) {
+            console.log(error);
         }
-        const buildLike = (like) => {
-            like = like[0];
-            const key = Object.keys(like)[0];
-            let val = {}
-            val[key] = ''
-            let column = Object.keys(parseColumnName(val, tableName))[0]
-            const query = `${tablealias}.${column} LIKE '%${like[key]}%'`;
-            return query;
+
+
+    }
+    const buildOrAndGteLte = (array, operator, sign = '=') => {
+        let query = ``;
+        console.log({array,operator, sign})
+        for (let item of array) {
+            if (array.indexOf(item) === array.length - 1) {
+                query = `${query} ${buildQuery(item, "", sign)}`
+            }
+            else
+                query = `${query} ${buildQuery(item, operator, sign)}`
         }
-        console.log({condition});
+        console.log({query})
+        return query;
+    }
+    const buildBetween = (between) => {
+        const key = Object.keys(between[0])[0];
+        let val = {}
+        val[key] = ''
+        let column = Object.keys(parseColumnName(val, tableName))
+        const query = `${tablealias}.${column} BETWEEN ${between[0][key]} AND ${between[1][key]}`;
+        console.log({query})
+        return query;
+
+    }
+    const buildLike = (like) => {
+
+        const key = Object.keys(like[0]);
+        let val = {};
+        val[key] = '';
+        let str = like.reduce((str, item) => {
+            if (item[key].startsWith('*')) {
+                str = `${str}${String.fromCharCode(item[key].slice(1, item.length))}`
+            }
+            else {
+                str = `${str}${item[key]}`
+            }
+            return str;
+        }, "")
+        let column = Object.keys(parseColumnName(val, tableName))[0];
+        const query = `${tablealias}.${column} LIKE '${str}' `;
+        console.log({query})
+        return query;
+    }
     let result = buildQuery(condition, "AND");
     result = result.slice(0, result.length - 3);
     return result;
@@ -88,7 +120,6 @@ const convertToMongoFilter = (condition) => {
 }
 
 const removeIndexes = (str) => {
-    console.log({str})
     let s = '';
     for (let i = 0; i < str.length; i++) {
         if (str[i] >= '0' && str[i] <= '9')
@@ -97,40 +128,88 @@ const removeIndexes = (str) => {
     }
     return s;
 }
-const convertQueryToObject = (query) => {
-        let pointer = [];
-        let i = 0;
-        const convert = async (key, value) => {
-            console.log({key, value})
-            if (key.includes('start')) {
-                pointer[i][value] = []
-                if (i == pointer.length - 1)
-                    pointer.push(pointer[i][value])
-                else
-                    pointer[i + 1] = pointer[i][value]
-                i++;
-                return;
-            }
-            if (key.includes('end')) {
-                i--;
-                return;
-            }
-            else {
-                let object = {}
-                object[removeIndexes(key)] = value
-                pointer[i]=object
-                return;
-            }
-        }
-        for (const key in query) {
-            
-            convert(key, query[key]);
-            i++
-        }
+// const convertQueryToObject = (query) => {
+//     // דוגמאות לשימוש בcondition 
+//     //  {"condition":{"LIKE":[{"OrdererName":"*37"},{"OrdererName":"י"},{"OrdererName":"*37"}]}}
+//     // {condition:{"AND":[{racheli:1},{michali:2},OR:[{sarit:5},{bilha:25},{BETWEEN:{michal:5,michal:25}}]],"LIKE":[{miri:('%').charCodeAt()},{miri:"א"}]}}
+//     // and the simple condition doesnt work - condition:{"miri": "x"}
+//     let obj = {}
+//     // let pointer = [];
+//     let i = 0;
+//     const convert =  (key, value) => {
+//         if (key.includes('start')) {
+//             pointer[i][value] = []
+//             if (i == pointer.length - 1)
+//                 pointer.push(pointer[i][value])
+//             else
+//                 pointer[i + 1] = pointer[i][value]
+//             i++;
+//             return;
+//         }
+//         if (key.includes('end')) {
+//             i--;
+//             return;
+//         }
+//         else {
+//             let object = {}
+//             object[removeIndexes(key)] = value
+//             pointer[i].push(object)
+//             return;
+//         }
+//     }
+//     for (const key in query) {
+//         convert(key, query[key]);
+//     }
 
-        let condition = pointer.reduce((obj, item)=>({...obj, ...item}), {})
-        return condition
-      
+//     // let condition = pointer.reduce((obj, item)=>({...obj, ...item}), {})
+//     return obj
+
+// }
+const buildQuertObject = (arr, start, obj) => {
+    console.log({ obj })
+    for (let i = start; i < arr.length; i++) {
+        for (const key in arr[i]) {
+            console.log({ key })
+            switch (key) {
+                case 'start':
+                    obj = {}
+                    obj[arr[i][key]] = buildQuertObject(arr, i + 1, [])
+                    console.log({ obj })
+                    return obj
+                case 'end':
+                    return obj;
+                default:
+                    let newobj = {}
+                    newobj[removeIndexes(key)] = arr[i][key]
+                    obj = [...obj, newobj]
+                    break;
+            }
+        }
+    }
+    return obj
+
 }
+
+const convertQueryToObject = (query) => {
+    const queryArray = Object.entries(query).reduce((arr, entry) => arr = [...arr, Object.fromEntries([entry])], [])
+    console.log(queryArray)
+    let queryMap = buildQuertObject(queryArray, 0, [])
+    console.log({ queryMap })
+    if(queryMap.length>0){
+        queryMap = queryMap.reduce((reduceObj, q)=>{
+            let key= Object.keys(q)
+            let obj = {}
+            obj[key]= q[key]
+            return {...reduceObj, ...obj}
+        }, {})
+    }
+    console.log(queryMap)
+    return queryMap
+}
+
+
+
+
+
 
 module.exports = { convertToMongoFilter, convertToSqlCondition, convertQueryToObject }
