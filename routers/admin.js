@@ -23,9 +23,9 @@ router.post('/updateConfig', express.urlencoded({ extended: true }), async (req,
 router.post('/delTable',express.json(), async (req, res)=> {
     try {
         console.log('try');
-        console.log(req.body);
+        console.log(req.body,'  req.body');
         const result = await delTableConfig(req.body);
-        console.log({result});
+        console.log({result}, '  result');
         res.status(200).send(result);
     }
     catch (error) {

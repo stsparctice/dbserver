@@ -236,6 +236,8 @@ const countRows = async function (obj) {
 //      return values;
 // };
 async function drop(tableName){
+     console.log(tableName,' tableName');
+     tableName=`tbl_${tableName}`
      _ = await getPool().request().query(`use ${SQL_DBNAME}
      DROP TABLE ${tableName}`);
      console.log('delat tbl in sql');
