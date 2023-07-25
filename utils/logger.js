@@ -1,11 +1,11 @@
 
 
-function routerLogger(){
-    return (req, res, next)=>{
-        const {hostname,port,baseUrl, url, body} = req
-        // console.log({hostname,port,bas eUrl,url, body})
+function routerLogger() {
+    return (req, res, next) => {
+        const { hostname, port, baseUrl, url, query, body } = req
+        console.log({ hostname, port, baseUrl, url, query, body })
         next()
     }
 }
 
-module.exports={routerLogger}
+module.exports = { routerLogger }

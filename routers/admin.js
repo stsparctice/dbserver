@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
-const config = require('../config2.json');
-=======
 const config = require('../config/DBconfig.json');
->>>>>>> cdaca1186d82ceb20dfbe4798fd0f323a445a06e
 const { checkUserRole } = require('../modules/authorization');
 const { updateConfig } = require('../modules/admin');
 const { routerLogger } = require('../utils/logger');
+const {delTableConfig} =require('../modules/admin/delete')
+const {createTableInConfig} = require('../modules/admin/create');
 
 router.use(routerLogger())
 
@@ -20,6 +18,30 @@ router.get('/', async (req, res) => {
 router.post('/updateConfig', express.urlencoded({ extended: true }), async (req, res) => {
     _ = await updateConfig(req.body);
     res.redirect('/');
+});
+//מחיקת טבלה
+router.post('/delTable',express.json(), async (req, res)=> {
+    try {
+        console.log('try');
+        console.log(req.body);
+        const result = await delTableConfig(req.body);
+        console.log({result});
+        res.status(200).send(result);
+    }
+    catch (error) {
+        console.log(error.message);
+        res.send(error.message)
+    }
+});
+//עדכון טבלה עי יצירת חדשה
+router.post('/createTableInConfig', express.json(), async (req, res) => {
+    if((req.body.columns).includes(undefined)){
+        console.log('include');
+    }        
+    console.log('im in router');
+
+    _ = await createTableInConfig(req.body);
+    res.status(200).send(true);
 });
 
 module.exports = router;

@@ -1,26 +1,27 @@
-const { create, createNewTable, insertColumn } = require('../services/sql/sql-operations');
+require('dotenv')
+const { create, insertColumn } = require('../services/sql/sql-operations');
 // const { checkObjCreate } = require('./check')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
+const { newTransaction } = require('../services/sql/sql-connection')
+const { parseDBname, parseColumnName } = require('../utils/parse_name')
+const { DBType } = require('./config/config')
+const { getPrimaryKeyField, getForeignTableAndColumn, getForeginKeyColumns } = require('./public')
+const { SQL_DBNAME } = process.env
 
 
-const { getSqlTableColumnsType, parseSQLType } = require('../modules/config/config')
+const { getSqlTableColumnsType, parseSQLType } = require('../modules/public');
 
 async function createSql(obj) {
     try {
-        // obj.tableName=`tbl_${obj.tableName}`
-        let tabledata = getSqlTableColumnsType(obj.tableName)
-        console.log({tabledata});
-        let arr = parseSQLType(obj.values, tabledata)
-
-
-        console.log({ arr })
-        const result = await create({ tableName: obj.tableName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
-        return result
+        let tabledata = getSqlTableColumnsType(obj.entityName);
+        let arr = parseSQLType(obj.values, tabledata);
+        const result = await create({ tableName: obj.entityName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
+        return result;
     }
-    catch (error){
-        console.log(error.message)
-        throw error
+    catch (error) {
+        console.log("error")
+        throw error;
     }
 };
 
@@ -33,18 +34,19 @@ async function insertManySql(obj) {
 
         let result = []
         for (let o of values) {
-            tabledata = getSqlTableColumnsType(obj.tableName)
+            tabledata = getSqlTableColumnsType(obj.entityName)
             arr = parseSQLType(o, tabledata);
-            let res = await create({ tableName: obj.tableName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
-            result = [...result, res]
+            let res = await create({ tableName: obj.entityName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
+            result = [...result, ...res]
         }
-        if (result)
+        if (result) {
             return result;
+        }
         else
             return false;
     }
-    catch {
-        throw new Error('Insert failed.')
+    catch (error) {
+        throw error;
     }
 }
 async function creatNewColumn(obj) {
@@ -72,28 +74,107 @@ async function creatSqlTable(obj) {
     }
 }
 
-<<<<<<< HEAD
-
-async function creatSqlNameColumn(str) {
-    return str.replace(str.charAt(0), str.charAt(0).toUpperCase())
-}
-
-async function creatSqlNameTable(str) {
-    return `tbl_${str.replace(str.charAt(0), str.charAt(0).toUpperCase())}`
-}
-
-
-=======
->>>>>>> 56ee8cc3311d081d848d0b6d855757b4304b6818
 async function createMng(obj) {
+
+// async function creatSqlTable(obj) {
+//     const result = await createNewTable(obj)
+//     return result
+}
+
+async function insertOne(obj) {
     try {
-        mongoCollection.setCollection(obj.collection);
+        mongoCollection.setCollection(obj.entityName);
         const response = await mongoCollection.insertOne(obj.data);
         return response;
     }
-    catch (error){
+    catch (error) {
+        console.log("error")
         throw error
     }
 };
+async function insertMany(obj) {
+    try {
+        mongoCollection.setCollection(obj.entityName);
+        const result = await mongoCollection.insertMany(obj.data);
+        return result;
+    }
+    catch (error) {
+        console.log("error")
+        throw error;
+    }
+}
 
-module.exports = { createSql, createMng, creatSqlTable, creatNewColumn, creatSqlNameTable, creatSqlNameColumn,insertManySql };
+const transactionCreate = async (data) => {
+    const { statement, transaction } = await newTransaction()
+    let result = []
+    let insertIds = []
+    let sqlRecords = []
+    let mongoRecords = []
+    try {
+        await transaction.begin()
+
+        sqlRecords = data.map(record => {
+            let dbObject = parseDBname(record.entityName)
+            record.entityName = dbObject.entityName
+            record.type = dbObject.type
+            return record
+        }).filter(({ type }) => type === DBType.SQL).map(({ type, ...rest }) => rest);
+        mongoRecords = data.filter(({ type }) => type === DBType.MONGO).map(({ type, ...rest }) => rest)
+
+        for (let record of sqlRecords) {
+            let tabledata = getSqlTableColumnsType(record.entityName)
+            let primarykey = getPrimaryKeyField(record.entityName)
+            record.values = record.values.map(obj => parseColumnName(obj, record.entityName))
+            let reference = getForeginKeyColumns(record.entityName);
+            console.log({ reference });
+            if (reference.length > 0) {
+                let ref = result.map((res) => { return { ...res, column: reference.find((ref) => ref.tableName === res.tableName) } }).filter(({ column }) => column)
+                ref = ref.reduce((state, r) => {
+                    if (!state.some((s) => s.tableName === r.tableName)) {
+                        state = [...state, { tableName: r.tableName, primaryKey: r.primaryKey, column: r.column.column }];
+                    }
+                    return state;
+                }, [])
+                ref.forEach(g => {
+                    record.values.forEach(y => {
+                        if (y[g.column] === null)
+                            y[g.column] = g.primaryKey;
+                    })
+                })
+            }
+            for (let iterator of record.values) {
+                let arr = parseSQLType(iterator, tabledata)
+                try {
+                    console.log(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
+                    await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
+                    const ans = await statement.execute();
+                    result = [...result, { tableName: record.entityName, primaryKey: ans.recordset[0].Id }]
+                }
+                finally {
+                    await statement.unprepare();
+
+                }
+            }
+        }
+
+        for (let record of mongoRecords) {
+            const ans = await insertMany({ entityName: record.entityName, data: record.values });
+            insertIds = [...insertIds, ...Object.values(ans).map(Id => { return { entityName: record.entityName, Id } })];
+        }
+        await transaction.commit();
+        result = [...result, ...insertIds]
+        return result
+    }
+    catch (error) {
+        await transaction.rollback();
+        for (let id of insertIds) {
+            await dropDocumentMng({ data: id.id, collection: id.entityName })
+        }
+        result = []
+        console.log({ error });
+        throw error
+    }
+
+}
+
+module.exports = { createSql, insertManySql, insertOne, creatNewColumn, insertMany, transactionCreate };

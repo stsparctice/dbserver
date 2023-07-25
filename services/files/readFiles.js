@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const {parseSQLType}=require('../../modules/config/config')
+const {parseSQLType}=require('../../modules/public')
 
 async function findSubDirectoriesSync(url) {
     let allData = [];

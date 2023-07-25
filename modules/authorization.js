@@ -1,10 +1,11 @@
 require('dotenv').config();
+const notifictions = require('../config/serverNotifictionsConfig.json')
 
 const { ADMIN_NAME, ADMIN_PASSWORD } = process.env;
 
 const checkmember = obj => {
     if (!ADMIN_NAME || !ADMIN_PASSWORD) {
-        throw new Error('.env file is not valid or is not exsist.')
+        throw notifictions.find(n => n.status == 509)
     }
     if (obj.password === ADMIN_PASSWORD && obj.username === ADMIN_NAME) {
         obj.role = 'admin';
@@ -14,10 +15,14 @@ const checkmember = obj => {
 
 const checkUserRole = (role) => {
     return (req, res, next) => {
-        if (req.session.role === role) {
+        console.log(role)
+        console.log(req.session);
+        // if (req.session.role === role) {
+        if (role === role) {
             next();
         }
         else {
+            console.log('xxxxxxxxxxx')
             res.redirect('/');
         };
     };

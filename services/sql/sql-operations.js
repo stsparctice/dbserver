@@ -1,34 +1,26 @@
 require('dotenv').config();
 
-const { getPool } = require('./sql-connection');
+const { getPool, newTransaction } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const { getPrimaryKeyField } = require('../../modules/config/config')
-const { Log } = require('../../services/log/log');
+const { getTableFromConfig, DBType } = require('../../modules/config/config')
+const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, getSqlTableColumnsType, parseSQLType } = require('../../modules/public')
+const notifictions = require('../../config/serverNotifictionsConfig.json');
+const { convertToSqlCondition } = require('../../utils/convert_condition');
 
 if (!SQL_DBNAME) {
-     throw new Error('.env file is not valid or is not exsist.')
+     throw notifictions.find(n => n.status == 509)
 }
 
 const create = async function (obj) {
+     const { tableName, columns, values } = obj;
      try {
-          const { tableName, columns, values } = obj;
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('values', values)
-          //      .execute(`pro_BasicCreate`);
-
-          //      console.log({result})
-          // console.log({ tableName, columns, values })
           const primarykey = getPrimaryKeyField(tableName)
-          console.log(primarykey);
-
+          console.log(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`);
           const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-          // console.log({ result })
           return result.recordset;
      }
+
      catch (error) {
-          console.log(error.message)
           throw error
      }
 
@@ -50,95 +42,39 @@ const create = async function (obj) {
 // WHERE  TABLE_NAME = 'Employees'
 //  AND COLUMN_NAME = 'FirstName'
 const insertColumn = async function (obj) {
-
+     // console.log(obj);
      try {
-          console.log("try sql");
-          const findTable = await getPool().request().query(`use ${SQL_DBNAME} 
-          SELECT * FROM sys.tables WHERE name = '${obj.tableName}'`)
-          if (findTable.recordset.length == 0) {
-               return ({ message: 'the table is not exists', data: findTable })
-          }
-          const findColumn = await getPool().request().query(`use ${SQL_DBNAME} 
-          SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName}' AND COLUMN_NAME='${obj.column.sqlName}'`)
-          if (findColumn.recordset.length == 0) {
-               _ = await getPool().request().query(`use ${SQL_DBNAME}  
-          ALTER TABLE ${obj.tableName} ADD ${obj.column.sqlName} ${obj.column.type}`)
-               return ({ message: "success insert column", findColumn: findColumn, len: findColumn.recordset.length })
-          }
-          else {
-               return ({ message: "the column was exists", data: findColumn })
-          }
-     } catch {
-          console.log("error sql");
-          throw new Error('ERROR! server faild')
+          _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
+     (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${obj.tableName} AND COLUMN_NAME=${obj.columns.name}') 
+     ALTER TABLE ${obj.tableName} ADD ${obj.column.name} ${obj.column.type}
+     ELSE PRINT('NO')`)
+          return 'success_column'
      }
-
-
+     catch (error) {
+          throw error
+     }
 }
 
-// obj:
-// {
-//      "MTDTable": {
-//          "name": {
-//              "name": "unitOfMeasure",
-//              "sqlName": "tbl_unitOfMeasure"
-//          },
-//          "description": "a normalization table of unitsOfMeasure"
-//      },
-//      "columns": [
-//          {
-//              "name": "id",
-//              "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-//          },
-//          {
-//              "name": "measure",
-//              "type": "NVARCHAR(20) NOT NULL "
-//          }
-//      ]
-//  },
 
 const createNewTable = async function (obj) {
      try {
+          console.log({ obj });
           let str = ''
           obj.columns.forEach(element => {
-               str += `${element.sqlName} ${element.type},`
+               str += `${element.name} ${element.type},`
           });
-          const findTable = await getPool().request().query(`use ${SQL_DBNAME} 
-          SELECT * FROM sys.tables WHERE name = '${obj.MTDTable.name.sqlName}'`)
-          if (findTable.recordset.length > 0) {
-               return ({ message: 'the table was exists', data: findTable.recordset })
-          }
-          else {
-               _ = await getPool().request().query(`use ${SQL_DBNAME} CREATE TABLE [dbo].[${obj.MTDTable.name.sqlName}](${str})`)
-               return ({ message: 'insert sucsses', data: findTable.recordset })
-          }
-     } catch (error)  {
-          console.log(error.message)
-        throw error
+          _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS
+      (SELECT * FROM sys.tables WHERE name = '${obj.MTDTable.name.sqlName}') 
+      CREATE TABLE [dbo].[${obj.MTDTable.name.sqlName}](${str})
+      ELSE PRINT('NO')`)
+          return 'success'
      }
-
+     catch (error) {
+          throw error
+     }
 }
 
 const read = async function (obj) {
-<<<<<<< HEAD
-
-     if (!Object.keys(obj).includes("condition")) {
-          obj.condition = '1=1';
-     };
-     if (!Object.keys(obj).includes("n")) {
-          obj.n = 100;
-     }
-     const { tableName, columns, condition, n } = obj;
-     // console.log({ tableName, columns, condition, n })
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('columns', columns)
-     //      .input('condition', condition)
-     //      .input('n', n)
-     //      .execute(`pro_BasicRead`);
-     try {
-          console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
-=======
      try {
           if (!Object.keys(obj).includes("condition")) {
                obj.condition = '1=1';
@@ -147,78 +83,31 @@ const read = async function (obj) {
                obj.n = 100;
           }
           const { tableName, columns, condition, n } = obj;
-          // console.log({ tableName, columns, condition, n })
-          // console.log({ tableName, columns, condition, n })
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('columns', columns)
-          //      .input('condition', condition)
-          //      .input('n', n)
-          //      .execute(`pro_BasicRead`);
-          // console.log(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
->>>>>>> 40ab28f24919dc47b4ccdd3f490bae029c3e7ca2
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select top ${n} ${columns} from ${tableName} where ${condition}`);
+
+
+          console.log(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
+          const result = await getPool().request().query(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getAlias(tableName)} WHERE ${condition}`);
           return result.recordset;
      }
      catch (error) {
-<<<<<<< HEAD
-          console.log(error);
-     }
-     // let newObject = {
-     //      name: "read",
-     //      path: "services/sql/sql-operations",
-     // }
-     // if (result)
-     // newObject.body = { rowsAffected: result.rowsAffected }
-
-     // else
-     // newObject.body = { rowsAffected: "problem" }
-     // object.push(newObject)
-     // Log(object)
-
-}
-=======
-          throw error
+          console.log({ error });
+          throw notifictions.find(({ status }) => status == 400);
      }
 };
->>>>>>> 40ab28f24919dc47b4ccdd3f490bae029c3e7ca2
 
 const readAll = async function (obj) {
-<<<<<<< HEAD
-     if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
-     };
-     const { tableName, condition } = obj;
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('condition', condition)
-     //      .execute(`pro_ReadAll`);
-     console.log("{ tableName, condition }{ tableName, condition }", { tableName, condition });
-     const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-     console.log("result.recordsetresult.recordsetresult.recordsetresult.recordsetresult.recordset", result.recordset);
-     return result.recordset;
-=======
      try {
-          // console.log('readAll');
-          // console.log(obj,'readAll');
           if (!Object.keys(obj).includes("condition")) {
                obj["condition"] = '1=1';
           };
           const { tableName, condition } = obj;
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('condition', condition)
-          //      .execute(`pro_ReadAll`);
-          console.log(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-          const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} where ${condition}`)
-           console.log({ result })
+          const result = await getPool().request().query(`use ${SQL_DBNAME} select * from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`)
           return result.recordset;
      }
      catch (error) {
           console.log(error.message)
           throw error
      }
->>>>>>> 40ab28f24919dc47b4ccdd3f490bae029c3e7ca2
 };
 
 const join = async (query = "") => {
@@ -234,123 +123,28 @@ const join = async (query = "") => {
      }
 };
 
+
 const update = async function (obj) {
-<<<<<<< HEAD
-     if (!Object.keys(obj).includes("condition")) {
-          obj["condition"] = '1=1';
-     };
-     const { tableName, values, condition } = obj;
-
-     const value = setValues(values);
-
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('values', value)
-     //      .input('condition', condition)
-     //      .execute(`pro_BasicUpdate`);
-
-     const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
      try {
-=======
-     try {
-          if (!Object.keys(obj).includes("condition")) {
-               obj["condition"] = '1=1';
-          };
-          const { tableName, values, condition } = obj;
-          const value = setValues(values);
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('values', value)
-          //      .input('condition', condition)
-          //      .execute(`pro_BasicUpdate`);
 
-          const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
->>>>>>> 40ab28f24919dc47b4ccdd3f490bae029c3e7ca2
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
+          obj.condition = convertToSqlCondition(getTableFromConfig(obj.entityName), obj.condition)
+          const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
+          const valEntries = Object.entries(obj.values);
+          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
      catch (error) {
-<<<<<<< HEAD
-          console.log(error);
-     }
-};
-const updateOne = async function (obj) {
-     // console.log("obj-=-=-=-=++++++++++++",obj);
-     // if (!Object.keys(obj).includes("condition")) {
-     //      obj["condition"] = '1=1';
-     // };
-     // const { tableName, values, condition } = obj;
-     const tableName = "tbl_Leads"
-
-     const { values, condition } = obj;
-     const value = setValues(values);
-     // const result = await getPool().request()
-     //      .input('tableName', tableName)
-     //      .input('values', value)
-     //      .input('condition', condition)
-     //      .execute(`pro_BasicUpdate`);
-
-     const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-     console.log({ query })
-     const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
-     console.log({ result })
-
-     return result;
-=======
-          console.log(error.message)
+          console.log(error)
           throw error
      }
-};
-const updateOne = async function (obj) {
-     try {
-          const tableName = "tbl_Leads"
-
-          const { values, condition } = obj;
-          const value = setValues(values);
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('values', value)
-          //      .input('condition', condition)
-          //      .execute(`pro_BasicUpdate`);
-
-          const query = `use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`
-          // console.log({query})
-          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${tableName} SET ${value} WHERE ${condition}`)
-          return result;
-     }
-     catch (error) {
-          throw error
-     }
->>>>>>> 40ab28f24919dc47b4ccdd3f490bae029c3e7ca2
-};
-// 
-const updateQuotation = async function (obj) {
-     const { Id } = obj;
-     const result = await getPool().request()
-          .input('serialNumber', Id)
-          .execute(`pro_UpdateQuotation`);
-     return result;
-};
-
-const updateSuppliersBranches = async function (obj) {
-     const { name, supplierCode, id } = obj;
-     const result = await getPool().request()
-          .input('name', name)
-          .input('id', id)
-          .input('supplierCode', supplierCode)
-          .execute(`pro_UpdateSuppliersBranches`);
-     return result;
 };
 
 const countRows = async function (obj) {
      try {
           const { tableName, condition } = obj;
-          // const result = await getPool().request()
-          //      .input('tableName', tableName)
-          //      .input('condition', condition)
-          //      .execute(`pro_CountRows`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) FROM ${tableName} WHERE ${condition}`)
-          // console.log({ count: result })
+          console.log({ func: 'countRows', tableName, condition })
+          const result = await getPool().request().query(`use ${SQL_DBNAME} SELECT COUNT(*) as countRows FROM ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} WHERE ${condition}`)
           return result;
      }
      catch (error) {
@@ -358,57 +152,27 @@ const countRows = async function (obj) {
      }
 }
 
-function setValues(obj) {
-     let values = "";
-     for (let key in obj) {
-          values += `${key} = `;
-          if (typeof (obj[key]) === 'string') {
-               values += `N'${obj[key]}'`;
-          }
-          else {
-               if (typeof (obj[key]) === 'boolean')
-                    values += `'${obj[key]}'`;
-               else
-                    values += obj[key];
-          };
-          values += ' , ';
-     };
-     values = values.substring(0, values.length - 2);
-     return values;
-};
+async function drop(name) {
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     DROP TABLE ${name}`);
+}
+async function updateColumn(obj) {
+     console.log('update column');
+     _ = await getPool().request().query(`use ${SQL_DBNAME}
+     UPDATE ${obj.table}
+     SET ${obj.column} = 1000`);
 
-async function buildcolumns(obj) {
-     let values = "";
-     let columns = "";
-     for (let key = 0; key < obj['values'].length; key++) {
-          if (typeof (obj['values'][key]) === 'string' && obj['values'][key] != 'NULL') {
-               values += `N'${obj['values'][key]}'`;
-          }
-          else {
-               values += obj['values'][key];
-          };
-          values += ', ';
-     };
-     values = values.substring(0, values.length - 2);
-     for (let key = 0; key < obj['columns'].length; key++) {
-          columns += `${obj['columns'][key]},`;
-     };
-     columns = columns.substring(0, columns.length - 1);
-     return { columns, values };
-};
 
+}
 module.exports = {
-     buildcolumns,
      create,
      read,
      readAll,
      update,
-     updateOne,
-     updateQuotation,
-     updateSuppliersBranches,
      countRows,
      join,
      createNewTable,
-     insertColumn
+     insertColumn,
+     drop,
+     updateColumn
 }
-

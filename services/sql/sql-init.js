@@ -2,12 +2,8 @@ require('dotenv').config();
 const path = require('path')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection');
-<<<<<<< HEAD
-const config = require('../../config2.json');
-
-=======
 const config = require('../../config/DBconfig.json');
->>>>>>> cdaca1186d82ceb20dfbe4798fd0f323a445a06e
+const notifictions = require('../../config/serverNotifictionsConfig.json')
 
 
 function buildColumns(details) {
@@ -21,7 +17,7 @@ function buildColumns(details) {
 
 async function createTables() {
     if (!SQL_DBNAME) {
-        throw new Error('.env file is not valid or is not exsist.')
+        throw notifictions.find(n => n.status == 509)
     }
 
     _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
