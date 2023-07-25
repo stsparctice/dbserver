@@ -1,10 +1,16 @@
+require('dotenv')
 const { create, insertColumn } = require('../services/sql/sql-operations');
 // const { checkObjCreate } = require('./check')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
+const { newTransaction } = require('../services/sql/sql-connection')
+const { parseDBname, parseColumnName } = require('../utils/parse_name')
+const { DBType } = require('./config/config')
+const { getPrimaryKeyField, getForeignTableAndColumn, getForeginKeyColumns } = require('./public')
+const { SQL_DBNAME } = process.env
 
 
-const { getSqlTableColumnsType, parseSQLType } = require('../modules/public')
+const { getSqlTableColumnsType, parseSQLType } = require('../modules/public');
 
 async function createSql(obj) {
     try {
@@ -54,7 +60,7 @@ async function creatNewColumn(obj) {
 
 async function insertOne(obj) {
     try {
-        console.log({obj})
+        console.log({ obj })
         mongoCollection.setCollection(obj.entityName);
         const response = await mongoCollection.insertOne(obj.data);
         return response;
@@ -76,4 +82,77 @@ async function insertMany(obj) {
     }
 }
 
-module.exports = { createSql, insertManySql, insertOne, creatNewColumn ,insertMany};
+const transactionCreate = async (data) => {
+    const { statement, transaction } = await newTransaction()
+    let result = []
+    let insertIds = []
+    let sqlRecords = []
+    let mongoRecords = []
+    try {
+        await transaction.begin()
+
+        sqlRecords = data.map(record => {
+            let dbObject = parseDBname(record.entityName)
+            record.entityName = dbObject.entityName
+            record.type = dbObject.type
+            return record
+        }).filter(({ type }) => type === DBType.SQL).map(({ type, ...rest }) => rest);
+        mongoRecords = data.filter(({ type }) => type === DBType.MONGO).map(({ type, ...rest }) => rest)
+
+        for (let record of sqlRecords) {
+            let tabledata = getSqlTableColumnsType(record.entityName)
+            let primarykey = getPrimaryKeyField(record.entityName)
+            record.values = record.values.map(obj => parseColumnName(obj, record.entityName))
+            let reference = getForeginKeyColumns(record.entityName);
+            console.log({ reference });
+            if (reference.length > 0) {
+                let ref = result.map((res) => { return { ...res, column: reference.find((ref) => ref.tableName === res.tableName) } }).filter(({ column }) => column)
+                ref = ref.reduce((state, r) => {
+                    if (!state.some((s) => s.tableName === r.tableName)) {
+                        state = [...state, { tableName: r.tableName, primaryKey: r.primaryKey, column: r.column.column }];
+                    }
+                    return state;
+                }, [])
+                ref.forEach(g => {
+                    record.values.forEach(y => {
+                        if (y[g.column] === null)
+                            y[g.column] = g.primaryKey;
+                    })
+                })
+            }
+            for (let iterator of record.values) {
+                let arr = parseSQLType(iterator, tabledata)
+                try {
+                    console.log(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
+                    await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
+                    const ans = await statement.execute();
+                    result = [...result, { tableName: record.entityName, primaryKey: ans.recordset[0].Id }]
+                }
+                finally {
+                    await statement.unprepare();
+
+                }
+            }
+        }
+
+        for (let record of mongoRecords) {
+            const ans = await insertMany({ entityName: record.entityName, data: record.values });
+            insertIds = [...insertIds, ...Object.values(ans).map(Id => { return { entityName: record.entityName, Id } })];
+        }
+        await transaction.commit();
+        result = [...result, ...insertIds]
+        return result
+    }
+    catch (error) {
+        await transaction.rollback();
+        for (let id of insertIds) {
+            await dropDocumentMng({ data: id.id, collection: id.entityName })
+        }
+        result = []
+        console.log({ error });
+        throw error
+    }
+
+}
+
+module.exports = { createSql, insertManySql, insertOne, creatNewColumn, insertMany, transactionCreate };

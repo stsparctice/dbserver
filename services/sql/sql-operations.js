@@ -6,8 +6,6 @@ const { getTableFromConfig, DBType } = require('../../modules/config/config')
 const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, getSqlTableColumnsType, parseSQLType } = require('../../modules/public')
 const notifictions = require('../../config/serverNotifictionsConfig.json');
 const { convertToSqlCondition } = require('../../utils/convert_condition');
-const { parseDBname, parseColumnName } = require('../../utils/parse_name');
-const mssql = require('mssql');
 
 if (!SQL_DBNAME) {
      throw notifictions.find(n => n.status == 509)
@@ -111,42 +109,7 @@ const readAll = async function (obj) {
           throw error
      }
 };
-const transactionCreate = async (data) => {
-     const { statement, transaction } = await newTransaction()
-     let result = []
-     try {
-          await transaction.begin()
 
-          for (let record of data) {
-               let dbObject = parseDBname(record.entityName)
-               let { type, entityName } = dbObject
-               if (type === DBType.SQL) {
-                    let tabledata = getSqlTableColumnsType(entityName)
-                    let primarykey = getPrimaryKeyField(entityName)
-                    record.values = record.values.map(obj => parseColumnName(obj, entityName))
-
-                    for (let iterator of record.values) {
-                         let arr = parseSQLType(iterator, tabledata)
-                         try {
-                              await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
-                              const ans = await statement.execute();
-                              result = [...result, { tableName: entityName, primaryKey: ans.recordset[0] }]
-                         }
-                         finally {
-                              await statement.unprepare();
-                         }
-                    }
-               }
-               await transaction.commit();
-          }
-     }
-     catch (error) {
-          await transaction.rollback();
-          result = []
-     }
-     console.log(result);
-
-}
 const join = async (query = "") => {
      try {
           const result = await getPool().request().query(query.trim());
@@ -211,6 +174,5 @@ module.exports = {
      createNewTable,
      insertColumn,
      drop,
-     updateColumn,
-     transactionCreate
+     updateColumn
 }

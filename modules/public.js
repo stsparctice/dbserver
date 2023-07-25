@@ -107,6 +107,15 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
     }
 }
 
+const getForeginKeyColumns = (tableName) => {
+    const myTable = getTableFromConfig(tableName)
+    const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
+    const result = columns.map((c) => { return {tableName: c.type.slice(c.type.toLowerCase().indexOf('tbl'), c.type.lastIndexOf('(')) 
+    ,column:c.sqlName}})
+    return result;
+}
+
+
 function getForeignTableAndColumn(tablename, field) {
     try {
 
@@ -182,5 +191,6 @@ module.exports = {
     getAlias,
     getObjectWithFeildNameForPrimaryKey,
     getForeignTableAndColumn,
-    getColumnAlias
+    getColumnAlias,
+    getForeginKeyColumns
 }
