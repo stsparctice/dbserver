@@ -169,6 +169,8 @@ const getColumnAlias = (tableName, column) => {
     const alias = table.columns.find(({ sqlName }) => sqlName === column).name;
     return alias;
 }
+
+
 module.exports = {
     getSqlTableColumnsType,
     getDefaultColumn,

@@ -6,16 +6,19 @@ const operators = {
     AND: "AND",
     OR: "OR",
     BETWEEN: "BETWEEN",
-    LIKE: "LIKE",
+    STARTWITH: "STARTWITH",
+    ENDWITH: "ENDWITH",
+    INCLUDES: "INCLUDES",
     GT: "GT",
     LT: "LT",
     GTE: "GTE",
-    LTE: "LTE"
+    LTE: "LTE",
+    IN: "IN"
 }
 const convertToSqlCondition = (table, condition) => {
     const tableName = table.MTDTable.name.sqlName;
     const tablealias = getAlias(table.MTDTable.name.sqlName);
-    const buildQuery = (condition, operator, sign='=') => {
+    const buildQuery = (condition, operator, sign = '=') => {
         try {
             let query = ``
             for (let key in condition) {
@@ -29,8 +32,17 @@ const convertToSqlCondition = (table, condition) => {
                     case operators.BETWEEN:
                         query = `${query} (${buildBetween(condition[key])}) ${operator}`;
                         break
-                    case operators.LIKE:
-                        query = `${query} (${buildLike(condition[key])}) ${operator}`;
+                    case operators.STARTWITH:
+                        query = `${query} (${buildLike(condition[key], operators.STARTWITH)}) ${operator}`;
+                        break;
+                    case operators.ENDWITH:
+                        query = `${query} (${buildLike(condition[key], operators.ENDWITH)}) ${operator}`;
+                        break;
+                    case operators.INCLUDES:
+                        query = `${query} (${buildLike(condition[key]), operators.INCLUDES}) ${operator}`;
+                        break;
+                    case operators.IN:
+                        query = `${query} (${buildIn(condition[key])}) ${operator}`;
                         break;
                     case operators.GT:
                         query = `${query} (${buildOrAndGteLte(condition[key], "", ">")}) ${operator}`;
@@ -62,7 +74,6 @@ const convertToSqlCondition = (table, condition) => {
     }
     const buildOrAndGteLte = (array, operator, sign = '=') => {
         let query = ``;
-        console.log({array,operator, sign})
         for (let item of array) {
             if (array.indexOf(item) === array.length - 1) {
                 query = `${query} ${buildQuery(item, "", sign)}`
@@ -70,7 +81,6 @@ const convertToSqlCondition = (table, condition) => {
             else
                 query = `${query} ${buildQuery(item, operator, sign)}`
         }
-        console.log({query})
         return query;
     }
     const buildBetween = (between) => {
@@ -79,33 +89,45 @@ const convertToSqlCondition = (table, condition) => {
         val[key] = ''
         let column = Object.keys(parseColumnName(val, tableName))
         const query = `${tablealias}.${column} BETWEEN ${between[0][key]} AND ${between[1][key]}`;
-        console.log({query})
         return query;
 
     }
-    const buildLike = (like) => {
-
+    const buildLike = (like, operator) => {
         const key = Object.keys(like[0]);
         let val = {};
         val[key] = '';
-        let str = like.reduce((str, item) => {
-            if (item[key].startsWith('*')) {
-                str = `${str}${String.fromCharCode(item[key].slice(1, item.length))}`
-            }
-            else {
-                str = `${str}${item[key]}`
-            }
-            return str;
-        }, "")
         let column = Object.keys(parseColumnName(val, tableName))[0];
-        const query = `${tablealias}.${column} LIKE '${str}' `;
-        console.log({query})
+        let regex = ``;
+        switch (operator) {
+            case operators.STARTWITH:
+                regex = `${like[0][key]}%`;
+                break;
+            case operators.ENDWITH:
+                regex = `%${like[0][key]}`;
+                break;
+            case operators.INCLUDES:
+                regex = `%${like[0][key]}%`;
+                break;
+            default:
+                break;
+        }
+        const query = `${tablealias}.${column} LIKE '${regex}' `;
+        return query;
+    }
+    const buildIn = (inArray) => {
+        const key = Object.keys(inArray[0])[0];
+        let val = {};
+        val[key] = '';
+        let column = Object.keys(parseColumnName(val, tableName))[0];
+        const values = inArray.map((v) => { return `${parseSQLTypeForColumn({ name: key, value: v[key] }, tableName)}` })
+        const query=`${tablealias}.${column} IN (${values.join(',')})`
         return query;
     }
     let result = buildQuery(condition, "AND");
     result = result.slice(0, result.length - 3);
     return result;
 }
+
 const convertToMongoFilter = (condition) => {
     let filter = {}
     for (let key in condition) {
@@ -195,12 +217,12 @@ const convertQueryToObject = (query) => {
     console.log(queryArray)
     let queryMap = buildQuertObject(queryArray, 0, [])
     console.log({ queryMap })
-    if(queryMap.length>0){
-        queryMap = queryMap.reduce((reduceObj, q)=>{
-            let key= Object.keys(q)
+    if (queryMap.length > 0) {
+        queryMap = queryMap.reduce((reduceObj, q) => {
+            let key = Object.keys(q)
             let obj = {}
-            obj[key]= q[key]
-            return {...reduceObj, ...obj}
+            obj[key] = q[key]
+            return { ...reduceObj, ...obj }
         }, {})
     }
     console.log(queryMap)

@@ -5,6 +5,7 @@ const { DBType } = require('../modules/config/config')
 const routeEntityByItsType = async (data, sql, mongo) => {
     try {
         let dbObject = parseDBname(data.entityName)
+        console.log(dbObject);
         let { type } = dbObject
         let result;
         if (type === DBType.SQL) {

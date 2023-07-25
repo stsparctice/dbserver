@@ -39,11 +39,23 @@ const connectSql = async () => {
     }
 }
 
+const newTransaction = async () => {
+    try {
+        const transaction = new sql.Transaction(getPool());
+        const statement = new sql.PreparedStatement(transaction);
+        return { transaction, statement }
+    }
+    catch (error) {
+        throw error
+    }
+}
+
 const getPool = () => {
     return pool
 };
 
 module.exports = {
     getPool,
-    connectSql
+    connectSql,
+    newTransaction
 };

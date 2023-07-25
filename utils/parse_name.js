@@ -72,6 +72,7 @@ const parseListOfColumnsName = () => {
 }
 
 const parseDBname = (entityName) => {
+    console.log({entityName});
     let sql = config.find(db => db.database === DBType.SQL);
     let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
     let table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);
