@@ -13,7 +13,6 @@ async function delTableConfig(name) {
             for (let i = 0; i <= (Tables[index].columns.length)-1; i++) {                    
                 if (Tables[index].columns[i].type.includes('REFERENCES')){
                     if(Tables[index].columns[i].type.slice(Tables[index].columns[i].type.indexOf('tbl_'),-5)==`tbl_${name.tableDel}`){
-                        console.log('wwwwwwwwowwwwww');
                         let obj={table:Tables[index].MTDTable.name.name,column:Tables[index].columns[i].name}
                         console.log(obj);
                         updateColumn(obj)
@@ -24,8 +23,6 @@ async function delTableConfig(name) {
                
         }
     }
-    // drop(name.tableDel)
-    //delete from config----
     for (let index = 0; index < Tables.length; index++) {
         if (Tables[index].MTDTable.name.name == Object.values(name)) {
             i = index

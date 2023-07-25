@@ -1,5 +1,4 @@
-const { update, updatOne, updateQuotation, updateSuppliersBranches } = require('../services/sql/sql-operations');
-// const { parseSQLTypeForColumn, getSqlTableColumnsType } = require('./config/config')
+const { update } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { getPrimaryKeyField } = require('./public');
 const mongoCollection = MongoDBOperations;
@@ -7,7 +6,6 @@ const notifications = require('../config/serverNotifictionsConfig.json')
 
 async function updateSql(obj) {
     try {
-
         const result = await update(obj);
         return result;
     }
@@ -18,7 +16,6 @@ async function updateSql(obj) {
 async function updateOneSql(obj) {
     try {
         const primarykey = getPrimaryKeyField(obj.entityName);
-        console.log({primarykey});
         if (!obj.condition[primarykey]) {
             throw notifications.find(n => n.status === 400)
         }
@@ -51,26 +48,6 @@ async function updateMany(obj) {
     }
 }
 
-async function updateQuotationSql(obj) {
-    try {
-        const result = await updateQuotation(obj);
-        return result;
-    }
-    catch (error) {
-        throw error
-    }
-};
-
-async function updateSuppliersBranchesSql(obj) {
-    try {
-        const result = await updateSuppliersBranches(obj);
-        return result;
-    }
-    catch (error) {
-        throw error
-    }
-};
-
 async function dropCollectionMng(obj) {
     try {
         mongoCollection.setCollection(obj.collection);
@@ -96,4 +73,4 @@ async function dropDocumentMng(obj) {
 };
 
 
-module.exports = { updateSql, updateOneSql, updateQuotationSql, updateSuppliersBranchesSql, updateOne, updateMany, dropCollectionMng, dropDocumentMng };
+module.exports = { updateSql, updateOneSql, updateOne, updateMany, dropCollectionMng, dropDocumentMng };

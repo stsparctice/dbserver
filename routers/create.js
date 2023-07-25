@@ -35,4 +35,6 @@ router.post('/createmany', parseTableName(), parseListOfColumnsName(),checkDataI
     }
 });
 
+
+
 module.exports = router;
