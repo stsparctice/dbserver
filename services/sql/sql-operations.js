@@ -7,12 +7,13 @@ const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, 
 const notifictions = require('../../config/serverNotifictionsConfig.json');
 const { convertToSqlCondition } = require('../../utils/convert_condition');
 
-if (!SQL_DBNAME) {
-     throw notifictions.find(n => n.status == 509)
-}
+// if (!SQL_DBNAME) {
+//      throw notifictions.find(n => n.status == 509)
+// }
 
 const create = async function (obj) {
      const { tableName, columns, values } = obj;
+
      try {
           const primarykey = getPrimaryKeyField(tableName)
           console.log(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`);
@@ -25,9 +26,6 @@ const create = async function (obj) {
      }
 
 }
-
-
-
 // obj:
 // {
 //      "tableName": "clients",
@@ -56,9 +54,11 @@ const insertColumn = async function (obj) {
 }
 
 
+
 const createNewTable = async function (obj) {
      try {
           console.log({ obj });
+
           let str = ''
           obj.columns.forEach(element => {
                str += `${element.name} ${element.type},`
@@ -73,7 +73,6 @@ const createNewTable = async function (obj) {
           throw error
      }
 }
-
 const read = async function (obj) {
      try {
           if (!Object.keys(obj).includes("condition")) {
@@ -94,7 +93,6 @@ const read = async function (obj) {
           throw notifictions.find(({ status }) => status == 400);
      }
 };
-
 const readAll = async function (obj) {
      try {
           if (!Object.keys(obj).includes("condition")) {
@@ -110,6 +108,51 @@ const readAll = async function (obj) {
      }
 };
 
+const transactionCreate = async (data) => {
+     const { statement, transaction } = await newTransaction()
+     // statement.input('db', mssql.NVarChar(50))
+     try {
+          await transaction.begin()
+
+          for (let record of data) {
+               let dbObject = parseDBname(record.entityName)
+               let { type, entityName } = dbObject
+               if (type === DBType.SQL) {
+                    let tabledata = getSqlTableColumnsType(entityName)
+                    let primarykey = getPrimaryKeyField(entityName)
+                    record.values = record.values.map(obj => parseColumnName(obj, entityName))
+
+                    for (let iterator of record.values) {
+                         let arr = parseSQLType(iterator, tabledata)
+                         try {
+                              console.log(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
+                              await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
+                              await statement.execute()
+                              await statement.unprepare();
+                         }
+                         finally {
+                              await statement.unprepare();
+                         }
+                    }
+                    // console.log(transaction);
+               }
+               await transaction.commit()
+
+
+               if (type === DBType.MONGO) {
+     
+               }
+          }
+
+     }
+     catch (error) {
+          await transaction.rollback();
+          result = []
+     }
+     console.log(result);
+
+}
+
 const join = async (query = "") => {
      try {
           const result = await getPool().request().query(query.trim());
@@ -122,8 +165,6 @@ const join = async (query = "") => {
           throw error
      }
 };
-
-
 const update = async function (obj) {
      try {
 
@@ -131,6 +172,7 @@ const update = async function (obj) {
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
+
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
@@ -139,6 +181,7 @@ const update = async function (obj) {
           throw error
      }
 };
+
 
 const countRows = async function (obj) {
      try {
@@ -152,17 +195,16 @@ const countRows = async function (obj) {
      }
 }
 
-async function drop(name) {
+async function drop(tableName){
      _ = await getPool().request().query(`use ${SQL_DBNAME}
-     DROP TABLE ${name}`);
+     DROP TABLE ${tableName}`);
+     console.log('delat tbl in sql');
 }
 async function updateColumn(obj) {
      console.log('update column');
      _ = await getPool().request().query(`use ${SQL_DBNAME}
      UPDATE ${obj.table}
      SET ${obj.column} = 1000`);
-
-
 }
 module.exports = {
      create,

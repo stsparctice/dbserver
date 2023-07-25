@@ -42,6 +42,12 @@ connectMng().then(_ => {
 });
 
 
+<<<<<<< HEAD
+=======
+// }, (err) => {
+//     console.log(err.message, 'from connectMng');
+// });
+>>>>>>> adminDBserver
 
 // });
 

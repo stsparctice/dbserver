@@ -5,12 +5,20 @@ const { DBType, getTableFromConfig } = require('../modules/config/config')
 function parseTableName() {
     return (req, res, next) => {
         try {
+<<<<<<< HEAD
             req.body.entityName = parseDBname(req.body.entityName).entityName;
             next();
         }
         catch (error) {
             console.log(error.description)
             res.status(error.status).send(error.message);
+=======
+            req.body.entityName = parseDBname(req.body.entityName).entityName
+            next();
+        }
+        catch (error) {
+            res.status(500).send(error.message)
+>>>>>>> adminDBserver
 
         }
     }
