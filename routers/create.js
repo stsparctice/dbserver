@@ -37,6 +37,8 @@ router.post('/createmany', parseTableName(), parseListOfColumnsName(), checkData
 
 router.post('/createManyEntities', async (req, res) => {
     try {
+
+    
         // const obj = [
         //     {
         //         entityName: 'Orderers', values: [
@@ -45,8 +47,14 @@ router.post('/createManyEntities', async (req, res) => {
         //     },
         //     {
         //         entityName: "Leads", values: [
-        //             { supplyDate: new Date(2023, 6, 24).toISOString(), ordererCode: 1, AddedDate: new Date(2023, 6, 24).toISOString(), Disable: 'False' },
-        //             { supplyDate: new Date(2023, 6, 24).toISOString(), ordererCode: 1, AddedDate: new Date(2023, 6, 24).toISOString(), Disable: 'False' }]
+        //             {  SupplyDate: new Date(2023, 6, 24).toISOString(), 
+        //                OrdererCode:  { ordererName: 'עדי ברוינר', ordererPhone: '025669664', addedDate: new Date().toISOString(), disable: 'False' }, 
+        //                AddedDate: new Date(2023, 6, 24).toISOString(),
+        //                Disable: 'False',
+        //                MoreProductsItems : [
+        //                               { product: 1, addedDate: new Date().toISOString() }
+        //                ] },
+        //             ]
         //     }, {
         //         entityName: 'unitOfMeasure', values: [
         //             { measure: 'meter', disable: 'True' }

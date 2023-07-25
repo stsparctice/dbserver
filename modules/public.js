@@ -110,8 +110,8 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
 const getForeginKeyColumns = (tableName) => {
     const myTable = getTableFromConfig(tableName)
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-    const result = columns.map((c) => { return {tableName: c.type.slice(c.type.toLowerCase().indexOf('tbl'), c.type.lastIndexOf('(')) 
-    ,column:c.sqlName}})
+    const result = columns.map((column) => { return {tableName: column.type.slice(column.type.toLowerCase().indexOf('tbl'), column.type.lastIndexOf('(')) 
+    ,column:column.sqlName,type:column.type}})
     return result;
 }
 
