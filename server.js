@@ -37,13 +37,15 @@ connectMng().then(_ => {
     });
 
     // deleteData();
-    // dropSQLTables();
+    
     // dropMongoDBCollection();
 });
 
 
 
 // });
+
+
 const server = http.createServer(app)
 
 
