@@ -67,7 +67,7 @@ const convertType = (column1, column2) => {
     const current2 = table2.columns.find(({ sqlName }) => sqlName === column2.column);
     let result = ``
     if (current1.type.toLowerCase().includes('nvarchar') && current2.type.toLowerCase().includes('int'))
-        result = `${column1.tableName}.${column2.column} = CONVERT(NVARCHAR,${column2.tableName}.${column2.column})`;
+        result = `${column1.tableName}.${column1.column} = CONVERT(NVARCHAR,${column2.tableName}.${column2.column})`;
     else {
 
         if (current1.type.toLowerCase().includes('int') && current2.type.toLowerCase().includes('nvarchar')) {

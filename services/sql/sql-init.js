@@ -12,7 +12,6 @@ function buildColumns(details) {
         columns += details[i].sqlName + ' ' + details[i].type + ', ';
     };
     columns = columns.substring(0, columns.length - 2);
-    console.log({columns});
     return columns;
 };
 

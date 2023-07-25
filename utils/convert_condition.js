@@ -16,6 +16,7 @@ const operators = {
     IN: "IN"
 }
 const convertToSqlCondition = (table, condition) => {
+    console.log({table, condition})
     const tableName = table.MTDTable.name.sqlName;
     const tablealias = getAlias(table.MTDTable.name.sqlName);
     const buildQuery = (condition, operator, sign = '=') => {
@@ -93,6 +94,7 @@ const convertToSqlCondition = (table, condition) => {
 
     }
     const buildLike = (like, operator) => {
+        console.log({like, operator})
         const key = Object.keys(like[0]);
         let val = {};
         val[key] = '';

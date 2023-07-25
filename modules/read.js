@@ -143,25 +143,32 @@ const selectReferenceColumn = async (values, tableName) => {
     const columnReference = getReferencedColumns(tableName)
     if(columnReference.length>0){
         let tablesJoin = []
-        columnReference.map(({ ref }) => {
-            tablesJoin = [...tablesJoin, ...values.reduce((state, val) => val[ref] !== null ? state.includes(parseDBname(val[ref]).entityName) ? [...state] : [...state, parseDBname(val[ref]).entityName] : [...state], [])];
+        console.log({columnReference, length:columnReference.length})
+        tablesJoin=  columnReference.map(({ref}) => {
+            console.log({ref})
+            console.log({values})
+            return [...values.reduce((state, val) => val[ref] !== null ? state.includes(parseDBname(val[ref]).entityName) ? [...state] : [...state, parseDBname(val[ref]).entityName] : [...state], [])];
         });
+        console.log({tablesJoin})
         const alias = getAlias(tableName);
         let query = `${tableName} ${alias}`;
+        console.log({query})
         let columns = ``
-        columnReference.map(({ name, ref }) => {
+        columnReference.forEach(({ name, ref }) => {
             columns = `${alias}.${getPrimaryKeyField(tableName)}, ${alias}.${name}, ${alias}.${ref}`
-            tablesJoin.map((table) => {
+            console.log({columns})
+            tablesJoin.forEach((table) => {
                 const currentAlias = getAlias(table);
                 const defaultColumn = getDefaultColumn(table);
                 const primaryKey = getPrimaryKeyField(table);
                 columns = `${columns},${currentAlias}.${primaryKey} AS FK_${currentAlias}_${getColumnAlias(table, primaryKey)} ,${currentAlias}.${defaultColumn} AS FK_${currentAlias}_${getColumnAlias(table, defaultColumn)}`;
                 query = `${query} LEFT JOIN ${table} ${currentAlias} ON ${convertType({ tableName: alias, column: name }, { tableName: currentAlias, column: getPrimaryKeyField(table) })}`
+               
             })
         })
         query = `SELECT ${columns} FROM ${query}`;
         const res = await join(query);
-        values.map((v) => {
+        values.forEach((v) => {
            const find= res.find((r) => r[getPrimaryKeyField(tableName)] === v[getPrimaryKeyField(tableName)])
            console.log({find});
            for(let key in find){
