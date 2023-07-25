@@ -42,12 +42,9 @@ const { dropMongoDBCollection } = require('./services/mongoDB/mongoDB-helpers');
 // });
 
 
-<<<<<<< HEAD
-=======
 // }, (err) => {
 //     console.log(err.message, 'from connectMng');
 // });
->>>>>>> adminDBserver
 
 // });
 
