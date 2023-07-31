@@ -6,7 +6,7 @@ const notifictaions = require('../../config/serverNotifictionsConfig.json');
 const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
-function getTableFromConfig(tableName) {
+function getTableFromConfig(tableName,config = config) {
     try {
         let tables
         try {
@@ -31,7 +31,7 @@ function getTableFromConfig(tableName) {
     }
 }
 
-function getCollectionsFromConfig(collectionName) {
+function getCollectionsFromConfig(collectionName,config = config) {
     let mongo = config.find(db => db.database === 'mongoDB');
     let collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
     if (!collection) {
@@ -110,10 +110,10 @@ const readJoin = async (baseTableName, baseColumn) => {
 
 
 
-function getReferencedColumns(tablename) {
+function getReferencedColumns(tablename,config = config) {
 
     try {
-        const table = getTableFromConfig(tablename)
+        const table = getTableFromConfig(tablename,config)
         let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
         if (!columns) {
             let error = notifictaions.find(n => n.status == 514)
@@ -147,8 +147,8 @@ function setFullObj(parentTable, refTable) {
 //     const table = getTableFromConfig(tablename)
 //     return table
 // }
-function getTableAccordingToRef(tablename) {
-    const table = getTableFromConfig(tablename)
+function getTableAccordingToRef(tablename,config = config) {
+    const table = getTableFromConfig(tablename,config)
     // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
     // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
     let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
@@ -173,7 +173,7 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
     }
 }
 
-function getForeignTableAndColumn(tablename, field) {
+function getForeignTableAndColumn(tablename, field,config = config) {
     try {
 
         const table = getTableFromConfig(tablename)
