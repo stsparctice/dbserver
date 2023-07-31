@@ -170,7 +170,7 @@
                                 "name": "example_table5",
                                 "sqlName": "tbl_example_table5"
                             },
-                            "description": "example table with PRIMARY KEY and FOREIGN KEY with two references"
+                            "description": "example table with references"
                         },
                         "columns": [
                             {
@@ -179,19 +179,20 @@
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": "leadNumber",
-                                "sqlName": "LeadNumber",
-                                "type": "INT NOT NULL FOREIGN KEY(LeadNumber) REFERENCES tbl_example_table3(Id)"
+                                "name": "unitOfMeasure",
+                                "sqlName": "UnitOfMeasure",
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table1(Id)"
                             },
                             {
-                                "name": "product",
-                                "sqlName": "Product",
-                                "type": "INT NOT NULL FOREIGN KEY(Product) REFERENCES tbl_example_table4(Id)"
+                                "name": "ProductId",
+                                "sqlName": "ProductId",
+                                "type": "NVARCHAR NOT NULL",
+                                "reference": "TableName"
                             },
                             {
-                                "name": "amount",
-                                "sqlName": "Amount",
-                                "type": "REAL NULL"
+                                "name": "tableName",
+                                "sqlName": "TableName",
+                                "type": "NVARCHAR(50)"
                             }
                         ]
                     }
