@@ -2,7 +2,7 @@ const { getTableFromConfig, getCollectionsFromConfig, readJoin, getReferencedCol
 const config = require('../../../config/TESTconfig.json');
 
 
-describe('config.js', () => {
+describe('TEST ON config.js FILE', () => {
 
     describe('GET TABLE FROM CONFIG', () => {
         it('The function received a table name and returns the table accordingly', () => {
@@ -133,10 +133,29 @@ describe('config.js', () => {
     
     // describe('GET OBJECT WITH FIELD NAME FOR PRIMARY KEY', () => { });   
 
-    
+    describe('GET FOREIGN TABLE AND COLUMN', () => {
+        it('A function received a table name, a field name and a config and returns an object that includes a table name and its information', () => {
+            const result = getForeignTableAndColumn('tbl_example_table3','unitOfMeasure',config);
+            expect(result).toBeDefined();
+            expect(result).toStrictEqual({ foreignTableName: 'TBL_EXAMPLE_TABLE2', defaultColumn: 'StatusName' });
+        });        
+        it('The returned value is of type object', () => {
+            const result = getForeignTableAndColumn('tbl_example_table3','unitOfMeasure',config);
+            expect(result).toBeInstanceOf(Object);
+        });
+        it('The table name and field name are of type string', () => {
+            expect(() => getForeignTableAndColumn(tbl_example_table3,unitOfMeasure,config)).toThrow();
+            expect(() => getForeignTableAndColumn('tbl_example_table3','unitOfMeasure',config)).not.toThrow();
+        }); 
+        it('A table name without a foreign key will return an error accordingly', () => {
+            expect(() => getForeignTableAndColumn('tbl_example_table1','Id',config)).toThrow();
+        });
+        it('A table column without a foreign key will return an error accordingly', () => {
+            expect(() => getForeignTableAndColumn('tbl_example_table3','Id',config)).toThrow();
+        });       
+    });
     
     // describe('CONVERT FIELD TYPE', () => { });
-
 
     describe('GET TABLE COLUMN NAME', () => {
         it('The function received a table name and a config and returns the names of its columns in sql', () => {
@@ -158,5 +177,6 @@ describe('config.js', () => {
             expect(() => getTabeColumnName('tbl_example_table3', config)).not.toThrow();
         });
     });
+    
 });
 

@@ -175,7 +175,6 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id,config=config
 
 function getForeignTableAndColumn(tablename, field,config = config) {
     try {
-
         const table = getTableFromConfig(tablename,config=config)
         if (table) {
             let foreignTableName
@@ -191,8 +190,7 @@ function getForeignTableAndColumn(tablename, field,config = config) {
                 error.description = `Field: ${field} is not exsist in table: ${tablename}.`
                 throw error
             }
-            const foreignTable = getTableFromConfig(foreignTableName,config=config)
-
+            const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(),config=config)
             const { defaultColumn } = foreignTable.MTDTable
             return { foreignTableName, defaultColumn }
 
