@@ -21,7 +21,7 @@ function getTableFromConfig(tableName,config = config) {
         let table = tables.find(tbl => tbl.MTDTable.name.sqlName == tableName)
         if (!table) {
             let error = notifictaions.find(n => n.status == 512)
-            error.description = `Table: ${tableName} does not exsist.`
+            error.description = `Table: ${tableName} does not exist.`
             throw error
         }
         return table
@@ -180,7 +180,6 @@ function getForeignTableAndColumn(tablename, field,config = config) {
         if (table) {
             let foreignTableName
             try {
-
                 const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
                 const { type } = column;
                 foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
