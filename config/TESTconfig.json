@@ -127,7 +127,7 @@
                             {
                                 "name": "unitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
-                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table1(Id)"
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table2(Id)"
                             },
                             {
                                 "name": "bookkeepingCode",
