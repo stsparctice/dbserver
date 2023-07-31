@@ -133,52 +133,29 @@ describe('config.js', () => {
     
     // describe('GET OBJECT WITH FIELD NAME FOR PRIMARY KEY', () => { });   
 
-    describe('GET FOREIGN TABLE AND COLUMN', () => {
-        it('A function received a table name, a field name and a config and returns an object that includes a table name and its information', () => {
-            const result = getForeignTableAndColumn();
-            expect(result).toBeDefined();
-        });
-        it('The function receives all values', () => {
-            const result = getForeignTableAndColumn();
-            expect(result).toBeDefined();
-        });
-        it('The returned value is of type object', () => {
-            const result = getForeignTableAndColumn();
-            expect(result).toBeDefined();
-        });
-        it('The table name and field name are of type string', () => {
-            const result = getForeignTableAndColumn();
-            expect(result).toBeDefined();
-        });
-        it('A table name that does not exist returns an error accordingly', () => {
-            const result = getForeignTableAndColumn();
-            expect(result).toBeDefined();
-        });
-    });
+    
     
     // describe('CONVERT FIELD TYPE', () => { });
 
 
     describe('GET TABLE COLUMN NAME', () => {
         it('The function received a table name and a config and returns the names of its columns in sql', () => {
-            const result = getTabeColumnName();
+            const result = getTabeColumnName('tbl_example_table2', config);
             expect(result).toBeDefined();
+            expect(result).toStrictEqual([ 'Id', 'StatusName' ])
         });
-        it('The function receives all values', () => {
-            const result = getTabeColumnName();
+        it('The function returns an array', () => {
+            const result = getTabeColumnName('tbl_example_table2', config);
             expect(result).toBeDefined();
-        });
-        it('The returned value is of array type', () => {
-            const result = getTabeColumnName();
-            expect(result).toBeDefined();
+            expect(result).toBeInstanceOf(Array);
         });
         it('The table name is of type string', () => {
-            const result = getTabeColumnName();
-            expect(result).toBeDefined();
+            expect(() => getTabeColumnName(tbl_example_table2, config)).toThrow();
+            expect(() => getTabeColumnName('tbl_example_table2', config)).not.toThrow();
         });
         it('The table name that does not exist returns an error accordingly', () => {
-            const result = getTabeColumnName();
-            expect(result).toBeDefined();
+            expect(() => getTabeColumnName('not_exist_table', config)).toThrow();
+            expect(() => getTabeColumnName('tbl_example_table3', config)).not.toThrow();
         });
     });
 });
