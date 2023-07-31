@@ -135,9 +135,8 @@ class MongoDBOperations {
         }
     };
 
-    async dropOneDocument(filter = '') {
+    async dropOneDocument(filter = {}) {
         try {
-            console.log("filter in oper***********", filter);
             const result = await getClient().db(this.dbName).collection(this.collectionName).deleteOne(filter);
             if (result.deletedCount === 0) {
                 return false
