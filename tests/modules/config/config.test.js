@@ -106,34 +106,5 @@ describe('config.js', () => {
         }); 
     });
     
-    // describe('GET OBJECT WITH FIELD NAME FOR PRIMARY KEY', () => { });
-
-    // describe('GET FOREIGN TABLE AND COLUMN', () => {
-    //     it('' ,()=>{
-    //         const result = getForeignTableAndColumn();
-    //         expect(result).toBeDefined();
-    //     }); 
-    //  });
-
-    // describe('CONVERT FIELD TYPE', () => {
-    //     it('' ,()=>{
-    //         const result = convertFieldType();
-    //         expect(result).toBeDefined();
-    //     }); 
-    //  });
-
-    // describe('GET TABLE COLUMN NAME', () => {
-    //     it('' ,()=>{
-    //         const result = getTabeColumnName();
-    //         expect(result).toBeDefined();
-    //     }); 
-    //  });
-
-    // describe('SET FULL OBJ', () => { });
-    
-
-    // describe('GET OBJECT WITH FIELD NAME FOR PRIMARY KEY', () => { });
-
-    // describe('GET FOREIGN TABLE AND COLUMN', () => { });
 
 })
