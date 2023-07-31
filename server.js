@@ -38,7 +38,7 @@ connectMng().then(_ => {
 
     // deleteData();
     
-    dropMongoDBCollection();
+    // dropMongoDBCollection();
 });
 
 
