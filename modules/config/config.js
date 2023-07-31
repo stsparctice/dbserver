@@ -6,7 +6,7 @@ const notifictaions = require('../../config/serverNotifictionsConfig.json');
 const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
-function getTableFromConfig(tableName) {
+function getTableFromConfig(tableName, config=config) {
     try {
         let tables
         try {
@@ -21,7 +21,7 @@ function getTableFromConfig(tableName) {
         let table = tables.find(tbl => tbl.MTDTable.name.sqlName == tableName)
         if (!table) {
             let error = notifictaions.find(n => n.status == 512)
-            error.description = `Table: ${tableName} does not exsist.`
+            error.description = `Table: ${tableName} does not exist.`
             throw error
         }
         return table
@@ -173,14 +173,13 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
     }
 }
 
-function getForeignTableAndColumn(tablename, field) {
+function getForeignTableAndColumn(tablename, field, config=config) {
     try {
 
         const table = getTableFromConfig(tablename)
         if (table) {
             let foreignTableName
             try {
-
                 const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
                 const { type } = column;
                 foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
