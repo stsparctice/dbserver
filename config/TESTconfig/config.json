@@ -8,7 +8,7 @@
                     {
                         "MTDProcedure": {
                             "name": {
-                                "BasicUpdate": "pro_example"
+                                "Example": "pro_example"
                             },
                             "description": {
                                 "description": "example for test"
