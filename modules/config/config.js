@@ -37,7 +37,7 @@ function getCollectionsFromConfig(collectionName, config = DBconfig) {
     if (!collection) {
         let error = notifictaions.find(n => n.status === 517)
         error.description = `Collection: ${collectionName} does not exsist.`
-        throw error
+        throw error.message
     }
     return collection
 }

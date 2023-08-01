@@ -66,11 +66,11 @@ describe('TEST ON config.js FILE', () => {
             expect(result).toBeInstanceOf(Object);
         });
         it('The collection name should be of type string', () => {
-            expect(() => getCollectionsFromConfig(example, config)).toThrow();
+            expect(() => getCollectionsFromConfig(example, config)).toThrow("example is not defined");
             expect(() => getCollectionsFromConfig("example", config)).not.toThrow();
         });
         it('Collection name does not exist returns an error accordingly', () => {
-            expect(() => getCollectionsFromConfig("exmple", config)).toThrow();
+            expect(() => getCollectionsFromConfig("exmple", config)).toThrow("Check Collection Name");
             expect(() => getCollectionsFromConfig("example", config)).not.toThrow();
         });
     });
@@ -88,11 +88,11 @@ describe('TEST ON config.js FILE', () => {
             expect(result).toBeInstanceOf(Array);
         });
         it('The table name should be of type string', () => {
-            expect(() => getReferencedColumns(tbl_example_table5, config)).toThrow();
+            expect(() => getReferencedColumns(tbl_example_table5, config)).toThrow("tbl_example_table5 is not defined");
             expect(() => getReferencedColumns('tbl_example_table5', config)).not.toThrow();
         });
         it('table name does not exist returns an error accordingly', () => {
-            expect(() => getReferencedColumns('stam', config)).toThrow();
+            expect(() => getReferencedColumns('stam', config)).toThrow("Check Table Name");
             expect(() => getReferencedColumns('tbl_example_table5', config)).not.toThrow();
         });
         it('A table that does not contain a reference returns an empty array', () => {
@@ -122,15 +122,15 @@ describe('TEST ON config.js FILE', () => {
             expect(result).toBeInstanceOf(Array);
         });
         it('The table name should be of type string', () => {
-            expect(() => getTableAccordingToRef(15, config)).toThrow();
+            expect(() => getTableAccordingToRef(15, config)).toThrow("Check Table Name");
             expect(() => getTableAccordingToRef("tbl_example_table5", config)).not.toThrow();
         });
         it('The table name should be of type string', () => {
-            expect(() => getTableAccordingToRef(config)).toThrow();
+            expect(() => getTableAccordingToRef(config)).toThrow("Check Table Name");
             expect(() => getTableAccordingToRef("tbl_example_table5", config)).not.toThrow();
         });
         it('table name does not exist returns an error accordingly', () => {
-            expect(() => getTableAccordingToRef("tbl_example_table6", config)).toThrow();
+            expect(() => getTableAccordingToRef("tbl_example_table6", config)).toThrow("Check Table Name");
             expect(() => getTableAccordingToRef("tbl_example_table5", config)).not.toThrow();
         });
     });
@@ -181,6 +181,4 @@ describe('TEST ON config.js FILE', () => {
             expect(() => getTabeColumnName('tbl_example_table3', config)).not.toThrow();
         });
     });
-
 });
-
