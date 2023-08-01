@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.92% </span>
+                <span class="strong">25.92% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/26</span>
+                <span class='fraction'>7/27</span>
             </div>
         
             
@@ -302,7 +302,8 @@
 <a name='L237'></a><a href='#L237'>237</a>
 <a name='L238'></a><a href='#L238'>238</a>
 <a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -311,27 +312,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">33x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">33x</span>
 <span class="cline-any cline-yes">34x</span>
-<span class="cline-any cline-yes">64x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">105x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">115x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">145x</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-yes">138x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -453,7 +454,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">23x</span>
@@ -475,6 +476,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -543,19 +545,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">require('dotenv');
 const { SQL_DBNAME } = process.env;
-const config = require('../../config/DBconfig.json')
+const DBconfig = require('../../config/DBconfig.json')
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
 &nbsp;
 const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
-function getTableFromConfig(tableName,config = <span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
+function getTableFromConfig(tableName, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
     try {
         let tables
         try {
             let sql = config.find(db =&gt; db.database == 'sql')
             tables = sql.dbobjects.find(obj =&gt; obj.type == 'Tables').list
-        }        
+        }
         catch {
             let error = notifictaions.find(({ status }) =&gt; status === 500)
             error.description += '(check the config file).'
@@ -574,7 +576,7 @@ function getTableFromConfig(tableName,config = <span class="branch-0 cbranch-no"
     }
 }
 &nbsp;
-function getCollectionsFromConfig(collectionName,config = <span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
+function getCollectionsFromConfig(collectionName, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
     let mongo = config.find(db =&gt; db.database === 'mongoDB');
     let collection = mongo.collections.find(({ mongoName }) =&gt; mongoName === collectionName);
     if (!collection) {
@@ -584,8 +586,8 @@ function getCollectionsFromConfig(collectionName,config = <span class="branch-0 
     }
     return collection
 }
-&nbsp;
-const readJoin = <span class="fstat-no" title="function not covered" >as</span>ync (baseTableName, baseColumn,config=<span class="branch-0 cbranch-no" title="branch not covered" >config)</span> =&gt; {
+// 
+const readJoin = <span class="fstat-no" title="function not covered" >as</span>ync (baseTableName, baseColumn, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> =&gt; {
     const tables = <span class="cstat-no" title="statement not covered" >config.find(<span class="fstat-no" title="function not covered" >f </span>=&gt; <span class="cstat-no" title="statement not covered" >f.database == "sql")</span>.dbobjects.find(<span class="fstat-no" title="function not covered" >({</span> type }) =&gt; <span class="cstat-no" title="statement not covered" >type === "Tables")</span>.list</span>
     let myTableNameSQL
 <span class="cstat-no" title="statement not covered" >    try {</span>
@@ -605,7 +607,7 @@ const readJoin = <span class="fstat-no" title="function not covered" >as</span>y
 <span class="cstat-no" title="statement not covered" >        throw error</span>
     }
     let selectColumns = <span class="cstat-no" title="statement not covered" >[]</span>
-    const buildJoin = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(t</span>ableName, column, prevTableAlias,config=<span class="branch-0 cbranch-no" title="branch not covered" >config)</span> =&gt; {</span>
+    const buildJoin = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(t</span>ableName, column, prevTableAlias, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> =&gt; {</span>
         const connectionTable = <span class="cstat-no" title="statement not covered" >tables.filter(<span class="fstat-no" title="function not covered" >({</span> columns }) =&gt; <span class="cstat-no" title="statement not covered" >columns.filter(<span class="fstat-no" title="function not covered" >({</span> type }) =&gt; <span class="cstat-no" title="statement not covered" >type.includes(`REFERENCES ${tableName}(${column})`))</span>.length != 0)</span>;</span>
         // console.log({ connectionTable });
 &nbsp;
@@ -628,10 +630,10 @@ const readJoin = <span class="fstat-no" title="function not covered" >as</span>y
                 let columnToEqual = <span class="cstat-no" title="statement not covered" >[table].map(<span class="fstat-no" title="function not covered" >({</span> columns }) =&gt; <span class="cstat-no" title="statement not covered" >columns.find(<span class="fstat-no" title="function not covered" >({</span> type }) =&gt; <span class="cstat-no" title="statement not covered" >type.includes(`REFERENCES ${tableName}(${column})`))</span>.sqlName)</span>[0];</span>
                 let columnToJoin = <span class="cstat-no" title="statement not covered" >[table].map(<span class="fstat-no" title="function not covered" >({</span> columns }) =&gt; <span class="cstat-no" title="statement not covered" >columns.find(<span class="fstat-no" title="function not covered" >({</span> type }) =&gt; <span class="cstat-no" title="statement not covered" >type.includes('PRIMARY KEY'))</span>.sqlName)</span>[0];</span>
 <span class="cstat-no" title="statement not covered" >                if (join.includes(`JOIN ${tableJoin} ${alias}`)) {</span>
-<span class="cstat-no" title="statement not covered" >                    join = `${join} ${buildJoin(tableJoin, columnToJoin, alias,config=config)}`</span>
+<span class="cstat-no" title="statement not covered" >                    join = `${join} ${buildJoin(tableJoin, columnToJoin, alias, config = config)}`</span>
                 }
                 else {
-<span class="cstat-no" title="statement not covered" >                    join = `${join} LEFT JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias,config=config)}`</span>
+<span class="cstat-no" title="statement not covered" >                    join = `${join} LEFT JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias, config = config)}`</span>
                 }
             }
         else {
@@ -639,7 +641,7 @@ const readJoin = <span class="fstat-no" title="function not covered" >as</span>y
         }
 <span class="cstat-no" title="statement not covered" >        return join;</span>
     }
-    let result = <span class="cstat-no" title="statement not covered" >buildJoin(myTableNameSQL, baseColumn,config=config);</span>
+    let result = <span class="cstat-no" title="statement not covered" >buildJoin(myTableNameSQL, baseColumn, config = config);</span>
     let select = <span class="cstat-no" title="statement not covered" >"";</span>
 <span class="cstat-no" title="statement not covered" >    selectColumns.forEach(<span class="fstat-no" title="function not covered" >s </span>=&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        s.columns.forEach(<span class="fstat-no" title="function not covered" >c </span>=&gt; {</span>
@@ -653,15 +655,15 @@ const readJoin = <span class="fstat-no" title="function not covered" >as</span>y
 &nbsp;
 &nbsp;
 &nbsp;
-function getReferencedColumns(tablename,config = <span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
+function getReferencedColumns(tablename, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
 &nbsp;
     try {
-        const table = getTableFromConfig(tablename,config)
+        const table = getTableFromConfig(tablename, config)
         let columns = table.columns.filter(col =&gt; col.reference).map(col =&gt; ({ name: col.sqlName, ref: col.reference }))
         // 
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!columns) {
             let error = <span class="cstat-no" title="statement not covered" >notifictaions.find(<span class="fstat-no" title="function not covered" >n </span>=&gt; <span class="cstat-no" title="statement not covered" >n.status == 514)</span></span>
-<span class="cstat-no" title="statement not covered" >            error.description = `: ${tablename} does not exist.`</span>
+<span class="cstat-no" title="statement not covered" >            error.description = `: ${collectionName} does not exist.`</span>
 <span class="cstat-no" title="statement not covered" >            throw error</span>
         }
         return columns
@@ -671,11 +673,11 @@ function getReferencedColumns(tablename,config = <span class="branch-0 cbranch-n
 &nbsp;
 &nbsp;
 }
-function <span class="fstat-no" title="function not covered" >setFullObj(</span>parentTable, refTable) {
+function <span class="fstat-no" title="function not covered" >setFullObj(</span>parentTable, refTable, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
     // console.log({ parentTable }, { refTable });
     // let table = getTableFromConfig(parentTable)
     // const f = `select ${refTable.ref} from ${parentTable}`
-    // let table2 = getTableFromConfig(refTable)
+    // let table2 = getTableFromConfig(refTable,config)
     // console.log({ table });
     // console.log({ table2 });
     // table2 = table2.columns.map(col =&gt; { col.name })
@@ -687,12 +689,12 @@ function <span class="fstat-no" title="function not covered" >setFullObj(</span>
     // let columns = table.columns.filter(col =&gt; col.sqlName == b.ref).map()
 }
 &nbsp;
-// function getTables(tablename) {
-//     const table = getTableFromConfig(tablename)
+// function getTables(tablename,config=DBconfig) {
+//     const table = getTableFromConfig(tablename,config)
 //     return table
 // }
-function getTableAccordingToRef(tablename,config = config) {
-    const table = getTableFromConfig(tablename,config)
+function getTableAccordingToRef(tablename, config = DBconfig) {
+    const table = getTableFromConfig(tablename, config)
     // let columns = table.columns.filter(col =&gt; col.reference).map(col =&gt; ({ name: col.sqlName, ref: col.reference }))
     // let columns = table.columns.filter(col =&gt; col.type.toLowerCase().includes('reference')).map(col =&gt; ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
     let columns = table.columns.filter(col =&gt; col.type.toLowerCase().includes('reference')).map(col =&gt; ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
@@ -700,11 +702,11 @@ function getTableAccordingToRef(tablename,config = config) {
     return columns
 &nbsp;
 }
-&nbsp;
-function <span class="fstat-no" title="function not covered" >getObjectWithFeildNameForPrimaryKey(</span>tablename, fields, id,config=<span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
+// 
+function <span class="fstat-no" title="function not covered" >getObjectWithFeildNameForPrimaryKey(</span>tablename, fields, id, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
 <span class="cstat-no" title="statement not covered" >    try {</span>
 &nbsp;
-        let primarykey = <span class="cstat-no" title="statement not covered" >getPrimaryKeyField(tablename,config=config)</span>
+        let primarykey = <span class="cstat-no" title="statement not covered" >getPrimaryKeyField(tablename, config)</span>
 <span class="cstat-no" title="statement not covered" >        if (primarykey) {</span>
             let where = <span class="cstat-no" title="statement not covered" >{}</span>
 <span class="cstat-no" title="statement not covered" >            where[primarykey] = id</span>
@@ -717,9 +719,10 @@ function <span class="fstat-no" title="function not covered" >getObjectWithFeild
     }
 }
 &nbsp;
-function getForeignTableAndColumn(tablename, field,config = <span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
+function getForeignTableAndColumn(tablename, field, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
+&nbsp;
     try {
-        const table = getTableFromConfig(tablename,config=config)
+        const table = getTableFromConfig(tablename, config)
         <span class="missing-if-branch" title="else path not taken" >E</span>if (table) {
             let foreignTableName
             try {
@@ -734,7 +737,7 @@ function getForeignTableAndColumn(tablename, field,config = <span class="branch-
                 error.description = `Field: ${field} is not exsist in table: ${tablename}.`
                 throw error
             }
-            const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(),config=config)
+            const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(), config)
             const { defaultColumn } = foreignTable.MTDTable
             return { foreignTableName, defaultColumn }
         }
@@ -745,11 +748,11 @@ function getForeignTableAndColumn(tablename, field,config = <span class="branch-
         throw error
     }
 }
-&nbsp;
-function <span class="fstat-no" title="function not covered" >convertFieldType(</span>tablename, field, value,config=<span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
+// 
+function <span class="fstat-no" title="function not covered" >convertFieldType(</span>tablename, field, value, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
 <span class="cstat-no" title="statement not covered" >    try {</span>
 &nbsp;
-        const columns = <span class="cstat-no" title="statement not covered" >getSqlTableColumnsType(tablename,config=config)</span>
+        const columns = <span class="cstat-no" title="statement not covered" >getSqlTableColumnsType(tablename, config)</span>
         let col = <span class="cstat-no" title="statement not covered" >columns.find(<span class="fstat-no" title="function not covered" >c </span>=&gt; <span class="cstat-no" title="statement not covered" >c.sqlName === field)</span></span>
         let parse = <span class="cstat-no" title="statement not covered" >types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]</span>
         const ans = <span class="cstat-no" title="statement not covered" >parse.parseNodeTypeToSqlType(value)</span>
@@ -762,8 +765,8 @@ function <span class="fstat-no" title="function not covered" >convertFieldType(<
     }
 &nbsp;
 }
-function getTabeColumnName(tablename,config=<span class="branch-0 cbranch-no" title="branch not covered" >config)</span> {
-    const table = getTableFromConfig(tablename,config=config)
+function getTabeColumnName(tablename, config = <span class="branch-0 cbranch-no" title="branch not covered" >DBconfig)</span> {
+    const table = getTableFromConfig(tablename, config)
     let columns = table.columns.map(col =&gt; col.sqlName)
     return columns
 }
@@ -787,7 +790,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-08-01T09:58:23.787Z
+                at 2023-08-01T12:44:38.367Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
