@@ -19,12 +19,29 @@ function getTableName(config = DBconfig) {
     return tableNameAndDescription;
 }
 
-async function getColumns(tableName, config = DBconfig) {
-    let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
-    for (let i = 0; i < Tables.length; i++) {
-        if (Tables[i].MTDTable.name.name == tableName[0][0]) {
-            return Tables[i].columns
+function getColumns(tableName, config = DBconfig) {
+    try {
+        let tables;
+        try {
+            let sql = config.find(db => db.database == 'sql');
+            tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
         }
+        catch {
+            let error = notifictaions.find(({ status }) => status === 500);
+            error.description += '(check the config file).';
+            throw error;
+        }
+        for (let i = 0; i < tables.length; i++) {
+            if (tables[i].MTDTable.name.sqlName == tableName) {
+                return tables[i].columns
+            }
+        }
+        let error = notifictaions.find(n => n.status == 512);
+        error.description = `Table: ${tableName} does not exist.`;
+        throw error;
+    }
+    catch (error) {
+        throw error;
     }
 }
 
