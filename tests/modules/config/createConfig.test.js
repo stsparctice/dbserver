@@ -39,7 +39,7 @@ describe('TEST ON createConfig.js FILE', () => {
 
     describe('GET COLUMNS',() => {
         it('The function accepts a table name and returns its columns' ,()=>{
-            const result = getColumns('tbl_example_table1',config);
+            const result = getColumns("tbl_example_table1",config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual( [
                 {
@@ -60,20 +60,20 @@ describe('TEST ON createConfig.js FILE', () => {
             ]);
         });
         it('The table name is of type string' ,()=>{
-            expect(() => getColumns(tbl_example_table1,config)).toThrow();
+            expect(() => getColumns(tbl_example_table1,config)).toThrow('tbl_example_table1 is not defined');
             expect(() => getColumns("tbl_example_table1",config)).not.toThrow();
         });
         it('The returned value is of type array' ,()=>{
-            const result = getColumns('tbl_example_table1',config);
+            const result = getColumns("tbl_example_table1",config);
             expect(result).toBeDefined();
             expect(result).toBeInstanceOf(Array)
         });
         it('The table name exists in the config' ,()=>{
-            expect(() => getColumns("tbl_example_table6",config)).toThrow();
+            expect(() => getColumns("tbl_example_table6",config)).toThrow('Check Table Name');
             expect(() => getColumns("tbl_example_table1",config)).not.toThrow();
         });
         it('Invalid config file' ,()=>{
-            expect(() => getColumns("tbl_example_table5",incorrectConfig)).toThrow();
+            expect(() => getColumns("tbl_example_table5",incorrectConfig)).toThrow('Internal Server Error');
         });
     });
 
@@ -104,7 +104,7 @@ describe('TEST ON createConfig.js FILE', () => {
 
     describe('GET VALUES', () => {
         it('The function accepts a procedure name and returns its values' ,()=>{
-            const result = getvalues('pro_example',config);
+            const result = getvalues("pro_example",config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual( [
                 {
@@ -134,20 +134,20 @@ describe('TEST ON createConfig.js FILE', () => {
             ]);
         });
         it('The procedure name is of type string' ,()=>{
-            expect(() => getvalues(pro_example,config)).toThrow();
+            expect(() => getvalues(pro_example,config)).toThrow('pro_example is not defined');
             expect(() => getvalues("pro_example",config)).not.toThrow();
         });
         it('The returned value is of type array' ,()=>{
-            const result = getvalues('pro_example',config);
+            const result = getvalues("pro_example",config);
             expect(result).toBeDefined();
             expect(result).toBeInstanceOf(Array)
         });
         it('The procedure name exists in the config' ,()=>{
-            expect(() => getvalues("pro_example2",config)).toThrow();
+            expect(() => getvalues("pro_example2",config)).toThrow('Check Procedure Name');
             expect(() => getvalues("pro_example",config)).not.toThrow();
         });
         it('Invalid config file' ,()=>{
-            expect(() => getvalues("pro_example",incorrectConfig)).toThrow();
+            expect(() => getvalues("pro_example",incorrectConfig)).toThrow('Internal Server Error');
         });
     });
 

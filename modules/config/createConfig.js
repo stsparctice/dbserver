@@ -90,7 +90,7 @@ function getvalues(proceduresName, config = DBconfig) {
                 return procedures[i].values
             }
         }
-        let error = notifictaions.find(n => n.status == 512);
+        let error = notifictaions.find(n => n.status == 518);
         error.description = `Procedure: ${proceduresName} does not exist.`;
         throw error;
     }
