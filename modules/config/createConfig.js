@@ -9,9 +9,14 @@ async function getTableName(config=config) {
     let description;
     Tables.forEach(t => {
         name = Object.values(t.MTDTable.name)
+        console.log({name});
         tableName.push(name)
+        console.log({tableName});
         description = Object.values(t.MTDTable.description)
+        console.log({description});
         tableDescription.push(description)
+        console.log({tableDescription});
+
     })
     for (let i = 0; i < tableName.length; i++) {
         tableNameAndDescription.push([tableName[i], tableDescription[i]])

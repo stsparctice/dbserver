@@ -1,5 +1,6 @@
 const { getTableFromConfig, getCollectionsFromConfig, readJoin, getReferencedColumns, setFullObj, getTableAccordingToRef, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn, convertFieldType, getTabeColumnName } = require('../../../modules/config/config');
-const config = require('../../../config/TESTconfig.json');
+const config = require('../../../config/TESTconfig/config.json');
+const incorrectConfig = require('../../../config/TESTconfig/incorrectConfig.json');
 
 
 describe('TEST ON config.js FILE', () => {
@@ -47,6 +48,9 @@ describe('TEST ON config.js FILE', () => {
         it('When table name does not exist in the config the function returns an error accordingly', () => {
             expect(() => getTableFromConfig('empty', config)).toThrow();
             expect(() => getTableFromConfig('tbl_example_table1', config)).not.toThrow();
+        });
+        it('When the structure of the config file is incorrect', () => {
+            expect(() => getTableFromConfig('tbl_example_table1',incorrectConfig)).toThrow();
         });
     });
 
