@@ -78,13 +78,54 @@ describe('TEST ON createConfig.js FILE', () => {
     //     });
     // });
 
-    // describe('GET VALUES', () => {
-    //     it('' ,()=>{
-    //         const result = getvalues('',config);
-    //         expect(result).toBeDefined();
-    //         expect(result).toStrictEqual();
-    //     });
-    // });
+    describe('GET VALUES', () => {
+        it('The function accepts a procedure name and returns its values' ,()=>{
+            const result = getvalues('pro_example',config);
+            expect(result).toBeDefined();
+            expect(result).toStrictEqual( [
+                {
+                    "name": {
+                        "tableName": "tableName"
+                    },
+                    "type": {
+                        "type": "NVARCHAR(20)"
+                    }
+                },
+                {
+                    "name": {
+                        "values": "values"
+                    },
+                    "type": {
+                        "type": "NVARCHAR(MAX)"
+                    }
+                },
+                {
+                    "name": {
+                        "condition": "condition"
+                    },
+                    "type": {
+                        "type": "NVARCHAR(MAX)"
+                    }
+                }
+            ]);
+        });
+        it('The procedure name is of type string' ,()=>{
+            expect(() => getvalues(pro_example,config)).toThrow();
+            expect(() => getvalues("pro_example",config)).not.toThrow();
+        });
+        it('The returned value is of type array' ,()=>{
+            const result = getvalues('pro_example',config);
+            expect(result).toBeDefined();
+            expect(result).toBeInstanceOf(Array)
+        });
+        it('The procedure name exists in the config' ,()=>{
+            expect(() => getvalues("pro_example2",config)).toThrow();
+            expect(() => getvalues("pro_example",config)).not.toThrow();
+        });
+        it('Invalid config file' ,()=>{
+            expect(() => getvalues("pro_example",incorrectConfig)).toThrow();
+        });
+    });
 
 });
 
