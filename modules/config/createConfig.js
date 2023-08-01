@@ -1,30 +1,25 @@
 const DBconfig = require('../../config/DBconfig.json')
+const notifictaions = require('../../config/serverNotifictionsConfig.json');
 
-async function getTableName(config=DBconfig) {
-    let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
-    let tableNameAndDescription = []
-    let tableName = [];
-    let tableDescription = [];
-    let name;
-    let description;
-    Tables.forEach(t => {
-        name = Object.values(t.MTDTable.name)
-        console.log({name});
-        tableName.push(name)
-        console.log({tableName});
-        description = Object.values(t.MTDTable.description)
-        console.log({description});
-        tableDescription.push(description)
-        console.log({tableDescription});
-
-    })
-    for (let i = 0; i < tableName.length; i++) {
-        tableNameAndDescription.push([tableName[i], tableDescription[i]])
+function getTableName(config = DBconfig) {
+    let tables;
+    try {
+        let sql = config.find(db => db.database === 'sql');
+        tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
     }
-    return tableNameAndDescription
+    catch {
+        error = notifictaions.find(({ status }) => status === 500);
+        error.description += '(check the config file).';
+        throw error;
+    };
+    let tableNameAndDescription = [];
+    tables.forEach(t => {
+        tableNameAndDescription.push(t.MTDTable.name.sqlName, t.MTDTable.description);
+    });
+    return tableNameAndDescription;
 }
 
-async function getColumns(tableName, config=DBconfig) {
+async function getColumns(tableName, config = DBconfig) {
     let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
     for (let i = 0; i < Tables.length; i++) {
         if (Tables[i].MTDTable.name.name == tableName[0][0]) {
@@ -33,7 +28,7 @@ async function getColumns(tableName, config=DBconfig) {
     }
 }
 
-async function getProcedures(config=DBconfig) {
+async function getProcedures(config = DBconfig) {
     let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
     let proceduresNameAndDescription = []
     let proceduresName = [];
@@ -52,7 +47,7 @@ async function getProcedures(config=DBconfig) {
     return proceduresNameAndDescription
 }
 
-async function getvalues(proceduresName, config=DBconfig) {
+async function getvalues(proceduresName, config = DBconfig) {
     let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
     for (let i = 0; i < procedures.length; i++) {
         if (Object.keys(procedures[i].MTDProcedure.name)[0] == Object.keys(proceduresName[0])[0]) {
