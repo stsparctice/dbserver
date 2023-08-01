@@ -9,21 +9,28 @@ describe('TEST ON createConfig.js FILE', () => {
             const result = getTableName(config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual(
-                ['tbl_example_table1',
-                'example table with PRIMARY KEY',
-                'tbl_example_table2',
-                'example table with defaultColumn',
-                'tbl_example_table3',
-                'example table with PRIMARY KEY and FOREIGN KEY',
-                'tbl_example_table4',
-                'example table with values in columns',
-                'tbl_example_table5',
-                'example table with references']);
+                [['tbl_example_table1',
+                'example table with PRIMARY KEY'],
+                ['tbl_example_table2',
+                'example table with defaultColumn'],
+                ['tbl_example_table3',
+                'example table with PRIMARY KEY and FOREIGN KEY'],
+                ['tbl_example_table4',
+                'example table with values in columns'],
+                ['tbl_example_table5',
+                'example table with references']]);
         });
         it('The function returns an array',  () => {
             const result =  getTableName(config);
             expect(result).toBeDefined();
             expect(result).toBeInstanceOf(Array);
+        });
+        it('The function returns an array of arrays',  () => {
+            const result =  getTableName(config);
+            expect(result).toBeDefined();
+            result.forEach(arr=>{ 
+                expect(arr).toBeInstanceOf(Array);
+            })  
         });
         it('If there is no database:sql in the config file, an error is thrown.', () => {
             expect(() =>  getTableName(incorrectConfig)).toThrow();
@@ -70,13 +77,30 @@ describe('TEST ON createConfig.js FILE', () => {
         });
     });
 
-    // describe('GET PROCEDURES', () => {
-    //     it('' ,()=>{
-    //         const result = getProcedures('',config);
-    //         expect(result).toBeDefined();
-    //         expect(result).toStrictEqual();
-    //     });
-    // });
+    describe('GET PROCEDURES', () => {
+        it('The function works as required', () => {
+            const result = getProcedures(config);
+            expect(result).toBeDefined();
+            expect(result).toStrictEqual(
+                [ [ 'pro_example', 'example for test' ] ]
+            );
+        });
+        it('The function returns an array',  () => {
+            const result =  getProcedures(config);
+            expect(result).toBeDefined();
+            expect(result).toBeInstanceOf(Array);
+        });
+        it('The function returns an array of arrays',  () => {
+            const result =  getProcedures(config);
+            expect(result).toBeDefined();
+            result.forEach(arr=>{ 
+                expect(arr).toBeInstanceOf(Array);
+            })  
+        });
+        it('If there is no database:sql in the config file, an error is thrown.', () => {
+            expect(() =>  getProcedures(incorrectConfig)).toThrow();
+        });
+    });
 
     describe('GET VALUES', () => {
         it('The function accepts a procedure name and returns its values' ,()=>{

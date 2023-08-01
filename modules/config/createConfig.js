@@ -14,7 +14,7 @@ function getTableName(config = DBconfig) {
     };
     let tableNameAndDescription = [];
     tables.forEach(t => {
-        tableNameAndDescription.push(t.MTDTable.name.sqlName, t.MTDTable.description);
+        tableNameAndDescription.push([t.MTDTable.name.sqlName, t.MTDTable.description]);
     });
     return tableNameAndDescription;
 }
@@ -45,23 +45,22 @@ function getColumns(tableName, config = DBconfig) {
     }
 }
 
-async function getProcedures(config = DBconfig) {
-    let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
-    let proceduresNameAndDescription = []
-    let proceduresName = [];
-    let proceduresDescription = [];
-    let name;
-    let description;
-    procedures.forEach(t => {
-        name = t.MTDProcedure.name;
-        proceduresName.push(name)
-        description = Object.values(t.MTDProcedure.description)
-        proceduresDescription.push(description)
-    })
-    for (let i = 0; i < proceduresDescription.length; i++) {
-        proceduresNameAndDescription.push([proceduresName[i], proceduresDescription[i]])
+function getProcedures(config = DBconfig) {
+    let procedures;
+    try {
+        let sql = config.find(db => db.database === 'sql');
+        procedures = sql.dbobjects.find(obj => obj.type === 'Procedures').list;
     }
-    return proceduresNameAndDescription
+    catch {
+        error = notifictaions.find(({ status }) => status === 500);
+        error.description += '(check the config file).';
+        throw error;
+    };
+    let proceduresNameAndDescription = [];
+    procedures.forEach(t => {
+        proceduresNameAndDescription.push([Object.values(t.MTDProcedure.name)[0], t.MTDProcedure.description.description]);
+    });
+    return proceduresNameAndDescription;
 }
 
 function getvalues(proceduresName, config = DBconfig) {
