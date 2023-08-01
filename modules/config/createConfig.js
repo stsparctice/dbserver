@@ -1,6 +1,6 @@
 const config = require('../../config/DBconfig.json')
 
-async function getTableName() {
+async function getTableName(config=config) {
     let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
     let tableNameAndDescription = []
     let tableName = [];
@@ -24,7 +24,7 @@ async function getTableName() {
     return tableNameAndDescription
 }
 
-async function getColumns(tableName) {
+async function getColumns(tableName, config=config) {
     let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
     for (let i = 0; i < Tables.length; i++) {
         if (Tables[i].MTDTable.name.name == tableName[0][0]) {
@@ -33,7 +33,7 @@ async function getColumns(tableName) {
     }
 }
 
-async function getProcedures() {
+async function getProcedures(config=config) {
     let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
     let proceduresNameAndDescription = []
     let proceduresName = [];
@@ -52,7 +52,7 @@ async function getProcedures() {
     return proceduresNameAndDescription
 }
 
-async function getvalues(proceduresName) {
+async function getvalues(proceduresName, config=config) {
     let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
     for (let i = 0; i < procedures.length; i++) {
         if (Object.keys(procedures[i].MTDProcedure.name)[0] == Object.keys(proceduresName[0])[0]) {
