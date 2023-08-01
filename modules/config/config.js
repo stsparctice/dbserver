@@ -1,18 +1,18 @@
 require('dotenv');
 const { SQL_DBNAME } = process.env;
-const config = require('../../config/DBconfig.json')
+const DBconfig = require('../../config/DBconfig.json')
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
 
 const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
-function getTableFromConfig(tableName,config = config) {
+function getTableFromConfig(tableName, config = DBconfig) {
     try {
         let tables
         try {
             let sql = config.find(db => db.database == 'sql')
             tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        }        
+        }
         catch {
             let error = notifictaions.find(({ status }) => status === 500)
             error.description += '(check the config file).'
@@ -31,7 +31,7 @@ function getTableFromConfig(tableName,config = config) {
     }
 }
 
-function getCollectionsFromConfig(collectionName,config = config) {
+function getCollectionsFromConfig(collectionName, config = DBconfig) {
     let mongo = config.find(db => db.database === 'mongoDB');
     let collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
     if (!collection) {
@@ -42,7 +42,7 @@ function getCollectionsFromConfig(collectionName,config = config) {
     return collection
 }
 // 
-const readJoin = async (baseTableName, baseColumn,config=config) => {
+const readJoin = async (baseTableName, baseColumn, config = DBconfig) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
     let myTableNameSQL
     try {
@@ -62,7 +62,7 @@ const readJoin = async (baseTableName, baseColumn,config=config) => {
         throw error
     }
     let selectColumns = []
-    const buildJoin = (tableName, column, prevTableAlias,config=config) => {
+    const buildJoin = (tableName, column, prevTableAlias, config = DBconfig) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
         // console.log({ connectionTable });
 
@@ -85,10 +85,10 @@ const readJoin = async (baseTableName, baseColumn,config=config) => {
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
                 let columnToJoin = [table].map(({ columns }) => columns.find(({ type }) => type.includes('PRIMARY KEY')).sqlName)[0];
                 if (join.includes(`JOIN ${tableJoin} ${alias}`)) {
-                    join = `${join} ${buildJoin(tableJoin, columnToJoin, alias,config=config)}`
+                    join = `${join} ${buildJoin(tableJoin, columnToJoin, alias, config = config)}`
                 }
                 else {
-                    join = `${join} LEFT JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias,config=config)}`
+                    join = `${join} LEFT JOIN ${tableJoin} ${alias} ON ${alias}.${columnToEqual}=${prevTableAlias}.${column} ${buildJoin(tableJoin, columnToJoin, alias, config = config)}`
                 }
             }
         else {
@@ -96,7 +96,7 @@ const readJoin = async (baseTableName, baseColumn,config=config) => {
         }
         return join;
     }
-    let result = buildJoin(myTableNameSQL, baseColumn,config=config);
+    let result = buildJoin(myTableNameSQL, baseColumn, config = config);
     let select = "";
     selectColumns.forEach(s => {
         s.columns.forEach(c => {
@@ -110,10 +110,10 @@ const readJoin = async (baseTableName, baseColumn,config=config) => {
 
 
 
-function getReferencedColumns(tablename,config = config) {
+function getReferencedColumns(tablename, config = DBconfig) {
 
     try {
-        const table = getTableFromConfig(tablename,config)
+        const table = getTableFromConfig(tablename, config)
         let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
         // 
         if (!columns) {
@@ -128,11 +128,11 @@ function getReferencedColumns(tablename,config = config) {
 
 
 }
-function setFullObj(parentTable, refTable) {
+function setFullObj(parentTable, refTable, config = DBconfig) {
     // console.log({ parentTable }, { refTable });
     // let table = getTableFromConfig(parentTable)
     // const f = `select ${refTable.ref} from ${parentTable}`
-    // let table2 = getTableFromConfig(refTable)
+    // let table2 = getTableFromConfig(refTable,config)
     // console.log({ table });
     // console.log({ table2 });
     // table2 = table2.columns.map(col => { col.name })
@@ -144,12 +144,12 @@ function setFullObj(parentTable, refTable) {
     // let columns = table.columns.filter(col => col.sqlName == b.ref).map()
 }
 
-// function getTables(tablename) {
-//     const table = getTableFromConfig(tablename)
+// function getTables(tablename,config=DBconfig) {
+//     const table = getTableFromConfig(tablename,config)
 //     return table
 // }
-function getTableAccordingToRef(tablename,config = config) {
-    const table = getTableFromConfig(tablename,config)
+function getTableAccordingToRef(tablename, config = DBconfig) {
+    const table = getTableFromConfig(tablename, config)
     // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
     // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
     let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
@@ -158,10 +158,10 @@ function getTableAccordingToRef(tablename,config = config) {
 
 }
 // 
-function getObjectWithFeildNameForPrimaryKey(tablename, fields, id,config=config) {
+function getObjectWithFeildNameForPrimaryKey(tablename, fields, id, config = DBconfig) {
     try {
 
-        let primarykey = getPrimaryKeyField(tablename,config=config)
+        let primarykey = getPrimaryKeyField(tablename, config)
         if (primarykey) {
             let where = {}
             where[primarykey] = id
@@ -174,9 +174,10 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id,config=config
     }
 }
 
-function getForeignTableAndColumn(tablename, field,config = config) {
+function getForeignTableAndColumn(tablename, field, config = DBconfig) {
+
     try {
-        const table = getTableFromConfig(tablename,config=config)
+        const table = getTableFromConfig(tablename, config)
         if (table) {
             let foreignTableName
             try {
@@ -191,7 +192,7 @@ function getForeignTableAndColumn(tablename, field,config = config) {
                 error.description = `Field: ${field} is not exsist in table: ${tablename}.`
                 throw error
             }
-            const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(),config=config)
+            const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(), config)
             const { defaultColumn } = foreignTable.MTDTable
             return { foreignTableName, defaultColumn }
         }
@@ -203,10 +204,10 @@ function getForeignTableAndColumn(tablename, field,config = config) {
     }
 }
 // 
-function convertFieldType(tablename, field, value,config=config) {
+function convertFieldType(tablename, field, value, config = DBconfig) {
     try {
 
-        const columns = getSqlTableColumnsType(tablename,config=config)
+        const columns = getSqlTableColumnsType(tablename, config)
         let col = columns.find(c => c.sqlName === field)
         let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
         const ans = parse.parseNodeTypeToSqlType(value)
@@ -219,8 +220,8 @@ function convertFieldType(tablename, field, value,config=config) {
     }
 
 }
-function getTabeColumnName(tablename,config=config) {
-    const table = getTableFromConfig(tablename,config=config)
+function getTabeColumnName(tablename, config = DBconfig) {
+    const table = getTableFromConfig(tablename, config)
     let columns = table.columns.map(col => col.sqlName)
     return columns
 }
