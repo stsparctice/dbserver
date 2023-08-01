@@ -12,7 +12,7 @@ function getTableFromConfig(tableName,config = config) {
         try {
             let sql = config.find(db => db.database == 'sql')
             tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
-        }
+        }        
         catch {
             let error = notifictaions.find(({ status }) => status === 500)
             error.description += '(check the config file).'
@@ -41,7 +41,7 @@ function getCollectionsFromConfig(collectionName,config = config) {
     }
     return collection
 }
-
+// 
 const readJoin = async (baseTableName, baseColumn,config=config) => {
     const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
     let myTableNameSQL
@@ -115,9 +115,10 @@ function getReferencedColumns(tablename,config = config) {
     try {
         const table = getTableFromConfig(tablename,config)
         let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
+        // 
         if (!columns) {
             let error = notifictaions.find(n => n.status == 514)
-            error.description = `: ${collectionName} does not exsist.`
+            error.description = `: ${collectionName} does not exist.`
             throw error
         }
         return columns
@@ -156,7 +157,7 @@ function getTableAccordingToRef(tablename,config = config) {
     return columns
 
 }
-
+// 
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id,config=config) {
     try {
 
@@ -193,15 +194,15 @@ function getForeignTableAndColumn(tablename, field,config = config) {
             const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(),config=config)
             const { defaultColumn } = foreignTable.MTDTable
             return { foreignTableName, defaultColumn }
-
         }
+        // 
         return false
     }
     catch (error) {
         throw error
     }
 }
-
+// 
 function convertFieldType(tablename, field, value,config=config) {
     try {
 
