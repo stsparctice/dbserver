@@ -33,7 +33,7 @@ describe('TEST ON createConfig.js FILE', () => {
             })  
         });
         it('If there is no database:sql in the config file, an error is thrown.', () => {
-            expect(() =>  getTableName(incorrectConfig)).toThrow();
+            expect(() =>  getTableName(incorrectConfig)).toThrow('Internal Server Error');
         });
     });
 
@@ -98,7 +98,7 @@ describe('TEST ON createConfig.js FILE', () => {
             })  
         });
         it('If there is no database:sql in the config file, an error is thrown.', () => {
-            expect(() =>  getProcedures(incorrectConfig)).toThrow();
+            expect(() =>  getProcedures(incorrectConfig)).toThrow('Internal Server Error');
         });
     });
 

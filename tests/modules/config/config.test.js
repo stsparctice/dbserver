@@ -37,7 +37,7 @@ describe('TEST ON config.js FILE', () => {
             });
         });
         it('The table name should be of type string', () => {
-            expect(() => getTableFromConfig(tbl_example_table1, config)).toThrow();
+            expect(() => getTableFromConfig(tbl_example_table1, config)).toThrow('tbl_example_table1 is not defined');
             expect(() => getTableFromConfig('tbl_example_table1', config)).not.toThrow();
         });
         it('The value returned is of type object', () => {
@@ -46,11 +46,11 @@ describe('TEST ON config.js FILE', () => {
             expect(result).toBeInstanceOf(Object);
         });
         it('When table name does not exist in the config the function returns an error accordingly', () => {
-            expect(() => getTableFromConfig('empty', config)).toThrow();
+            expect(() => getTableFromConfig('empty', config)).toThrow('Check Table Name');
             expect(() => getTableFromConfig('tbl_example_table1', config)).not.toThrow();
         });
         it('When the structure of the config file is incorrect', () => {
-            expect(() => getTableFromConfig('tbl_example_table1',incorrectConfig)).toThrow();
+            expect(() => getTableFromConfig('tbl_example_table1',incorrectConfig)).toThrow('Internal Server Error');
         });
     });
 
@@ -173,11 +173,11 @@ describe('TEST ON config.js FILE', () => {
             expect(result).toBeInstanceOf(Array);
         });
         it('The table name is of type string', () => {
-            expect(() => getTabeColumnName(tbl_example_table2, config)).toThrow();
+            expect(() => getTabeColumnName(tbl_example_table2, config)).toThrow('tbl_example_table2 is not defined');
             expect(() => getTabeColumnName('tbl_example_table2', config)).not.toThrow();
         });
         it('The table name that does not exist returns an error accordingly', () => {
-            expect(() => getTabeColumnName('not_exist_table', config)).toThrow();
+            expect(() => getTabeColumnName('not_exist_table', config)).toThrow('Check Table Name');
             expect(() => getTabeColumnName('tbl_example_table3', config)).not.toThrow();
         });
     });
