@@ -74,11 +74,28 @@ function getProcedures(config = DBconfig) {
 }
 
 function getvalues(proceduresName, config = DBconfig) {
-    let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
-    for (let i = 0; i < procedures.length; i++) {
-        if (Object.keys(procedures[i].MTDProcedure.name)[0] == Object.keys(proceduresName[0])[0]) {
-            return procedures[i].values
+    try {
+        let procedures;
+        try {
+            let sql = config.find(db => db.database == 'sql');
+            procedures = sql.dbobjects.find(obj => obj.type == 'Procedures').list;
         }
+        catch {
+            let error = notifictaions.find(({ status }) => status === 500);
+            error.description += '(check the config file).';
+            throw error;
+        }
+        for (let i = 0; i < procedures.length; i++) {
+            if (Object.values(procedures[i].MTDProcedure.name)[0] === proceduresName) {
+                return procedures[i].values
+            }
+        }
+        let error = notifictaions.find(n => n.status == 512);
+        error.description = `Procedure: ${proceduresName} does not exist.`;
+        throw error;
+    }
+    catch (error) {
+        throw error;
     }
 }
 
