@@ -9,7 +9,7 @@ function getTableName(config = DBconfig) {
             tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
         }
         catch {
-            error = notifictaions.find(({ status }) => status === 500);
+            error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         };
@@ -32,7 +32,7 @@ function getColumns(tableName, config = DBconfig) {
             tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
         }
         catch {
-            let error = notifictaions.find(({ status }) => status === 500);
+            let error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         }
@@ -58,7 +58,7 @@ function getProcedures(config = DBconfig) {
             procedures = sql.dbobjects.find(obj => obj.type === 'Procedures').list;
         }
         catch {
-            error = notifictaions.find(({ status }) => status === 500);
+            error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         };
@@ -81,7 +81,7 @@ function getvalues(proceduresName, config = DBconfig) {
             procedures = sql.dbobjects.find(obj => obj.type == 'Procedures').list;
         }
         catch {
-            let error = notifictaions.find(({ status }) => status === 500);
+            let error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         }
