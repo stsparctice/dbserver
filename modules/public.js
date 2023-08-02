@@ -1,4 +1,4 @@
-const types = require('./config/config-objects')
+const { types } = require('./config/config-objects')
 const { getTableFromConfig, getCollectionsFromConfig } = require('./config/config')
 const notifictaions = require('../config/serverNotifictionsConfig.json')
 
@@ -29,7 +29,6 @@ function parseSQLType(obj, tabledata) {
                     error.description = `Type: ${type} does not exist.`
                     throw error
                 }
-                // console.log(obj[keys[i]]);
                 const val = parse.parseNodeTypeToSqlType(obj[keys[i]]);
                 str.push(val);
             }
@@ -52,7 +51,8 @@ function parseSQLTypeForColumn(col, tableName) {
     let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
     let parse
     try {
-        parse = types[type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '')]
+        const typename = type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '').trim()
+        parse = types[typename]
     }
     catch {
         let error = notifictaions.find(n => n.status == 513)
@@ -110,8 +110,12 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id) {
 const getForeginKeyColumns = (tableName) => {
     const myTable = getTableFromConfig(tableName)
     const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-    const result = columns.map((column) => { return {tableName: column.type.slice(column.type.toLowerCase().indexOf('tbl'), column.type.lastIndexOf('(')) 
-    ,column:column.sqlName,type:column.type}})
+    const result = columns.map((column) => {
+        return {
+            tableName: column.type.slice(column.type.toLowerCase().indexOf('tbl'), column.type.lastIndexOf('('))
+            , column: column.sqlName, type: column.type
+        }
+    })
     return result;
 }
 

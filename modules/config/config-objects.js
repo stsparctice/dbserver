@@ -27,12 +27,13 @@ const isValueSent = (value) => {
 };
 
 const types = {
-
     NVARCHAR: {
-
         typeNodeName: 'string',
         parseNodeTypeToSqlType: (value) => {
-            try { return convertToSQLString(value); } catch (err) { throw err; };
+            try {
+                return convertToSQLString(value);
+            }
+            catch (err) { throw err; };
         }
     },
 
@@ -67,7 +68,7 @@ const types = {
                 return number;
         }
     },
-    
+
     REAL: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
