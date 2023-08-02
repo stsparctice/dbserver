@@ -1,4 +1,6 @@
 const convertToSQLString = (value) => {
+    if (value === undefined) throw new Error('value is required');
+    if (typeof value !== 'string') throw new Error('value must be a string');
     let special = ["'", "&", "%", "#", "$"]
     const sqlStrings = []
     const split = value.split('')
@@ -21,6 +23,9 @@ const convertToSQLString = (value) => {
     return `N'${value}'`
 }
 
+const isValueSent = (value) => {
+    if (value === undefined) throw new Error('value is required');
+}
 
 const types = {
 
@@ -28,30 +33,36 @@ const types = {
 
         typeNodeName: 'string',
         parseNodeTypeToSqlType: (value) => {
-            return convertToSQLString(value)
+            try { return convertToSQLString(value) } catch (err) { throw err };
         }
     },
 
     BIT: {
         typeNodeName: 'boolean',
         parseNodeTypeToSqlType: (boolean) => {
-            return `'${boolean}'`
+            try {
+                isValueSent(boolean)
+                return `'${boolean}'`
+            }
+            catch (err) { throw err }
         }
     },
 
     DATETIME: {
         typeNodeName: 'Date',
         parseNodeTypeToSqlType: (Date) => {
-
-            return `'${Date}'`
+            try {
+                isValueSent(Date)
+                return `'${Date}'`
+            }
+            catch (err) { throw err }
         }
     },
 
     INT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-           
-            if (isNaN(number)|| number=='')
+            if (isNaN(number) || number == '')
                 return 0
             else
                 return number
@@ -60,7 +71,7 @@ const types = {
     REAL: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number)|| number=='')
+            if (isNaN(number) || number == '')
                 return 0
             else
                 return number
@@ -69,7 +80,7 @@ const types = {
     FLOAT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number)|| number=='')
+            if (isNaN(number) || number == '')
                 return 0
             else
                 return number
@@ -78,5 +89,5 @@ const types = {
 }
 
 
-module.exports = types
+module.exports = { types, convertToSQLString }
 
