@@ -23,7 +23,7 @@ const convertToSQLString = (value) => {
     return `N'${value}'`
 }
 
-const isValueHasBeenSent = (value) => {
+const isValueSent = (value) => {
     if (value === undefined) throw new Error('value is required');
 }
 
@@ -41,7 +41,7 @@ const types = {
         typeNodeName: 'boolean',
         parseNodeTypeToSqlType: (boolean) => {
             try {
-                isValueHasBeenSent(boolean)
+                isValueSent(boolean)
                 return `'${boolean}'`
             }
             catch (err) { throw err }
@@ -52,7 +52,7 @@ const types = {
         typeNodeName: 'Date',
         parseNodeTypeToSqlType: (Date) => {
             try {
-                isValueHasBeenSent(Date)
+                isValueSent(Date)
                 return `'${Date}'`
             }
             catch (err) { throw err }
