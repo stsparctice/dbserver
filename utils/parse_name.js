@@ -5,11 +5,12 @@ const { DBType, getTableFromConfig } = require('../modules/config/config')
 function parseTableName() {
     return (req, res, next) => {
         try {
-            req.body.entityName = parseDBname(req.body.entityName).entityName
+            req.body.entityName = parseDBname(req.body.entityName).entityName;
             next();
         }
         catch (error) {
-            res.status(500).send(error.message)
+            console.log(error.description)
+            res.status(error.status).send(error.message);
 
         }
     }
@@ -71,7 +72,7 @@ const parseListOfColumnsName = () => {
 }
 
 const parseDBname = (entityName) => {
-    console.log({entityName});
+    // console.log({entityName});
     let sql = config.find(db => db.database === DBType.SQL);
     let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
     let table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);

@@ -6,8 +6,6 @@ const { getTableFromConfig, DBType } = require('../../modules/config/config')
 const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, getSqlTableColumnsType, parseSQLType } = require('../../modules/public')
 const notifictions = require('../../config/serverNotifictionsConfig.json');
 const { convertToSqlCondition } = require('../../utils/convert_condition');
-const { parseDBname, parseColumnName } = require('../../utils/parse_name');
-const mssql = require('mssql');
 
 // if (!SQL_DBNAME) {
 //      throw notifictions.find(n => n.status == 509)
@@ -218,6 +216,5 @@ module.exports = {
      createNewTable,
      insertColumn,
      drop,
-     updateColumn,
-     transactionCreate
+     updateColumn
 }
