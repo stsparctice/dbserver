@@ -49,68 +49,10 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "example_table1",
-                                "sqlName": "tbl_example_table1"
+                                "name": "example_table4",
+                                "sqlName": "tbl_example_table4"
                             },
-                            "description": "example table with PRIMARY KEY"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "measure",
-                                "sqlName": "Measure",
-                                "type": "NVARCHAR(20) NOT NULL "
-                            },
-                            {
-                                "name": "disable",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "example_table2",
-                                "sqlName": "tbl_example_table2"
-                            },
-                            "description": "example table with defaultColumn",
-                            "defaultColumn": "StatusName"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL",
-                                "values": [
-                                    1,
-                                    2,
-                                    3
-                                ]
-                            },
-                            {
-                                "name": "StatusName",
-                                "sqlName": "StatusName",
-                                "type": "NVARCHAR(50) NOT NULL",
-                                "values": [
-                                    "פעיל",
-                                    "מושהה",
-                                    "מוגבל"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "example_table3",
-                                "sqlName": "tbl_example_table3"
-                            },
-                            "description": "example table with PRIMARY KEY and FOREIGN KEY" ,
+                            "description": "example table with values in columns",
                             "defaultColumn": "Name"
                         },
                         "columns": [
@@ -118,49 +60,6 @@
                                 "name": "Id",
                                 "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "name",
-                                "sqlName": "Name",
-                                "type": "NVARCHAR(20)  NOT NULL"
-                            },
-                            {
-                                "name": "unitOfMeasure",
-                                "sqlName": "UnitOfMeasure",
-                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table2(Id)"
-                            },
-                            {
-                                "name": "bookkeepingCode",
-                                "sqlName": "BookkeepingCode",
-                                "type": "NVARCHAR(20)  NULL"
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "example_table4",
-                                "sqlName": "tbl_example_table4"
-                            },
-                            "description": "example table with values in columns"
-                        },
-                        "columns": [
-                            {
-                                "name": "Id",
-                                "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                            },
-                            {
-                                "name": "PaymentType",
-                                "sqlName": "PaymentType",
-                                "type": "NVARCHAR(20)  NOT NULL",
-                                "values": [
-                                    "Cash",
-                                    "Cheque",
-                                    "Credit",
-                                    "StandingOrder",
-                                    "BankTransfer"
-                                ]
                             }
                         ]
                     },
@@ -170,7 +69,8 @@
                                 "name": "example_table5",
                                 "sqlName": "tbl_example_table5"
                             },
-                            "description": "example table with references"
+                            "description": "example table with references",
+                            "defaultColumn": "ProductId"
                         },
                         "columns": [
                             {
@@ -181,7 +81,7 @@
                             {
                                 "name": "unitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
-                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table1(Id)"
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table4(Id)"
                             },
                             {
                                 "name": "ProductId",
@@ -190,9 +90,9 @@
                                 "reference": "TableName"
                             },
                             {
-                                "name": "tableName",
+                                "name": "tablename",
                                 "sqlName": "TableName",
-                                "type": "NVARCHAR(50)"
+                                "type": "NVARCHAR(MAX) NULL"
                             }
                         ]
                     }

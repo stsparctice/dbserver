@@ -9,13 +9,7 @@ describe('TEST ON createConfig.js FILE', () => {
             const result = getTableName(config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual(
-                [['tbl_example_table1',
-                    'example table with PRIMARY KEY'],
-                ['tbl_example_table2',
-                    'example table with defaultColumn'],
-                ['tbl_example_table3',
-                    'example table with PRIMARY KEY and FOREIGN KEY'],
-                ['tbl_example_table4',
+                [['tbl_example_table4',
                     'example table with values in columns'],
                 ['tbl_example_table5',
                     'example table with references']]);
@@ -39,23 +33,13 @@ describe('TEST ON createConfig.js FILE', () => {
 
     describe('GET COLUMNS', () => {
         it('The function accepts a table name and returns its columns', () => {
-            const result = getColumns('tbl_example_table1', config);
+            const result = getColumns('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual([
                 {
-                    'name': 'Id',
-                    'sqlName': 'Id',
-                    'type': 'INT IDENTITY PRIMARY KEY NOT NULL'
-                },
-                {
-                    'name': 'measure',
-                    'sqlName': 'Measure',
-                    'type': 'NVARCHAR(20) NOT NULL '
-                },
-                {
-                    'name': 'disable',
-                    'sqlName': 'Disable',
-                    'type': 'BIT NOT NULL'
+                    "name": "Id",
+                    "sqlName": "Id",
+                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                 }
             ]);
         });
@@ -63,13 +47,13 @@ describe('TEST ON createConfig.js FILE', () => {
             expect(() => getColumns(15, config)).toThrow('Check the type of the parameter received');
         });
         it('The returned value is of type array', () => {
-            const result = getColumns('tbl_example_table1', config);
+            const result = getColumns('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toBeInstanceOf(Array)
         });
         it('The table name exists in the config', () => {
             expect(() => getColumns('table_not_exist', config)).toThrow('Check Table Name');
-            expect(() => getColumns('tbl_example_table1', config)).not.toThrow();
+            expect(() => getColumns('tbl_example_table4', config)).not.toThrow();
         });
         it('Invalid config file', () => {
             expect(() => getColumns('tbl_example_table5', incorrectConfig)).toThrow('Check config file');

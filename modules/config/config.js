@@ -114,6 +114,7 @@ function getForeignTableAndColumn(tablename, field, config = DBconfig) {
         }
         const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(), config);
         const { defaultColumn } = foreignTable.MTDTable;
+        console.log({ foreignTableName, defaultColumn });
         return { foreignTableName, defaultColumn };
     }
     catch (error) {
