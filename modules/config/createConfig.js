@@ -26,6 +26,11 @@ function getTableName(config = DBconfig) {
 
 function getColumns(tableName, config = DBconfig) {
     try {
+        if (typeof tableName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The table name should be of type string';
+            throw error;
+        }
         let tables;
         try {
             let sql = config.find(db => db.database == 'sql');
@@ -75,6 +80,11 @@ function getProcedures(config = DBconfig) {
 
 function getvalues(proceduresName, config = DBconfig) {
     try {
+        if (typeof proceduresName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The procedure name should be of type string';
+            throw error;
+        }
         let procedures;
         try {
             let sql = config.find(db => db.database == 'sql');

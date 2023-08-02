@@ -60,8 +60,7 @@ describe('TEST ON createConfig.js FILE', () => {
             ]);
         });
         it('The table name is of type string', () => {
-            expect(() => getColumns(tbl_example_table1, config)).toThrow('tbl_example_table1 is not defined');
-            expect(() => getColumns('tbl_example_table1', config)).not.toThrow();
+            expect(() => getColumns(15, config)).toThrow('Check the type of the parameter received');
         });
         it('The returned value is of type array', () => {
             const result = getColumns('tbl_example_table1', config);
@@ -69,7 +68,7 @@ describe('TEST ON createConfig.js FILE', () => {
             expect(result).toBeInstanceOf(Array)
         });
         it('The table name exists in the config', () => {
-            expect(() => getColumns('tbl_example_table6', config)).toThrow('Check Table Name');
+            expect(() => getColumns('table_not_exist', config)).toThrow('Check Table Name');
             expect(() => getColumns('tbl_example_table1', config)).not.toThrow();
         });
         it('Invalid config file', () => {
@@ -81,9 +80,7 @@ describe('TEST ON createConfig.js FILE', () => {
         it('The function works as required', () => {
             const result = getProcedures(config);
             expect(result).toBeDefined();
-            expect(result).toStrictEqual(
-                [['pro_example', 'example for test']]
-            );
+            expect(result).toStrictEqual([['pro_example', 'example for test']]);
         });
         it('The function returns an array', () => {
             const result = getProcedures(config);
@@ -134,8 +131,7 @@ describe('TEST ON createConfig.js FILE', () => {
             ]);
         });
         it('The procedure name is of type string', () => {
-            expect(() => getvalues(pro_example, config)).toThrow('pro_example is not defined');
-            expect(() => getvalues('pro_example', config)).not.toThrow();
+            expect(() => getvalues(15, config)).toThrow('Check the type of the parameter received');
         });
         it('The returned value is of type array', () => {
             const result = getvalues('pro_example', config);
@@ -143,7 +139,7 @@ describe('TEST ON createConfig.js FILE', () => {
             expect(result).toBeInstanceOf(Array)
         });
         it('The procedure name exists in the config', () => {
-            expect(() => getvalues('pro_example2', config)).toThrow('Check Procedure Name');
+            expect(() => getvalues('procedure_not_exist', config)).toThrow('Check Procedure Name');
             expect(() => getvalues('pro_example', config)).not.toThrow();
         });
         it('Invalid config file', () => {
