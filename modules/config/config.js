@@ -1,55 +1,148 @@
 require('dotenv');
 const { SQL_DBNAME } = process.env;
-const DBconfig = require('../../config/DBconfig.json')
+const DBconfig = require('../../config/DBconfig.json');
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
 
 const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
+
 function getTableFromConfig(tableName, config = DBconfig) {
     try {
-        let tables
+        if (typeof tableName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The table name should be of type string';
+            throw error;
+        }
+        let tables;
         try {
-            let sql = config.find(db => db.database == 'sql')
-            tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
+            let sql = config.find(db => db.database === 'sql');
+            tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
         }
         catch {
-            let error = notifictaions.find(({ status }) => status === 500)
-            error.description += '(check the config file).'
-            throw error
+            let error = notifictaions.find(({ status }) => status === 600);
+            error.description += '(check the config file).';
+            throw error;
         }
-        let table = tables.find(tbl => tbl.MTDTable.name.sqlName == tableName)
+        let table = tables.find(tbl => tbl.MTDTable.name.sqlName === tableName);
         if (!table) {
-            let error = notifictaions.find(n => n.status == 512)
-            error.description = `Table: ${tableName} does not exist.`
-            throw error
+            let error = notifictaions.find(n => n.status === 512);
+            error.description = `Table: ${tableName} does not exist.`;
+            throw error;
         }
-        return table
+        return table;
     }
     catch (error) {
-        throw error
+        throw error;
     }
 }
 
 function getCollectionsFromConfig(collectionName, config = DBconfig) {
-    let mongo = config.find(db => db.database === 'mongoDB');
-    let collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
-    if (!collection) {
-        let error = notifictaions.find(n => n.status === 517)
-        error.description = `Collection: ${collectionName} does not exsist.`
-        throw error.message
+    try {
+        if (typeof collectionName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The collection name should be of type string';
+            throw error;
+        }
+        let collection;
+        try {
+            let mongo = config.find(db => db.database === 'mongoDB');
+            collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
+        }
+        catch {
+            let error = notifictaions.find(({ status }) => status === 600);
+            error.description += '(check the config file).';
+            throw error;
+        }
+        if (!collection) {
+            let error = notifictaions.find(n => n.status === 517);
+            error.description = `Collection: ${collectionName} does not exsist.`;
+            throw error;
+        }
+        return collection;
     }
-    return collection
+    catch (error) {
+        throw error;
+    }
 }
-// 
+
+function getReferencedColumns(tablename, config = DBconfig) {
+    let columns;
+    try {
+        const table = getTableFromConfig(tablename, config);
+        columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }));
+    }
+    catch (err) {
+        throw err;
+    }
+    return columns;
+}
+
+function getTableAccordingToRef(tablename, config = DBconfig) {
+    let columns;
+    try {
+        const table = getTableFromConfig(tablename, config);
+        columns = table.columns.filter(col => col.type.toLowerCase().includes('reference'));
+        columns = columns.map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }));
+    }
+    catch (err) {
+        throw err;
+    }
+    return columns;
+}
+
+function getForeignTableAndColumn(tablename, field, config = DBconfig) {
+    try {
+        const table = getTableFromConfig(tablename, config);
+        if (typeof field !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The table name should be of type string';
+            throw error;
+        }
+        let foreignTableName;
+        try {
+            const column = table.columns.find(c => c.name.toLowerCase() === field.toLowerCase());
+            const { type } = column;
+            foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'));
+            let index = foreignTableName.indexOf('(');
+            foreignTableName = foreignTableName.slice(0, index);
+        }
+        catch {
+            let error = notifictaions.find(n => n.status === 515);
+            error.description = `Field: ${field} is not exsist in table: ${tablename}.`;
+            throw error;
+        }
+        const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(), config);
+        const { defaultColumn } = foreignTable.MTDTable;
+        return { foreignTableName, defaultColumn };
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+function getTabeColumnName(tablename, config = DBconfig) {
+    let columns;
+    try {
+        const table = getTableFromConfig(tablename, config);
+        columns = table.columns.map(col => col.sqlName);
+    }
+    catch (err) {
+        throw err;
+    }
+    return columns;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------
+
 const readJoin = async (baseTableName, baseColumn, config = DBconfig) => {
-    const tables = config.find(f => f.database == "sql").dbobjects.find(({ type }) => type === "Tables").list
+    const tables = config.find(f => f.database === "sql").dbobjects.find(({ type }) => type === "Tables").list
     let myTableNameSQL
     try {
         myTableNameSQL = tables.find(({ MTDTable }) => MTDTable.name.name === baseTableName).MTDTable.name.sqlName;
     }
     catch {
-        let error = notifictaions.find(n => n.status == 512)
+        let error = notifictaions.find(n => n.status === 512)
         error.description = `BaseTableName: ${baseTableName} is not exsist.`
         throw error
     }
@@ -57,29 +150,27 @@ const readJoin = async (baseTableName, baseColumn, config = DBconfig) => {
         baseColumn = tables.find(({ MTDTable }) => MTDTable.name.sqlName === myTableNameSQL).columns.find(({ name }) => name === baseColumn).sqlName;
     }
     catch {
-        let error = notifictaions.find(n => n.status == 514)
+        let error = notifictaions.find(n => n.status === 514)
         error.description = `BaseColumn: ${baseColumn} is not exsist in table ${baseTableName}.`
         throw error
     }
     let selectColumns = []
     const buildJoin = (tableName, column, prevTableAlias, config = DBconfig) => {
         const connectionTable = tables.filter(({ columns }) => columns.filter(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).length != 0);
-        // console.log({ connectionTable });
 
         let join = '';
         if (tableName === myTableNameSQL) {
-            let alias1 = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).MTDTable.name.name;
+            let alias1 = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableName).MTDTable.name.name;
             join = `FROM ${tableName} ${alias1} `
             prevTableAlias = alias1;
 
-            let columns = tables.find(({ MTDTable }) => MTDTable.name.sqlName == tableName).columns.map(({ sqlName }) => { return sqlName });
+            let columns = tables.find(({ MTDTable }) => MTDTable.name.sqlName === tableName).columns.map(({ sqlName }) => { return sqlName });
             selectColumns.push({ alias: prevTableAlias, columns });
         }
         if (connectionTable.length > 0)
             for (let table of connectionTable) {
                 let tableJoin = table.MTDTable.name.sqlName;
                 let alias = table.MTDTable.name.name;
-                // console.log({ tableJoin });
                 let columns = table.columns.map(({ name }) => { return name });
                 selectColumns.push({ alias, columns })
                 let columnToEqual = [table].map(({ columns }) => columns.find(({ type }) => type.includes(`REFERENCES ${tableName}(${column})`)).sqlName)[0];
@@ -104,60 +195,26 @@ const readJoin = async (baseTableName, baseColumn, config = DBconfig) => {
         });
     });
     result = `USE ${SQL_DBNAME} SELECT ${select.slice(0, select.length - 1)} ${result}`;
-    // console.log(result);
     return result;
 }
-
-
-
-function getReferencedColumns(tablename, config = DBconfig) {
-
-    try {
-        const table = getTableFromConfig(tablename, config)
-        let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
-        // 
-        if (!columns) {
-            let error = notifictaions.find(n => n.status == 514)
-            error.description = `: ${collectionName} does not exist.`
-            throw error
-        }
-        return columns
-    } catch (error) {
-        throw error
-    }
-
-
-}
 function setFullObj(parentTable, refTable, config = DBconfig) {
-    // console.log({ parentTable }, { refTable });
     // let table = getTableFromConfig(parentTable)
     // const f = `select ${refTable.ref} from ${parentTable}`
     // let table2 = getTableFromConfig(refTable,config)
-    // console.log({ table });
-    // console.log({ table2 });
     // table2 = table2.columns.map(col => { col.name })
     // table.columns.filter(col => {
-    //     if (col.sqlName == refTable.name) {
+    //     if (col.sqlName === refTable.name) {
     //         col = table2
     //     }
     // }).map()
-    // let columns = table.columns.filter(col => col.sqlName == b.ref).map()
+    // let columns = table.columns.filter(col => col.sqlName === b.ref).map()
 }
-
 // function getTables(tablename,config=DBconfig) {
 //     const table = getTableFromConfig(tablename,config)
 //     return table
 // }
-function getTableAccordingToRef(tablename, config = DBconfig) {
-    const table = getTableFromConfig(tablename, config)
-    // let columns = table.columns.filter(col => col.reference).map(col => ({ name: col.sqlName, ref: col.reference }))
-    // let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_', col.type.lastIndexOf('('))) }))
-    let columns = table.columns.filter(col => col.type.toLowerCase().includes('reference')).map(col => ({ name: col.sqlName, ref: col.type.slice(col.type.indexOf('tbl_'), col.type.lastIndexOf('(')) }))
-    // console.log({ columns });
-    return columns
-
-}
 // 
+
 function getObjectWithFeildNameForPrimaryKey(tablename, fields, id, config = DBconfig) {
     try {
 
@@ -173,37 +230,6 @@ function getObjectWithFeildNameForPrimaryKey(tablename, fields, id, config = DBc
         throw error
     }
 }
-
-function getForeignTableAndColumn(tablename, field, config = DBconfig) {
-
-    try {
-        const table = getTableFromConfig(tablename, config)
-        if (table) {
-            let foreignTableName
-            try {
-                const column = table.columns.find(c => c.name.toLowerCase() == field.toLowerCase())
-                const { type } = column;
-                foreignTableName = type.toUpperCase().split(' ').find(w => w.includes('TBL_'))
-                let index = foreignTableName.indexOf('(')
-                foreignTableName = foreignTableName.slice(0, index)
-            }
-            catch {
-                let error = notifictaions.find(n => n.status == 515)
-                error.description = `Field: ${field} is not exsist in table: ${tablename}.`
-                throw error
-            }
-            const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(), config)
-            const { defaultColumn } = foreignTable.MTDTable
-            return { foreignTableName, defaultColumn }
-        }
-        // 
-        return false
-    }
-    catch (error) {
-        throw error
-    }
-}
-// 
 function convertFieldType(tablename, field, value, config = DBconfig) {
     try {
 
@@ -220,21 +246,18 @@ function convertFieldType(tablename, field, value, config = DBconfig) {
     }
 
 }
-function getTabeColumnName(tablename, config = DBconfig) {
-    const table = getTableFromConfig(tablename, config)
-    let columns = table.columns.map(col => col.sqlName)
-    return columns
-}
 
 module.exports = {
-
     getTabeColumnName,
-
-    getReferencedColumns, getTableAccordingToRef, setFullObj, convertFieldType,
+    getReferencedColumns,
+    getTableAccordingToRef,
+    setFullObj,
+    convertFieldType,
     getTableFromConfig,
     readJoin,
-    getReferencedColumns, convertFieldType, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn,
-    DBType,
+    getReferencedColumns,
+    convertFieldType, getObjectWithFeildNameForPrimaryKey,
+    getForeignTableAndColumn,
     getCollectionsFromConfig,
-
+    DBType,
 };

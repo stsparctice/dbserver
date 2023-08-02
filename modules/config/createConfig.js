@@ -9,7 +9,7 @@ function getTableName(config = DBconfig) {
             tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
         }
         catch {
-            error = notifictaions.find(({ status }) => status === 500);
+            error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         };
@@ -26,13 +26,18 @@ function getTableName(config = DBconfig) {
 
 function getColumns(tableName, config = DBconfig) {
     try {
+        if (typeof tableName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The table name should be of type string';
+            throw error;
+        }
         let tables;
         try {
             let sql = config.find(db => db.database == 'sql');
             tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
         }
         catch {
-            let error = notifictaions.find(({ status }) => status === 500);
+            let error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         }
@@ -58,7 +63,7 @@ function getProcedures(config = DBconfig) {
             procedures = sql.dbobjects.find(obj => obj.type === 'Procedures').list;
         }
         catch {
-            error = notifictaions.find(({ status }) => status === 500);
+            error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         };
@@ -75,13 +80,18 @@ function getProcedures(config = DBconfig) {
 
 function getvalues(proceduresName, config = DBconfig) {
     try {
+        if (typeof proceduresName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The procedure name should be of type string';
+            throw error;
+        }
         let procedures;
         try {
             let sql = config.find(db => db.database == 'sql');
             procedures = sql.dbobjects.find(obj => obj.type == 'Procedures').list;
         }
         catch {
-            let error = notifictaions.find(({ status }) => status === 500);
+            let error = notifictaions.find(({ status }) => status === 600);
             error.description += '(check the config file).';
             throw error;
         }

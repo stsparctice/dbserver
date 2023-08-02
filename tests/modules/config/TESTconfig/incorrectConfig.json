@@ -201,7 +201,7 @@
         ]
     },
     {
-        "database": "mongoDB",
+        "database": "MONGODB",
         "collections": [
             {
                 "name": "example",
