@@ -1,4 +1,5 @@
 const convertToSQLString = (value) => {
+    if (value === undefined) throw new Error('value is required');
     if (typeof value !== 'string') throw new Error('value must be a string');
     let special = ["'", "&", "%", "#", "$"]
     const sqlStrings = []
@@ -22,6 +23,9 @@ const convertToSQLString = (value) => {
     return `N'${value}'`
 }
 
+const isValueHasBeenSent = (value) => {
+    if (value === undefined) throw new Error('value is required');
+}
 
 const types = {
 
@@ -29,29 +33,35 @@ const types = {
 
         typeNodeName: 'string',
         parseNodeTypeToSqlType: (value) => {
-            return convertToSQLString(value)
+            try { return convertToSQLString(value) } catch (err) { throw err };
         }
     },
 
     BIT: {
         typeNodeName: 'boolean',
         parseNodeTypeToSqlType: (boolean) => {
-            return `'${boolean}'`
+            try {
+                isValueHasBeenSent(boolean)
+                return `'${boolean}'`
+            }
+            catch (err) { throw err }
         }
     },
 
     DATETIME: {
         typeNodeName: 'Date',
         parseNodeTypeToSqlType: (Date) => {
-
-            return `'${Date}'`
+            try {
+                isValueHasBeenSent(Date)
+                return `'${Date}'`
+            }
+            catch (err) { throw err }
         }
     },
 
     INT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-
             if (isNaN(number) || number == '')
                 return 0
             else
