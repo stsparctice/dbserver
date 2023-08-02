@@ -1,58 +1,111 @@
-const config = require('../../config/DBconfig.json')
+const DBconfig = require('../../config/DBconfig.json')
+const notifictaions = require('../../config/serverNotifictionsConfig.json');
 
-async function getTableName() {
-    let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
-    let tableNameAndDescription = []
-    let tableName = [];
-    let tableDescription = [];
-    let name;
-    let description;
-    Tables.forEach(t => {
-        name = Object.values(t.MTDTable.name)
-        tableName.push(name)
-        description = Object.values(t.MTDTable.description)
-        tableDescription.push(description)
-    })
-    for (let i = 0; i < tableName.length; i++) {
-        tableNameAndDescription.push([tableName[i], tableDescription[i]])
-    }
-    return tableNameAndDescription
-}
-
-async function getColumns(tableName) {
-    let Tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Tables').list
-    for (let i = 0; i < Tables.length; i++) {
-        if (Tables[i].MTDTable.name.name == tableName[0][0]) {
-            return Tables[i].columns
+function getTableName(config = DBconfig) {
+    try {
+        let tables;
+        try {
+            let sql = config.find(db => db.database === 'sql');
+            tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
         }
+        catch {
+            error = notifictaions.find(({ status }) => status === 600);
+            error.description += '(check the config file).';
+            throw error;
+        };
+        let tableNameAndDescription = [];
+        tables.forEach(t => {
+            tableNameAndDescription.push([t.MTDTable.name.sqlName, t.MTDTable.description]);
+        });
+        return tableNameAndDescription;
+    }
+    catch (error) {
+        throw error;
     }
 }
 
-async function getProcedures() {
-    let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
-    let proceduresNameAndDescription = []
-    let proceduresName = [];
-    let proceduresDescription = [];
-    let name;
-    let description;
-    procedures.forEach(t => {
-        name = t.MTDProcedure.name;
-        proceduresName.push(name)
-        description = Object.values(t.MTDProcedure.description)
-        proceduresDescription.push(description)
-    })
-    for (let i = 0; i < proceduresDescription.length; i++) {
-        proceduresNameAndDescription.push([proceduresName[i], proceduresDescription[i]])
-    }
-    return proceduresNameAndDescription
-}
-
-async function getvalues(proceduresName) {
-    let procedures = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == 'Procedures').list
-    for (let i = 0; i < procedures.length; i++) {
-        if (Object.keys(procedures[i].MTDProcedure.name)[0] == Object.keys(proceduresName[0])[0]) {
-            return procedures[i].values
+function getColumns(tableName, config = DBconfig) {
+    try {
+        if (typeof tableName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The table name should be of type string';
+            throw error;
         }
+        let tables;
+        try {
+            let sql = config.find(db => db.database == 'sql');
+            tables = sql.dbobjects.find(obj => obj.type == 'Tables').list;
+        }
+        catch {
+            let error = notifictaions.find(({ status }) => status === 600);
+            error.description += '(check the config file).';
+            throw error;
+        }
+        for (let i = 0; i < tables.length; i++) {
+            if (tables[i].MTDTable.name.sqlName == tableName) {
+                return tables[i].columns
+            }
+        }
+        let error = notifictaions.find(n => n.status == 512);
+        error.description = `Table: ${tableName} does not exist.`;
+        throw error;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+function getProcedures(config = DBconfig) {
+    try {
+        let procedures;
+        try {
+            let sql = config.find(db => db.database === 'sql');
+            procedures = sql.dbobjects.find(obj => obj.type === 'Procedures').list;
+        }
+        catch {
+            error = notifictaions.find(({ status }) => status === 600);
+            error.description += '(check the config file).';
+            throw error;
+        };
+        let proceduresNameAndDescription = [];
+        procedures.forEach(t => {
+            proceduresNameAndDescription.push([Object.values(t.MTDProcedure.name)[0], t.MTDProcedure.description.description]);
+        });
+        return proceduresNameAndDescription;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+function getvalues(proceduresName, config = DBconfig) {
+    try {
+        if (typeof proceduresName !== 'string') {
+            let error = notifictaions.find(({ status }) => status === 519);
+            error.description += 'The procedure name should be of type string';
+            throw error;
+        }
+        let procedures;
+        try {
+            let sql = config.find(db => db.database == 'sql');
+            procedures = sql.dbobjects.find(obj => obj.type == 'Procedures').list;
+        }
+        catch {
+            let error = notifictaions.find(({ status }) => status === 600);
+            error.description += '(check the config file).';
+            throw error;
+        }
+        for (let i = 0; i < procedures.length; i++) {
+            if (Object.values(procedures[i].MTDProcedure.name)[0] === proceduresName) {
+                return procedures[i].values
+            }
+        }
+        let error = notifictaions.find(n => n.status == 518);
+        error.description = `Procedure: ${proceduresName} does not exist.`;
+        throw error;
+    }
+    catch (error) {
+        throw error;
     }
 }
 
