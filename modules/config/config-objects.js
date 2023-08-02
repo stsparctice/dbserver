@@ -1,4 +1,5 @@
 const convertToSQLString = (value) => {
+    if (typeof value !== 'string') throw new Error('value must be a string');
     let special = ["'", "&", "%", "#", "$"]
     const sqlStrings = []
     const split = value.split('')
@@ -50,8 +51,8 @@ const types = {
     INT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-           
-            if (isNaN(number)|| number=='')
+
+            if (isNaN(number) || number == '')
                 return 0
             else
                 return number
@@ -60,7 +61,7 @@ const types = {
     REAL: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number)|| number=='')
+            if (isNaN(number) || number == '')
                 return 0
             else
                 return number
@@ -69,7 +70,7 @@ const types = {
     FLOAT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number)|| number=='')
+            if (isNaN(number) || number == '')
                 return 0
             else
                 return number
@@ -78,5 +79,5 @@ const types = {
 }
 
 
-module.exports = types
+module.exports = { types, convertToSQLString }
 

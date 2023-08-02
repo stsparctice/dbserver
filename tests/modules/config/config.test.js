@@ -1,6 +1,6 @@
 const { getTableFromConfig, getCollectionsFromConfig, readJoin, getReferencedColumns, setFullObj, getTableAccordingToRef, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn, convertFieldType, getTabeColumnName } = require('../../../modules/config/config');
-const config = require('../../../config/TESTconfig/config.json');
-const incorrectConfig = require('../../../config/TESTconfig/incorrectConfig.json');
+const config = require('./TESTconfig/config.json');
+const incorrectConfig = require('./TESTconfig/incorrectConfig.json');
 
 
 describe('TEST ON config.js FILE', () => {

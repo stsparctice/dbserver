@@ -1,6 +1,6 @@
 const { getTableName, getColumns, getProcedures, getvalues } = require('../../../modules/config/createConfig');
-const config = require('../../../config/TESTconfig/config.json');
-const incorrectConfig = require('../../../config/TESTconfig/incorrectConfig.json');
+const config = require('./TESTconfig/config.json');
+const incorrectConfig = require('./TESTconfig/incorrectConfig.json');
 
 describe('TEST ON createConfig.js FILE', () => {
 
