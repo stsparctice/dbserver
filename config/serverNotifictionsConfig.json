@@ -138,5 +138,20 @@
         "message":"Check Collection Name",
         "status":517,
         "description":""
+    },
+    {
+        "message":"Check Procedure Name",
+        "status":518,
+        "description":""
+    },
+    {
+        "message":"Check the type of the parameter received",
+        "status":519,
+        "description":""
+    },
+    {
+        "message":"Check config file",
+        "status":600,
+        "description":""
     }
 ]

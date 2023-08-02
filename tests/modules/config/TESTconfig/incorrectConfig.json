@@ -1,0 +1,73 @@
+[
+    {
+        "database": "SQL",
+        "dbobjects": [
+            {
+                "type": "Procedures",
+                "list": [
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "BasicUpdate": "pro_example"
+                            },
+                            "description": {
+                                "description": "example for test"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "tableName": "tableName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "values": "values"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "condition": "condition"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "Tables",
+                "list": [
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "example_table5",
+                                "sqlName": "tbl_example_table5"
+                            },
+                            "description": "example table with PRIMARY KEY"
+                        },
+                        "columns": [
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "database": "MONGODB",
+        "collections": [
+            {
+                "name": "example",
+                "mongoName": "example"
+            }
+        ]
+    }
+]

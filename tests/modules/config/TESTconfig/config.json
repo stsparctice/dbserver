@@ -1,0 +1,112 @@
+[
+    {
+        "database": "sql",
+        "dbobjects": [
+            {
+                "type": "Procedures",
+                "list": [
+                    {
+                        "MTDProcedure": {
+                            "name": {
+                                "Example": "pro_example"
+                            },
+                            "description": {
+                                "description": "example for test"
+                            }
+                        },
+                        "values": [
+                            {
+                                "name": {
+                                    "tableName": "tableName"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(20)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "values": "values"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            },
+                            {
+                                "name": {
+                                    "condition": "condition"
+                                },
+                                "type": {
+                                    "type": "NVARCHAR(MAX)"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "Tables",
+                "list": [
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "example_table4",
+                                "sqlName": "tbl_example_table4"
+                            },
+                            "description": "example table with values in columns",
+                            "defaultColumn": "Name"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "example_table5",
+                                "sqlName": "tbl_example_table5"
+                            },
+                            "description": "example table with references",
+                            "defaultColumn": "ProductId"
+                        },
+                        "columns": [
+                            {
+                                "name": "Id",
+                                "sqlName": "Id",
+                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "unitOfMeasure",
+                                "sqlName": "UnitOfMeasure",
+                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table4(Id)"
+                            },
+                            {
+                                "name": "ProductId",
+                                "sqlName": "ProductId",
+                                "type": "NVARCHAR NOT NULL",
+                                "reference": "TableName"
+                            },
+                            {
+                                "name": "tablename",
+                                "sqlName": "TableName",
+                                "type": "NVARCHAR(MAX) NULL"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "database": "mongoDB",
+        "collections": [
+            {
+                "name": "example",
+                "mongoName": "example"
+            }
+        ]
+    }
+]
