@@ -62,7 +62,7 @@ const types = {
     INT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number) || number == '')
+            if (isNaN(number) || number === '')
                 return 0
             else
                 return number
@@ -71,7 +71,7 @@ const types = {
     REAL: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number) || number == '')
+            if (isNaN(number) || number === '')
                 return 0
             else
                 return number
@@ -80,8 +80,9 @@ const types = {
     FLOAT: {
         typeNodeName: 'number',
         parseNodeTypeToSqlType: (number) => {
-            if (isNaN(number) || number == '')
+            if (isNaN(number) || number === '') {
                 return 0
+            }
             else
                 return number
         }
