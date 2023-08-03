@@ -813,7 +813,7 @@
                             {
                                 "name": "House",
                                 "sqlName": "House",
-                                "type": "INT NOT NULL"
+                                "type": "NVARCHAR(20) NOT NULL"
                             },
                             {
                                 "name": "City",

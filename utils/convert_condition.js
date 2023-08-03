@@ -39,7 +39,7 @@ const convertToSqlCondition = (table, condition) => {
                         query = `${query} (${buildLike(condition[key], operators.ENDWITH)}) ${operator}`;
                         break;
                     case operators.INCLUDES:
-                        query = `${query} (${buildLike(condition[key]), operators.INCLUDES}) ${operator}`;
+                        query = `${query} ${buildLike(condition[key], operators.INCLUDES)} ${operator}`;
                         break;
                     case operators.IN:
                         query = `${query} (${buildIn(condition[key])}) ${operator}`;
@@ -93,10 +93,12 @@ const convertToSqlCondition = (table, condition) => {
 
     }
     const buildLike = (like, operator) => {
+        console.log({like, operator})
         const key = Object.keys(like[0]);
         let val = {};
         val[key] = '';
         let column = Object.keys(parseColumnName(val, tableName))[0];
+        console.log({column})
         let regex = ``;
         switch (operator) {
             case operators.STARTWITH:
@@ -120,7 +122,7 @@ const convertToSqlCondition = (table, condition) => {
         val[key] = '';
         let column = Object.keys(parseColumnName(val, tableName))[0];
         const values = inArray.map((v) => { return `${parseSQLTypeForColumn({ name: key, value: v[key] }, tableName)}` })
-        const query=`${tablealias}.${column} IN (${values.join(',')})`
+        const query = `${tablealias}.${column} IN (${values.join(',')})`
         return query;
     }
     let result = buildQuery(condition, "AND");
@@ -142,60 +144,24 @@ const convertToMongoFilter = (condition) => {
 }
 
 const removeIndexes = (str) => {
-    let s = '';
-    for (let i = 0; i < str.length; i++) {
-        if (str[i] >= '0' && str[i] <= '9')
-            return s;
-        s += str[i]
+    const splitIndex = str.lastIndexOf('_')
+    if (splitIndex !== -1) {
+        str = str.slice(0, splitIndex)
     }
-    return s;
+    return str;
 }
-// const convertQueryToObject = (query) => {
-//     // דוגמאות לשימוש בcondition 
 //     //  {"condition":{"LIKE":[{"OrdererName":"*37"},{"OrdererName":"י"},{"OrdererName":"*37"}]}}
 //     // {condition:{"AND":[{racheli:1},{michali:2},OR:[{sarit:5},{bilha:25},{BETWEEN:{michal:5,michal:25}}]],"LIKE":[{miri:('%').charCodeAt()},{miri:"א"}]}}
 //     // and the simple condition doesnt work - condition:{"miri": "x"}
-//     let obj = {}
-//     // let pointer = [];
-//     let i = 0;
-//     const convert =  (key, value) => {
-//         if (key.includes('start')) {
-//             pointer[i][value] = []
-//             if (i == pointer.length - 1)
-//                 pointer.push(pointer[i][value])
-//             else
-//                 pointer[i + 1] = pointer[i][value]
-//             i++;
-//             return;
-//         }
-//         if (key.includes('end')) {
-//             i--;
-//             return;
-//         }
-//         else {
-//             let object = {}
-//             object[removeIndexes(key)] = value
-//             pointer[i].push(object)
-//             return;
-//         }
-//     }
-//     for (const key in query) {
-//         convert(key, query[key]);
-//     }
-
-//     // let condition = pointer.reduce((obj, item)=>({...obj, ...item}), {})
-//     return obj
-
-// }
-const buildQuertObject = (arr, start, obj) => {
-    console.log({ obj })
+const buildQueryObject = (arr, start, obj) => {
     for (let i = start; i < arr.length; i++) {
         for (const key in arr[i]) {
-            console.log({ key })
-            switch (key) {
+            const realKey = removeIndexes(key)
+            switch (realKey) {
                 case 'start':
                     obj = {}
-                    obj[arr[i][key]] = buildQuertObject(arr, i + 1, [])
+                    console.log({ arr: arr[i][key] })
+                    obj[arr[i][key]] = buildQueryObject(arr, i + 1, [])
                     console.log({ obj })
                     return obj
                 case 'end':
@@ -214,9 +180,7 @@ const buildQuertObject = (arr, start, obj) => {
 
 const convertQueryToObject = (query) => {
     const queryArray = Object.entries(query).reduce((arr, entry) => arr = [...arr, Object.fromEntries([entry])], [])
-    console.log(queryArray)
-    let queryMap = buildQuertObject(queryArray, 0, [])
-    console.log({ queryMap })
+    let queryMap = buildQueryObject(queryArray, 0, [])
     if (queryMap.length > 0) {
         queryMap = queryMap.reduce((reduceObj, q) => {
             let key = Object.keys(q)
@@ -225,11 +189,8 @@ const convertQueryToObject = (query) => {
             return { ...reduceObj, ...obj }
         }, {})
     }
-    console.log(queryMap)
     return queryMap
 }
-
-
 
 
 
