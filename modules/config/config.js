@@ -144,7 +144,7 @@ const readJoin = async (baseTableName, baseColumn, config = DBconfig) => {
     }
     catch {
         let error = notifictaions.find(n => n.status === 512)
-        error.description = `BaseTableName: ${baseTableName} is not exsist.`
+        error.description = `BaseTableName: ${baseTableName} does not exsist.`
         throw error
     }
     try {
@@ -152,7 +152,7 @@ const readJoin = async (baseTableName, baseColumn, config = DBconfig) => {
     }
     catch {
         let error = notifictaions.find(n => n.status === 514)
-        error.description = `BaseColumn: ${baseColumn} is not exsist in table ${baseTableName}.`
+        error.description = `BaseColumn: ${baseColumn} does not exsist in table ${baseTableName}.`
         throw error
     }
     let selectColumns = []

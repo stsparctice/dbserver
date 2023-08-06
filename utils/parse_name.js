@@ -21,7 +21,8 @@ function parseColumnName(values, table) {
     let columns = {}
     let error = [];
     for (let name in values) {
-        let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() || column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
+        let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() ||
+            column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
         //😡 לסדר בהתאם לצורה השפויה
         if (column) {
             columns[column.sqlName] = values[name]
@@ -31,7 +32,7 @@ function parseColumnName(values, table) {
         }
     }
     if (error.length > 0) {
-        let description = `This column: ${error.join(', ')} does not exist.`
+        let description = `This column${error.length > 1 ? 's' : ''}: ${error.join(', ')} ${error.length > 1 ? 'do' : 'does'} not exist.`
         error = notifications.find(n => n.status === 514)
         error.description = description
         throw error
@@ -85,11 +86,16 @@ const parseDBname = (entityName) => {
         return { type: DBType.MONGO, entityName: collection.mongoName };
     }
     else {
-        let description = `The entity name ${entityName} does not exist`
         let error = notifications.find(n => n.status === 516)
-        error.description = description
+        error.description = `The entity name ${entityName} does not exist`
         throw error;
     }
 }
 
-module.exports = { parseTableName, parseColumnName, parseDBname, parseListOfColumnsName, parseColumnNameMiddleware }
+module.exports = {
+    parseDBname,
+    parseTableName,
+    parseColumnName,
+    parseListOfColumnsName,
+    parseColumnNameMiddleware
+}

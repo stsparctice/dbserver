@@ -113,10 +113,11 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "unitOfMeasure",
+                                "name": "UnitOfMeasure",
                                 "sqlName": "tbl_UnitOfMeasure"
                             },
-                            "description": "a normalization table of unitsOfMeasure"
+                            "description": "a normalization table of unitsOfMeasure",
+                            "defaultColumn":"Measure"
                         },
                         "columns": [
                             {
@@ -171,7 +172,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "finishProducts",
+                                "name": "FinishProducts",
                                 "sqlName": "tbl_FinishProducts"
                             },
                             "description": "a table of finish products ",
@@ -184,32 +185,32 @@
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": "name",
+                                "name": "Name",
                                 "sqlName": "Name",
                                 "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": "unitOfMeasure",
+                                "name": "UnitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
                                 "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },
                             {
-                                "name": "bookkeepingCode",
+                                "name": "BookkeepingCode",
                                 "sqlName": "BookkeepingCode",
                                 "type": "NVARCHAR(20)  NULL"
                             },
                             {
-                                "name": "addedDate",
+                                "name": "AddedDate",
                                 "sqlName": "AddedDate",
                                 "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": "enabled",
+                                "name": "Enabled",
                                 "sqlName": "Enabled",
                                 "type": "BIT NOT NULL"
                             },
                             {
-                                "name": "deletedDate",
+                                "name": "DeletedDate",
                                 "sqlName": "DeleteDate",
                                 "type": "DATETIME NULL"
                             }
@@ -218,7 +219,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "additions",
+                                "name": "Additions",
                                 "sqlName": "tbl_Additions"
                             },
                             "description": "a table of additions to the byton "
@@ -230,12 +231,12 @@
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": "name",
+                                "name": "Name",
                                 "sqlName": "Name",
                                 "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": "unitOfMeasure",
+                                "name": "UnitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
                                 "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },
@@ -264,7 +265,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "pumps",
+                                "name": "Pumps",
                                 "sqlName": "tbl_Pumps"
                             },
                             "description": "a table of pumps and additions to the pumps ",
@@ -277,12 +278,12 @@
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
                             },
                             {
-                                "name": "name",
+                                "name": "Name",
                                 "sqlName": "Name",
                                 "type": "NVARCHAR(20)  NOT NULL"
                             },
                             {
-                                "name": "unitOfMeasure",
+                                "name": "UnitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
                                 "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },

@@ -174,20 +174,20 @@ const selectReferenceColumn = async (values, tableName) => {
 
 }
 
-const mapEntity = (values) => {
+const mapEntity = (entities) => {
     try {
         const items = []
-        for (let val of values) {
-            const entries = Object.entries(val)
+        for (let entity of entities) {
+            const entries = Object.entries(entity)
             const foreignkeys = entries.filter(e => e[0].startsWith('FK'))
             let groups = foreignkeys.reduce((gr, fk) => {
                 const prop = fk[0].split('_')[1]
                 if (!gr.some(g => g.name === prop)) {
-                    let group = { name: prop, values: [fk] }
+                    let group = { name: prop, items: [fk] }
                     gr = [...gr, group]
                 }
                 else {
-                    gr.find(g => g.name === prop).values.push(fk)
+                    gr.find(g => g.name === prop).items.push(fk)
                 }
                 return gr
             }, [])
@@ -197,7 +197,7 @@ const mapEntity = (values) => {
                 }
                 const gr = groups.find(g => g.name.indexOf(ent[0]) !== -1)
                 if (gr) {
-                    obj[ent[0]] = gr.values.reduce((val, v) => {
+                    obj[ent[0]] = gr.items.reduce((val, v) => {
                         const split = v[0].split('_')
                         val[split[split.length - 1]] = v[1]
                         return val

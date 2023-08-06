@@ -13,6 +13,7 @@ const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) =>
         let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];
         let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
         columns.forEach(column => {
+            console.log(column)
             const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
             const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
             const thisTable = getTableFromConfig(tableToJoin);
