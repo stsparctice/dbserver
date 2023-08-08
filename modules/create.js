@@ -5,12 +5,12 @@ const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 const { newTransaction } = require('../services/sql/sql-connection')
 const { parseDBname, parseColumnName } = require('../utils/parse_name')
-const { DBType } = require('./config/config')
-const { getPrimaryKeyField, getForeignTableAndColumn, getForeginKeyColumns } = require('./public')
+const { DBType } = require('./config/get-config')
+const { getPrimaryKeyField, getForeignTableAndColumn, getForeginKeyColumns } = require('./config/config-sql')
 const { SQL_DBNAME } = process.env
 
 
-const { getSqlTableColumnsType, parseSQLType } = require('../modules/public');
+const { getSqlTableColumnsType, parseSQLType } = require('./config/config-sql');
 
 async function createSql(obj) {
     try {

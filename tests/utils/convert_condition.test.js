@@ -1,4 +1,4 @@
-const {convertQueryToObject} = require('../../utils/convert_condition')
+const {convertQueryToObject} = require('../../utils/convert_query')
 
 
 describe('CONVER QUERY TO OBJECT', ()=>{

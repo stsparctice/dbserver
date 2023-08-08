@@ -2,7 +2,7 @@
 const path = require('path')
 const { readAll, create } = require('../sql/sql-operations')
 const { findSubDirectoriesSync } = require('../files/readFiles')
-const { getSqlTableColumnsType, parseSQLType } = require('../../modules/public');
+const { getSqlTableColumnsType, parseSQLType } = require('../../modules/config/config-sql');
 const productTables = ["BuytonGrain", "BuytonItems", "BuytonSomech", "BuytonStrength", "BuytonDegree"]
 
 async function insertDataToSql() {

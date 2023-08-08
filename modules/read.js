@@ -1,10 +1,10 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
-const { readJoin, getTableFromConfig } = require('./config/config');
-const { getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, getAlias, getDefaultColumn, getColumnAlias } = require('./public');
+const { readJoin, getTableFromConfig } = require('./config/get-config');
+const { getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, getAlias, getDefaultColumn, getColumnAlias } = require('./config/config-sql');
 const { viewConnectionsTables, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
-const { convertToSqlCondition } = require('../utils/convert_condition');
+const { convertToSqlCondition } = require('../utils/convert_query');
 
 
 

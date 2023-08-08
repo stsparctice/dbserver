@@ -1,6 +1,6 @@
 const { update } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const { getPrimaryKeyField } = require('./public');
+const { getPrimaryKeyField } = require('./config/config-sql');
 const mongoCollection = MongoDBOperations;
 const notifications = require('../config/serverNotifictionsConfig.json')
 

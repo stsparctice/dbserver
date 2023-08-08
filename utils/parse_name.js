@@ -1,6 +1,6 @@
 const config = require('../config/DBconfig.json')
 const notifications = require('../config/serverNotifictionsConfig.json')
-const { DBType, getTableFromConfig } = require('../modules/config/config')
+const { DBType, getTableFromConfig } = require('../modules/config/get-config')
 
 function parseTableName() {
     return (req, res, next) => {
@@ -32,7 +32,7 @@ function parseColumnName(values, table) {
         }
     }
     if (error.length > 0) {
-        let description = `This column${error.length > 1 ? 's' : ''}: ${error.join(', ')} ${error.length > 1 ? 'do' : 'does'} not exist.`
+        let description = `The column${error.length > 1 ? 's' : ''}: ${error.join(', ')} ${error.length > 1 ? 'do' : 'does'} not exist.`
         error = notifications.find(n => n.status === 514)
         error.description = description
         throw error
@@ -47,6 +47,7 @@ const parseColumnNameMiddleware = () => {
             next();
         }
         catch (error) {
+            console.log({error})
             res.status(error.status).send(error.message);
         }
     }

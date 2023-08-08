@@ -2,10 +2,10 @@ require('dotenv').config();
 
 const { getPool, newTransaction } = require('./sql-connection');
 const { SQL_DBNAME } = process.env;
-const { getTableFromConfig, DBType } = require('../../modules/config/config')
-const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, getSqlTableColumnsType, parseSQLType } = require('../../modules/public')
+const { getTableFromConfig, DBType } = require('../../modules/config/get-config')
+const { getPrimaryKeyField, buildSqlCondition, parseSQLTypeForColumn, getAlias, getSqlTableColumnsType, parseSQLType } = require('../../modules/config/config-sql')
 const notifictions = require('../../config/serverNotifictionsConfig.json');
-const { convertToSqlCondition } = require('../../utils/convert_condition');
+const { convertToSqlCondition } = require('../../utils/convert_query');
 
 // if (!SQL_DBNAME) {
 //      throw notifictions.find(n => n.status == 509)
@@ -140,7 +140,7 @@ const transactionCreate = async (data) => {
 
 
                if (type === DBType.MONGO) {
-     
+
                }
           }
 
@@ -172,7 +172,7 @@ const update = async function (obj) {
           const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
-
+          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
           return result;
      }
@@ -182,6 +182,22 @@ const update = async function (obj) {
      }
 };
 
+const deleteItem = async (obj)=>{
+     try {
+
+          obj.condition = convertToSqlCondition(getTableFromConfig(obj.entityName), obj.condition)
+          const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
+          
+          const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
+          console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
+          const result = await getPool().request().query(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)
+          return result;
+     }
+     catch (error) {
+          console.log(error)
+          throw error
+     }
+}
 
 const countRows = async function (obj) {
      try {
@@ -195,7 +211,7 @@ const countRows = async function (obj) {
      }
 }
 
-async function drop(tableName){
+async function drop(tableName) {
      _ = await getPool().request().query(`use ${SQL_DBNAME}
      DROP TABLE ${tableName}`);
      console.log('delat tbl in sql');

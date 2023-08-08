@@ -1,7 +1,7 @@
 require('dotenv')
-const { getTableFromConfig } = require('../../modules/config/config')
-const { convertToSqlCondition } = require('../../utils/convert_condition');
-const { getPrimaryKeyField } = require('../../modules/public');
+const { getTableFromConfig } = require('../../modules/config/get-config')
+const { convertToSqlCondition } = require('../../utils/convert_query');
+const { getPrimaryKeyField } = require('../../modules/config/config-sql');
 const { parseDBname, parseColumnName } = require('../../utils/parse_name');
 const { SQL_DBNAME } = process.env
 
@@ -10,7 +10,7 @@ const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) =>
         console.log({ tableName });
         const myTable = getTableFromConfig(tableName)
         const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-        let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: [...myTable.columns.map(({ sqlName }) => sqlName)] }];
+        let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: myTable.columns.map(({ sqlName }) => sqlName)}];
         let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
         columns.forEach(column => {
             console.log(column)
