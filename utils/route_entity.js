@@ -1,6 +1,6 @@
 const { parseDBname } = require('./parse_name')
-const { convertToMongoFilter } = require('./convert_query')
-const { DBType } = require('../modules/config/get-config')
+const { convertToMongoFilter } = require('../services/mongoDB/mongoDB-helpers')
+const { DBType } = require('./types')
 
 const routeEntityByItsType = async (data, sql, mongo) => {
     try {

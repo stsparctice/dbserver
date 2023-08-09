@@ -4,15 +4,15 @@
         "tables": []
     },
     {
-        "entity": "areas",
+        "entity": "Areas",
         "tables": [],
         "collections": []
     },
     {
-        "entity": "leads",
+        "entity": "Leads",
         "tables": [
             "Leads",
-            "moreProductsItems",
+            "MoreProductsItems",
             "PouringsTypes",
             "Orderers",
             "StatusesLead"

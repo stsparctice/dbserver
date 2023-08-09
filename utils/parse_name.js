@@ -1,11 +1,10 @@
-const config = require('../config/DBconfig.json')
 const notifications = require('../config/serverNotifictionsConfig.json')
-const { DBType, getTableFromConfig } = require('../modules/config/get-config')
+const { getDBTypeAndName, getTableFromConfig } = require('../modules/config/get-config')
 
 function parseTableName() {
     return (req, res, next) => {
         try {
-            req.body.entityName = parseDBname(req.body.entityName).entityName;
+            req.body.entityName = getDBTypeAndName(req.body.entityName).entityName;
             next();
         }
         catch (error) {
@@ -73,28 +72,9 @@ const parseListOfColumnsName = () => {
     }
 }
 
-const parseDBname = (entityName) => {
-    // console.log({entityName});
-    let sql = config.find(db => db.database === DBType.SQL);
-    let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
-    let table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);
-    if (table) {
-        return { type: DBType.SQL, entityName: table.MTDTable.name.sqlName }
-    }
-    const mongo = config.find(db => db.database === DBType.MONGO);
-    const collection = mongo.collections.find(({ name }) => name === entityName);
-    if (collection) {
-        return { type: DBType.MONGO, entityName: collection.mongoName };
-    }
-    else {
-        let error = notifications.find(n => n.status === 516)
-        error.description = `The entity name ${entityName} does not exist`
-        throw error;
-    }
-}
+
 
 module.exports = {
-    parseDBname,
     parseTableName,
     parseColumnName,
     parseListOfColumnsName,

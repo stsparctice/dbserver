@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { countRowsSql, getDetailsMng, getCountDocumentsMng,
-    connectTables, autoComplete } = require('../modules/read');
+const { countRowsSql, 
+    getDetailsMng, 
+    getCountDocumentsMng,
+    connectTables, 
+    autoComplete } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
 const { convertQueryToObject } = require('../utils/convert_query')

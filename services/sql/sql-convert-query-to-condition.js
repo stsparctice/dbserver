@@ -126,4 +126,4 @@ function buildIn(inArray) {
 
 
 
-module.export = { convertQueryToSQLCondition, buildBetween, buildIn, buildLike, buildOrAndGteLte, }
+module.exports = { convertQueryToSQLCondition, buildBetween, buildIn, buildLike, buildOrAndGteLte, }

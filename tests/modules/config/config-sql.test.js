@@ -1,4 +1,15 @@
-const { getTableFromConfig, getCollectionsFromConfig, readJoin, getReferencedColumns, setFullObj, getTableAccordingToRef, getObjectWithFeildNameForPrimaryKey, getForeignTableAndColumn, convertFieldType, getTabeColumnName } = require('../../../modules/config/get-config');
+const {getTableFromConfig,
+getReferencedColumns,
+getTableAccordingToRef,
+getForeignTableAndDefaultColumn,
+getTableColumnsName} = require('../../../modules/config/config-sql')
+const { 
+    getCollectionsFromConfig,
+    readJoin,
+    setFullObj,
+    getObjectWithFeildNameForPrimaryKey,
+    convertFieldType,
+} = require('../../../modules/config/get-config');
 const config = require('./TESTconfig/config.json');
 const incorrectConfig = require('./TESTconfig/incorrectConfig.json');
 
@@ -7,7 +18,7 @@ describe('TEST ON config.js FILE', () => {
         it('The function received a table name and returns the table accordingly', () => {
             const result = getTableFromConfig('tbl_example_table4', config);
             expect(result).toBeDefined();
-            expect(result).toStrictEqual( {
+            expect(result).toStrictEqual({
                 "MTDTable": {
                     "name": {
                         "name": "example_table4",
@@ -127,56 +138,56 @@ describe('TEST ON config.js FILE', () => {
 
     describe('GET FOREIGN TABLE AND COLUMN', () => {
         it('A function received a table name, a field name and a config and returns an object that includes a table name and its information', () => {
-            const result = getForeignTableAndColumn('tbl_example_table5', 'unitOfMeasure', config);
+            const result = getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual({ foreignTableName: 'TBL_EXAMPLE_TABLE4', defaultColumn: 'Name' });
         });
         it('The returned value is of type object', () => {
-            const result = getForeignTableAndColumn('tbl_example_table5', 'unitOfMeasure', config);
+            const result = getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
             expect(result).toBeInstanceOf(Object);
         });
         it('The table name is of type string', () => {
-            expect(() => getForeignTableAndColumn(15, 'unitOfMeasure', config)).toThrow('Check the type of the parameter received');
+            expect(() => getForeignTableAndDefaultColumn(15, 'unitOfMeasure', config)).toThrow('Check the type of the parameter received');
         });
         it('The field name is of type string', () => {
-            expect(() => getForeignTableAndColumn('tbl_example_table4', 15, config)).toThrow('Check the type of the parameter received');
+            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 15, config)).toThrow('Check the type of the parameter received');
         });
         it('The table name and field name are of type string', () => {
-            expect(() => getForeignTableAndColumn(15, 15, config)).toThrow('Check the type of the parameter received');
-            expect(() => getForeignTableAndColumn('tbl_example_table5', 'unitOfMeasure', config)).not.toThrow();
+            expect(() => getForeignTableAndDefaultColumn(15, 15, config)).toThrow('Check the type of the parameter received');
+            expect(() => getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config)).not.toThrow();
         });
         it('A table name without a foreign key will return an error accordingly', () => {
-            expect(() => getForeignTableAndColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
+            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
         });
         it('A table column without a foreign key will return an error accordingly', () => {
-            expect(() => getForeignTableAndColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
+            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
         });
         it('When the structure of the config file is incorrect', () => {
-            expect(() => getForeignTableAndColumn('tbl_example_table4', 'unitOfMeasure', incorrectConfig)).toThrow('Check config file');
+            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 'unitOfMeasure', incorrectConfig)).toThrow('Check config file');
         });
     });
 
     describe('GET TABLE COLUMN NAME', () => {
         it('The function received a table name and a config and returns the names of its columns in sql', () => {
-            const result = getTabeColumnName('tbl_example_table4', config);
+            const result = getTableColumnsName('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual(['Id']);
         });
         it('The function returns an array', () => {
-            const result = getTabeColumnName('tbl_example_table4', config);
+            const result = getTableColumnsName('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toBeInstanceOf(Array);
         });
         it('The table name is of type string', () => {
-            expect(() => getTabeColumnName(15, config)).toThrow('Check the type of the parameter receive');
-            expect(() => getTabeColumnName('tbl_example_table4', config)).not.toThrow();
+            expect(() => getTableColumnsName(15, config)).toThrow('Check the type of the parameter receive');
+            expect(() => getTableColumnsName('tbl_example_table4', config)).not.toThrow();
         });
         it('The table name that does not exist returns an error accordingly', () => {
-            expect(() => getTabeColumnName('not_exist_table', config)).toThrow('Check Table Name');
-            expect(() => getTabeColumnName('tbl_example_table4', config)).not.toThrow();
+            expect(() => getTableColumnsName('not_exist_table', config)).toThrow('Check Table Name');
+            expect(() => getTableColumnsName('tbl_example_table4', config)).not.toThrow();
         });
         it('When the structure of the config file is incorrect', () => {
-            expect(() => getTabeColumnName('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
+            expect(() => getTableColumnsName('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
         });
     });
 

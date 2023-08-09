@@ -1,6 +1,3 @@
-
-
-
 const removeIndexes = (str) => {
     const splitIndex = str.lastIndexOf('_')
     if (splitIndex !== -1) {
@@ -53,4 +50,4 @@ const convertQueryToObject = (query) => {
 
 
 
-module.exports = { convertToMongoFilter, convertToSqlCondition, convertQueryToObject }
+module.exports = {   convertQueryToObject }

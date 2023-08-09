@@ -1,9 +1,28 @@
 require('dotenv')
-const { getTableFromConfig } = require('../../modules/config/get-config')
-const { convertToSqlCondition } = require('../../utils/convert_query');
-const { getPrimaryKeyField } = require('../../modules/config/config-sql');
-const { parseDBname, parseColumnName } = require('../../utils/parse_name');
+const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn } = require('../../modules/config/config-sql')
+const { convertQueryToSQLCondition } = require('../../services/sql/sql-convert-query-to-condition');
+const {  parseColumnName } = require('../../utils/parse_name');
 const { SQL_DBNAME } = process.env
+
+
+const autoCompleteQuery = ({ entity, column }, condition) => {
+    try {
+        let obj = {}
+        const { entityName } = parseDBname(entity);
+        obj.tableName = entityName
+        let val = {}
+        val[column] = ''
+        obj.columns = `${Object.keys(parseColumnName(val, entityName))}, ${getPrimaryKeyField(obj.tableName)}`;
+        console.log({ condition: condition.LIKE });
+        obj.condition = convertQueryToSQLCondition(getTableFromConfig(obj.tableName), condition);
+        obj.n = 10;
+        return obj;
+    }
+    catch (error) {
+        console.log(error);
+        throw error
+    }
+}
 
 const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) => {
     try {
@@ -16,14 +35,15 @@ const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) =>
             console.log(column)
             const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
             const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
-            const thisTable = getTableFromConfig(tableToJoin);
-            const alias = thisTable.MTDTable.name.name;
-            columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} AS FK_${column.name}_${columnToJoin}`, `${thisTable.MTDTable.defaultColumn} AS FK_${column.name}_${thisTable.MTDTable.defaultColumn}`] }];
+            const joinTable = getTableFromConfig(tableToJoin);
+            const alias = getTableAlias(joinTable);
+            const defaultcolumn = getDefaultColumn(joinTable)
+            columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} AS FK_${column.name}_${columnToJoin}`, `${defaultcolumn} AS FK_${column.name}_${defaultcolumn}`] }];
             join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
         });
         if (Object.keys(condition).length > 0) {
 
-            let conditionString = convertToSqlCondition(getTableFromConfig(tableName), condition);
+            let conditionString = convertQueryToSQLCondition(getTableFromConfig(tableName), condition);
 
             join = `${join} WHERE ${conditionString}`;
         }
@@ -43,24 +63,7 @@ const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) =>
     }
 }
 
-const autoCompleteQuery = ({ entity, column }, condition) => {
-    try {
-        let obj = {}
-        const { entityName } = parseDBname(entity);
-        obj.tableName = entityName
-        let val = {}
-        val[column] = ''
-        obj.columns = `${Object.keys(parseColumnName(val, entityName))}, ${getPrimaryKeyField(obj.tableName)}`;
-        console.log({ condition: condition.LIKE });
-        obj.condition = convertToSqlCondition(getTableFromConfig(obj.tableName), condition);
-        obj.n = 10;
-        return obj;
-    }
-    catch (error) {
-        console.log(error);
-        throw error
-    }
-}
+
 const convertType = (column1, column2) => {
     const table1 = getTableFromConfig(parseDBname(column1.tableName).entityName);
     const current1 = table1.columns.find(({ sqlName }) => sqlName === column1.column);
