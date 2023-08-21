@@ -4,7 +4,7 @@ const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { readJoin, getDBTypeAndName } = require('./config/get-config');
 const { getReferencedColumns, getPrimaryKeyField, getDefaultColumn, getColumnAlias , getTableFromConfig} = require('./config/config-sql');
 const ConvertQueryToSQLCondition = require('../services/sql/sql-convert-query-to-condition')
-const { viewConnectionsTables, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
+const { getSelectSqlQueryWithFK, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
 
 
 const mongoCollection = MongoDBOperations;
@@ -128,10 +128,10 @@ async function readWithJoin(tableName, column) {
 
 async function connectTables(obj) {
     try {
-        const query = viewConnectionsTables(obj);
+        const query = getSelectSqlQueryWithFK(obj);
         const values = await join(query);
         const res = await selectReferenceColumn(values, obj.tableName);
-        const result = mapEntity(res);
+        const result = mapFKIntoEntity(res);
         return result;
     }
     catch (error) {
@@ -174,7 +174,7 @@ const selectReferenceColumn = async (values, tableName) => {
 
 }
 
-const mapEntity = (entities) => {
+const mapFKIntoEntity = (entities) => {
     try {
         const items = []
         for (let entity of entities) {

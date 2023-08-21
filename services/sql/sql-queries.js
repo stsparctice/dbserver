@@ -25,7 +25,7 @@ const autoCompleteQuery = ({ tablename, column }, condition) => {
     }
 }
 
-const viewConnectionsTables = ({ tableName, condition = {}, topn, skip = 0 }) => {
+const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) => {
     try {
         const myTable = getTableFromConfig(tableName)
         const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
@@ -84,4 +84,4 @@ const convertType = (column1, column2) => {
 
 }
 
-module.exports = { viewConnectionsTables, autoCompleteQuery, convertType };
+module.exports = { getSelectSqlQueryWithFK, autoCompleteQuery, convertType };
