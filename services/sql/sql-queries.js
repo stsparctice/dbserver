@@ -44,7 +44,7 @@ const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) 
                     let count = joinTables.filter(jt => jt.tableToJoin === tableToJoin).length
                     alias = `${alias}${count}`
                 }
-                columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} AS FK_${column.name}_${columnToJoin}`, `${defaultcolumn} AS FK_${column.name}_${defaultcolumn}`] }];
+                columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} AS FK_${column.sqlName}_${columnToJoin}`, `${defaultcolumn} AS FK_${column.sqlName}_${defaultcolumn}`] }];
                 // join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
 
                 joinTables.push({ tableToJoin, alias, columnToJoin, entity2: myTable.MTDTable.name.name, column2: column.sqlName })

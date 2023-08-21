@@ -174,6 +174,7 @@ const selectReferenceColumn = async (values, tableName) => {
 }
 
 const mapFKIntoEntity = (entities) => {
+    console.log({entities})
     try {
         const items = []
         for (let entity of entities) {
@@ -181,6 +182,7 @@ const mapFKIntoEntity = (entities) => {
             const foreignkeys = entries.filter(e => e[0].startsWith('FK'))
             let groups = foreignkeys.reduce((gr, fk) => {
                 const prop = fk[0].split('_')[1]
+                console.log({prop})
                 if (!gr.some(g => g.name === prop)) {
                     let group = { name: prop, items: [fk] }
                     gr = [...gr, group]
@@ -190,11 +192,14 @@ const mapFKIntoEntity = (entities) => {
                 }
                 return gr
             }, [])
+            console.log({groups})
             const newObj = entries.reduce((obj, ent) => {
+                console.log(ent[0])
                 if (ent[0].startsWith('FK')) {
                     return obj
                 }
-                const gr = groups.find(g => g.name.indexOf(ent[0]) !== -1)
+                console.log(ent[0])
+                const gr = groups.find(g => g.name===ent[0])
                 if (gr) {
                     obj[ent[0]] = gr.items.reduce((val, v) => {
                         const split = v[0].split('_')
@@ -207,6 +212,7 @@ const mapFKIntoEntity = (entities) => {
                 }
                 return obj
             }, {});
+            console.log({newObj})
             items.push(newObj)
         }
         return items;
