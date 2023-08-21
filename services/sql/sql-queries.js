@@ -1,7 +1,7 @@
 require('dotenv')
 const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn } = require('../../modules/config/config-sql')
 const { getDBTypeAndName } = require('../../modules/config/get-config');
-const {getConverter} = require('../../services/sql/sql-convert-query-to-condition');
+const { getConverter } = require('../../services/sql/sql-convert-query-to-condition');
 const { parseColumnName } = require('../../utils/parse_name');
 const { SQL_DBNAME } = process.env
 
@@ -28,19 +28,33 @@ const autoCompleteQuery = ({ tablename, column }, condition) => {
 const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) => {
     try {
         const myTable = getTableFromConfig(tableName)
-        const columns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
+        const foreignKeyColumns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
         let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: myTable.columns.map(({ sqlName }) => sqlName) }];
         let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
-        columns.forEach(column => {
-            const tableToJoin = column.type.slice(column.type.lastIndexOf('tbl_'), column.type.lastIndexOf('('));
-            const columnToJoin = column.type.slice(column.type.lastIndexOf('(') + 1, column.type.lastIndexOf(')'));
-            const alias = getTableAlias(tableToJoin);
-            const defaultcolumn = getDefaultColumn(tableToJoin)
-            columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} AS FK_${column.name}_${columnToJoin}`, `${defaultcolumn} AS FK_${column.name}_${defaultcolumn}`] }];
-            join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
-        });
+        let joinTables = []
+        if (foreignKeyColumns.length > 0) {
+            foreignKeyColumns.forEach(column => {
+                let startindex = column.type.toUpperCase().indexOf('REFERENCES')
+                startindex += 11
+                let tableToJoin = column.type.slice(startindex, column.type.indexOf('(', startindex));
+                const columnToJoin = column.type.slice(column.type.indexOf('(', startindex) + 1, column.type.indexOf(')', startindex));
+                let  alias = getTableAlias(tableToJoin);
+                const defaultcolumn = getDefaultColumn(tableToJoin)
+                if (joinTables.some(jt => jt.tableToJoin === tableToJoin)) {
+                    let count = joinTables.filter(jt => jt.tableToJoin === tableToJoin).length
+                    alias = `${alias}${count}`
+                }
+                columnsSelect = [...columnsSelect, { tableName: alias, columnsName: [`${columnToJoin} AS FK_${column.name}_${columnToJoin}`, `${defaultcolumn} AS FK_${column.name}_${defaultcolumn}`] }];
+                // join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
+
+                joinTables.push({ tableToJoin, alias, columnToJoin, entity2: myTable.MTDTable.name.name, column2: column.sqlName })
+            });
+        }
+        console.log({ joinTables })
+        joinTables = joinTables.map(({ tableToJoin, alias, columnToJoin, entity2, column2 }) => `LEFT JOIN ${tableToJoin} ${alias} ON ${entity2}.${column2}=${alias}.${columnToJoin}`)
+        join = `${join} ${joinTables.join(' ')}`
         if (Object.keys(condition).length > 0) {
-            const convert =getConverter(myTable)
+            const convert = getConverter(myTable)
             let conditionString = convert.convertCondition(condition)
 
             join = `${join} WHERE ${conditionString}`;
