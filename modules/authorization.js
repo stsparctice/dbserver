@@ -22,7 +22,6 @@ const checkUserRole = (role) => {
             next();
         }
         else {
-            console.log('xxxxxxxxxxx')
             res.redirect('/');
         };
     };

@@ -60,6 +60,11 @@
                                 "name": "Id",
                                 "sqlName": "Id",
                                 "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                            },
+                            {
+                                "name": "Name",
+                                "sqlName": "Name",
+                                "type": "NVARCHAR(50)"
                             }
                         ]
                     },

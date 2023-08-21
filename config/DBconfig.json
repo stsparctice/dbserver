@@ -128,7 +128,7 @@
                             {
                                 "name": "measure",
                                 "sqlName": "Measure",
-                                "type": "NVARCHAR(20) NOT NULL "
+                                "type": "NVARCHAR(30) NOT NULL "
                             },
                             {
                                 "name": "disable",
@@ -207,12 +207,17 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeletedDate",
-                                "sqlName": "DeleteDate",
-                                "type": "DATETIME NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -241,24 +246,29 @@
                                 "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_UnitOfMeasure(Id)"
                             },
                             {
-                                "name": "bookkeepingCode",
+                                "name": "BookkeepingCode",
                                 "sqlName": "BookkeepingCode",
                                 "type": "NVARCHAR(20) NULL"
                             },
                             {
-                                "name": "addedDate",
+                                "name": "AddedDate",
                                 "sqlName": "AddedDate",
                                 "type": "DATETIME NOT NULL"
                             },
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "deletedDate",
-                                "sqlName": "DeleteDate",
-                                "type": "DATETIME NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -305,12 +315,17 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "deletedDate",
-                                "sqlName": "DeleteDate",
-                                "type": "DATETIME NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -365,13 +380,18 @@
                             },
                             {
                                 "name": "Disabled",
-                                "sqlName": "Disable",
-                                "type": "BIT NULL"
+                                "sqlName": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeleteDate",
-                                "sqlName": "DeleteDate",
-                                "type": "NVARCHAR(20) NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -528,13 +548,18 @@
                             },
                             {
                                 "name": "Disabled",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "sqlName": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeleteDate",
-                                "sqlName": "DeleteDate",
-                                "type": "NVARCHAR(20) NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -605,12 +630,17 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeleteDate",
-                                "sqlName": "DeleteDate",
-                                "type": "NVARCHAR(20) NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -661,12 +691,17 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeleteDate",
-                                "sqlName": "DeleteDate",
-                                "type": "NVARCHAR(20) NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -717,12 +752,17 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeleteDate",
-                                "sqlName": "DeleteDate",
-                                "type": "NVARCHAR(20) NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -869,17 +909,17 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeletionDate",
-                                "sqlName": "DeletionDate",
-                                "type": "NVARCHAR(50)"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
                             },
                             {
-                                "name": "UserThatDelete",
-                                "sqlName": "UserThatDelete",
-                                "type": "NVARCHAR(20)"
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -1011,7 +1051,7 @@
                             {
                                 "name": "DisabledDate",
                                 "sqlName": "DisabledDate",
-                                "type": "NVARCHAR(50)"
+                                "type": "DATETIME  NULL"
                             },
                             {
                                 "name": "DisableUser",
@@ -1152,14 +1192,19 @@
                                 "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": "disable",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": "deletingDate",
-                                "sqlName": "DeletingDate",
-                                "type": "DATETIME NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -1194,14 +1239,19 @@
                                 "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": "disable",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": "deletingDate",
-                                "sqlName": "DeletingDate",
-                                "type": "DATETIME NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -1231,14 +1281,19 @@
                                 "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": "disable",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": "deletingDate",
-                                "sqlName": "DeletingDate",
-                                "type": "DATETIME NULL"
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -1348,14 +1403,19 @@
                                 "type": "DATETIME NOT NULL"
                             },
                             {
-                                "name": "Disable",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT"
                             },
                             {
-                                "name": "DeletingDate",
-                                "sqlName": "DeletingDate",
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
                                 "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },
@@ -1392,6 +1452,21 @@
                                 "name": "addedDate",
                                 "sqlName": "AddedDate",
                                 "type": "DATETIME NOT NULL"
+                            },
+                            {
+                                "name": "Disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT"
+                            },
+                            {
+                                "name": "DisabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": "DATETIME  NULL"
+                            },
+                            {
+                                "name": "DisableUser",
+                                "sqlName": "DisableUser",
+                                "type": " NVARCHAR(20) NULL"
                             }
                         ]
                     },

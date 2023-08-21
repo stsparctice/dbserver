@@ -150,6 +150,11 @@
         "description":""
     },
     {
+        "message":"Missing required arguments for method",
+        "status":520,
+        "description":""
+    },
+    {
         "message":"Check config file",
         "status":600,
         "description":""

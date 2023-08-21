@@ -5,11 +5,11 @@ const { SQL_DBNAME } = process.env;
 const { DBType } = require('../../utils/types')
 const { getPrimaryKeyField,
      getTableFromConfig,
-     parseSQLType,
+     parseColumnSQLType,
      getTableAlias,
      getSqlTableColumnsType } = require('../../modules/config/config-sql')
 const notifictions = require('../../config/serverNotifictionsConfig.json');
-const { convertQueryToSQLCondition } = require('./sql-convert-query-to-condition');
+const ConvertQueryToSQLCondition = require('./sql-convert-query-to-condition');
 
 // if (!SQL_DBNAME) {
 //      throw notifictions.find(n => n.status == 509)
@@ -61,8 +61,6 @@ const insertColumn = async function (obj) {
 
 const createNewTable = async function (obj) {
      try {
-          console.log({ obj });
-
           let str = ''
           obj.columns.forEach(element => {
                str += `${element.name} ${element.type},`
@@ -88,7 +86,7 @@ const read = async function (obj) {
           const { tableName, columns, condition, n } = obj;
 
 
-          console.log(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`);
+          console.log(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableAlias(tableName)} where ${condition}`);
           const result = await getPool().request().query(`USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableAlias(tableName)} WHERE ${condition}`);
           return result.recordset;
      }
@@ -127,7 +125,7 @@ const transaction = async (data) => {
                     record.values = record.values.map(obj => parseColumnName(obj, entityName))
 
                     for (let iterator of record.values) {
-                         let arr = parseSQLType(iterator, tabledata)
+                         let arr = parseColumnSQLType(iterator, tabledata)
                          try {
                               console.log(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
                               await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)
@@ -171,9 +169,10 @@ const join = async (query = "") => {
 };
 const update = async function (obj) {
      try {
-
-          obj.condition = convertQueryToSQLCondition(getTableFromConfig(obj.entityName), obj.condition)
-          const alias = getTableFromConfig(obj.entityName).MTDTable.name.name
+          const convert = new ConvertQueryToSQLCondition()
+          convert.setTable(obj.entityName)
+          obj.condition = convert.convertCondition(obj.condition)
+          const alias = getTableAlias(obj.entityName)
           const valEntries = Object.entries(obj.values);
           const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseSQLTypeForColumn({ name: c[0], value: c[1] }, obj.entityName)}`).join(',')
           console.log(`use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.entityName} ${alias} WHERE ${obj.condition}`)

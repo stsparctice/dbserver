@@ -1,14 +1,13 @@
 require('dotenv');
 const { SQL_DBNAME } = process.env;
-const{DBType} = require('../../utils/types')
+const { DBType } = require('../../utils/types')
 const DBconfig = require('../../config/DBconfig.json');
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
 
-const getDBTypeAndName = (entityName) => {
-    // console.log({entityName});
-    let sql = DBconfig.find(db => db.database === DBType.SQL);
-    let tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
-    let table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);
+const getDBTypeAndName = (entityName, config = DBconfig) => {
+    const sql = config.find(db => db.database === DBType.SQL);
+    const tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
+    const table = tables.find(table => table.MTDTable.name.name == entityName || table.MTDTable.name.sqlName == entityName);
     if (table) {
         return { type: DBType.SQL, entityName: table.MTDTable.name.sqlName }
     }
@@ -18,7 +17,7 @@ const getDBTypeAndName = (entityName) => {
         return { type: DBType.MONGO, entityName: collection.mongoName };
     }
     else {
-        let error = notifications.find(n => n.status === 516)
+        let error = notifictaions.find(n => n.status === 516)
         error.description = `The entity name ${entityName} does not exist`
         throw error;
     }
@@ -26,34 +25,6 @@ const getDBTypeAndName = (entityName) => {
 
 
 
-function getCollectionsFromConfig(collectionName, config = DBconfig) {
-    try {
-        if (typeof collectionName !== 'string') {
-            let error = notifictaions.find(({ status }) => status === 519);
-            error.description += 'The collection name should be of type string';
-            throw error;
-        }
-        let collection;
-        try {
-            let mongo = config.find(db => db.database === 'mongoDB');
-            collection = mongo.collections.find(({ mongoName }) => mongoName === collectionName);
-        }
-        catch {
-            let error = notifictaions.find(({ status }) => status === 600);
-            error.description += '(check the config file).';
-            throw error;
-        }
-        if (!collection) {
-            let error = notifictaions.find(n => n.status === 517);
-            error.description = `Collection: ${collectionName} does not exsist.`;
-            throw error;
-        }
-        return collection;
-    }
-    catch (error) {
-        throw error;
-    }
-}
 
 
 
@@ -140,44 +111,8 @@ function setFullObj(parentTable, refTable, config = DBconfig) {
 // }
 // 
 
-
-function getObjectWithFeildNameForPrimaryKey(tablename, fields, id, config = DBconfig) {
-    try {
-
-        let primarykey = getPrimaryKeyField(tablename, config)
-        if (primarykey) {
-            let where = {}
-            where[primarykey] = id
-            return { tablename, columns: fields, where }
-        }
-        return false
-    }
-    catch (error) {
-        throw error
-    }
-}
-function convertFieldType(tablename, field, value, config = DBconfig) {
-    try {
-
-        const columns = getSqlTableColumnsType(tablename, config)
-        let col = columns.find(c => c.sqlName === field)
-        let parse = types[col.type.toUpperCase().replace(col.type.slice(col.type.indexOf('('), col.type.indexOf(')') + 1), '')]
-        const ans = parse.parseNodeTypeToSqlType(value)
-        return ans
-    }
-    catch (error) {
-        const e = notifictaions.find(({ status }) => status === 513);
-        e.description = error.message;
-        throw e;
-    }
-
-}
-
 module.exports = {
     getDBTypeAndName,
     setFullObj,
-    convertFieldType,
     readJoin,
-    convertFieldType, getObjectWithFeildNameForPrimaryKey,
-    getCollectionsFromConfig,
 };

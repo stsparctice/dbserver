@@ -1,17 +1,18 @@
 const { types } = require('./config-objects')
 const notifictaions = require('../../config/serverNotifictionsConfig.json')
 const DBconfig = require('../../config/DBconfig.json');
+const { DBType } = require('../../utils/types');
 
 function getTableFromConfig(tableName, config = DBconfig) {
     try {
         if (typeof tableName !== 'string') {
             let error = notifictaions.find(({ status }) => status === 519);
-            error.description += 'The table name should be of type string';
+            error.description = 'The table name should be of type string';
             throw error;
         }
         let tables;
         try {
-            let sql = config.find(db => db.database === 'sql');
+            let sql = config.find(db => db.database === DBType.SQL);
             tables = sql.dbobjects.find(obj => obj.type === 'Tables').list;
         }
         catch {
@@ -32,18 +33,20 @@ function getTableFromConfig(tableName, config = DBconfig) {
     }
 }
 
-function getSqlTableColumnsType(tablename) {
+function getSqlTableColumnsType(tablename, config=DBconfig) {
     try {
-        const table = getTableFromConfig(tablename)
-        let col = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
-        return col
+        const table = getTableFromConfig(tablename, config)
+        let columns = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
+
+        return columns
     }
     catch (error) {
+        console.log({error})
         throw error
     }
 };
 
-function getReferencedColumns(tablename, config = DBconfig) {
+function getReferencedColumns(tablename, config=DBconfig) {
     let columns;
     try {
         const table = getTableFromConfig(tablename, config);
@@ -71,11 +74,6 @@ function getTableAccordingToRef(tablename, config = DBconfig) {
 function getForeignTableAndDefaultColumn(tablename, field, config = DBconfig) {
     try {
         const table = getTableFromConfig(tablename, config);
-        if (typeof field !== 'string') {
-            let error = notifictaions.find(({ status }) => status === 519);
-            error.description += 'The table name should be of type string';
-            throw error;
-        }
         let foreignTableName;
         try {
             const column = table.columns.find(c => c.name.toLowerCase() === field.toLowerCase());
@@ -86,12 +84,11 @@ function getForeignTableAndDefaultColumn(tablename, field, config = DBconfig) {
         }
         catch {
             let error = notifictaions.find(n => n.status === 515);
-            error.description = `Field: ${field} is not exsist in table: ${tablename}.`;
+            error.description = `Field: ${field} does not exsist in table: ${tablename}.`;
             throw error;
         }
         const foreignTable = getTableFromConfig(foreignTableName.toLowerCase(), config);
         const { defaultColumn } = foreignTable.MTDTable;
-        console.log({ foreignTableName, defaultColumn });
         return { foreignTableName, defaultColumn };
     }
     catch (error) {
@@ -131,6 +128,7 @@ function getDefaultColumn(tableName) {
     }
 
 }
+
 function getColumnAlias(tableName, column) {
     try {
         const table = getTableFromConfig(tableName);
@@ -155,8 +153,6 @@ function getPrimaryKeyField(tablename) {
         throw error
     }
 }
-
-
 
 function getForeginKeyColumns(tableName) {
     const myTable = getTableFromConfig(tableName)
@@ -186,19 +182,22 @@ function getObjectWithFieldNameForPrimaryKey(tablename, fields, id) {
     }
 }
 
+function parseColumnSQLType(object, tabledata){
+    const props = Object.entries(object)
+    let arr = props.map(p => parseOneColumnSQLType({ name: p[0], value: p[1] }, tabledata))
+    return arr
+}
 
 
-
-
-
-
-
-
-
-
-function parseSQLType(col, tableName) {
-    const tabledata = getSqlTableColumnsType(tableName)
-    let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == col.name.trim().toLowerCase()).type
+function parseOneColumnSQLType(column, tabledata) {
+    
+    const props = Object.keys(column)
+    if(!props.includes('name')|| !props.includes('value')){
+        const error=notifictaions.find(n=>n.status===519)
+        error.description = `Argument column must be an object with the following keys: 'name' and 'value`
+        throw error
+    }
+    let type = tabledata.find(td => td.sqlName.trim().toLowerCase() == column.name.trim().toLowerCase()).type
     let parse
     try {
         const typename = type.toUpperCase().replace(type.slice(type.indexOf('('), type.indexOf(')') + 1), '').trim()
@@ -209,10 +208,9 @@ function parseSQLType(col, tableName) {
         error.description = `Type: ${type} does not exist.`
         throw error
     }
-    const val = parse.parseNodeTypeToSqlType(col.value);
+    const val = parse.parseNodeTypeToSqlType(column.value);
     return val
 }
-
 
 module.exports = {
     getTableFromConfig,
@@ -227,7 +225,6 @@ module.exports = {
     getPrimaryKeyField,
     getForeginKeyColumns,
     getObjectWithFieldNameForPrimaryKey,
-
-
-    parseSQLType,
+    parseColumnSQLType,
+    parseOneColumnSQLType
 }

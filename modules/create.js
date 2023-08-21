@@ -4,18 +4,16 @@ const { create, insertColumn } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 const { newTransaction } = require('../services/sql/sql-connection')
-const { parseDBname, parseColumnName } = require('../utils/parse_name')
-const { DBType } = require('./config/get-config')
 const { getPrimaryKeyField, getForeignTableAndColumn, getForeginKeyColumns } = require('./config/config-sql')
 const { SQL_DBNAME } = process.env
 
 
-const { getSqlTableColumnsType, parseSQLType } = require('./config/config-sql');
+const { getSqlTableColumnsType, parseColumnSQLType } = require('./config/config-sql');
 
 async function createSql(obj) {
     try {
         let tabledata = getSqlTableColumnsType(obj.entityName);
-        let arr = parseSQLType(obj.values, tabledata);
+        let arr = parseColumnSQLType(obj.values, tabledata);
         const result = await create({ tableName: obj.entityName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
         return result;
     }
@@ -33,10 +31,10 @@ async function insertManySql(obj) {
         let values = obj.values
 
         let result = []
-        for (let o of values) {
-            tabledata = getSqlTableColumnsType(obj.entityName)
-            arr = parseSQLType(o, tabledata);
-            let res = await create({ tableName: obj.entityName, columns: (Object.keys(o).join()).trim(), values: arr.join() });
+        tabledata = getSqlTableColumnsType(obj.entityName)
+        for (let item of values) {
+            arr = parseColumnSQLType(item, tabledata);
+            let res = await create({ tableName: obj.entityName, columns: (Object.keys(item).join()).trim(), values: arr.join() });
             result = [...result, ...res]
         }
         if (result) {
@@ -143,7 +141,7 @@ const transactionCreate = async (data) => {
 
             }
 // אני פה בדיוק באמצע של האמצע של האמצע ואני חיייייבת ללכת על כן על המורה להמשיך את זה לטפל בהכנסה של כל מה שמחקתי באובייקט הראשי
-            let arr = parseSQLType(record, tabledata)
+            let arr = parseColumnSQLType(record, tabledata)
             try {
                 console.log(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
                 await statement.prepare(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`)

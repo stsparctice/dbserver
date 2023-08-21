@@ -1,5 +1,6 @@
 const notifications = require('../config/serverNotifictionsConfig.json')
-const { getDBTypeAndName, getTableFromConfig } = require('../modules/config/get-config')
+const { getDBTypeAndName } = require('../modules/config/get-config')
+const {getTableFromConfig} = require('../modules/config/config-sql')
 
 function parseTableName() {
     return (req, res, next) => {

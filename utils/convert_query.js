@@ -15,9 +15,7 @@ const buildQueryObject = (arr, start, obj) => {
             switch (realKey) {
                 case 'start':
                     obj = {}
-                    console.log({ arr: arr[i][key] })
                     obj[arr[i][key]] = buildQueryObject(arr, i + 1, [])
-                    console.log({ obj })
                     return obj
                 case 'end':
                     return obj;

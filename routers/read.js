@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { countRowsSql, 
-    getDetailsMng, 
+const { countRowsSql,
+    getDetailsMng,
     getCountDocumentsMng,
-    connectTables, 
+    connectTables,
     autoComplete } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
@@ -14,10 +14,9 @@ router.use(routerLogger());
 
 router.get('/auto_complete/:entity/:column', async (req, res) => {
     try {
-        console.log({ like: req.query.LIKE });
         const condition = convertQueryToObject(req.query)
-        const result = await autoComplete({ ...req.params, condition });
-        res.status(200).send(result);
+        const response = await routeEntityByItsType({ entityName: req.params.entity, condition }, autoComplete);
+        res.status(200).send(response);
     }
     catch (error) {
         console.log(error.description);

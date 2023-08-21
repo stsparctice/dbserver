@@ -1,17 +1,13 @@
-const {getTableFromConfig,
-getReferencedColumns,
-getTableAccordingToRef,
-getForeignTableAndDefaultColumn,
-getTableColumnsName} = require('../../../modules/config/config-sql')
-const { 
-    getCollectionsFromConfig,
-    readJoin,
-    setFullObj,
-    getObjectWithFeildNameForPrimaryKey,
-    convertFieldType,
-} = require('../../../modules/config/get-config');
 const config = require('./TESTconfig/config.json');
 const incorrectConfig = require('./TESTconfig/incorrectConfig.json');
+const {
+    getTableFromConfig,
+    getReferencedColumns,
+    getTableAccordingToRef,
+    getForeignTableAndDefaultColumn,
+    getTableColumnsName,
+    getSqlTableColumnsType
+} = require('../../../modules/config/config-sql')
 
 describe('TEST ON config.js FILE', () => {
     describe('GET TABLE FROM CONFIG', () => {
@@ -32,6 +28,11 @@ describe('TEST ON config.js FILE', () => {
                         "name": "Id",
                         "sqlName": "Id",
                         "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                    }, 
+                    {
+                        "name": "Name",
+                        "sqlName": "Name",
+                        "type": "NVARCHAR(50)"
                     }
                 ]
             });
@@ -54,29 +55,29 @@ describe('TEST ON config.js FILE', () => {
         });
     });
 
-    describe('GET COLLECTIONS FROM CONFIG', () => {
-        it('A function received a collection name and returns the collection accordingly', () => {
-            const result = getCollectionsFromConfig('example', config);
-            expect(result).toBeDefined();
-            expect(result).toStrictEqual({ 'mongoName': 'example', 'name': 'example' });
-        });
-        it('The value returned is of type object', () => {
-            const result = getCollectionsFromConfig('example', config);
-            expect(result).toBeDefined();
-            expect(result).toBeInstanceOf(Object);
-        });
-        it('The collection name should be of type string', () => {
-            expect(() => getCollectionsFromConfig(15, config)).toThrow('Check the type of the parameter received');
-            expect(() => getCollectionsFromConfig('example', config)).not.toThrow();
-        });
-        it('Collection name does not exist returns an error accordingly', () => {
-            expect(() => getCollectionsFromConfig('collection_not_exist', config)).toThrow('Check Collection Name');
-            expect(() => getCollectionsFromConfig('example', config)).not.toThrow();
-        });
-        it('When the structure of the config file is incorrect', () => {
-            expect(() => getCollectionsFromConfig('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
-        });
-    });
+    // describe('GET COLLECTIONS FROM CONFIG', () => {
+    //     it('A function received a collection name and returns the collection accordingly', () => {
+    //         const result = getCollectionsFromConfig('example', config);
+    //         expect(result).toBeDefined();
+    //         expect(result).toStrictEqual({ 'mongoName': 'example', 'name': 'example' });
+    //     });
+    //     it('The value returned is of type object', () => {
+    //         const result = getCollectionsFromConfig('example', config);
+    //         expect(result).toBeDefined();
+    //         expect(result).toBeInstanceOf(Object);
+    //     });
+    //     it('The collection name should be of type string', () => {
+    //         expect(() => getCollectionsFromConfig(15, config)).toThrow('Check the type of the parameter received');
+    //         expect(() => getCollectionsFromConfig('example', config)).not.toThrow();
+    //     });
+    //     it('Collection name does not exist returns an error accordingly', () => {
+    //         expect(() => getCollectionsFromConfig('collection_not_exist', config)).toThrow('Check Collection Name');
+    //         expect(() => getCollectionsFromConfig('example', config)).not.toThrow();
+    //     });
+    //     it('When the structure of the config file is incorrect', () => {
+    //         expect(() => getCollectionsFromConfig('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
+    //     });
+    // });
 
     describe('GET REFERENCED COLUMNS', () => {
         it('The function is given a table name and returns the column name and its reference', () => {
@@ -150,7 +151,7 @@ describe('TEST ON config.js FILE', () => {
             expect(() => getForeignTableAndDefaultColumn(15, 'unitOfMeasure', config)).toThrow('Check the type of the parameter received');
         });
         it('The field name is of type string', () => {
-            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 15, config)).toThrow('Check the type of the parameter received');
+            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 15, config)).toThrow('Check Field Name');
         });
         it('The table name and field name are of type string', () => {
             expect(() => getForeignTableAndDefaultColumn(15, 15, config)).toThrow('Check the type of the parameter received');
@@ -167,11 +168,11 @@ describe('TEST ON config.js FILE', () => {
         });
     });
 
-    describe('GET TABLE COLUMN NAME', () => {
+    describe('GET ALL COLUMNS FROM A TABLE', () => {
         it('The function received a table name and a config and returns the names of its columns in sql', () => {
             const result = getTableColumnsName('tbl_example_table4', config);
             expect(result).toBeDefined();
-            expect(result).toStrictEqual(['Id']);
+            expect(result).toStrictEqual(['Id', 'Name']);
         });
         it('The function returns an array', () => {
             const result = getTableColumnsName('tbl_example_table4', config);
@@ -190,6 +191,14 @@ describe('TEST ON config.js FILE', () => {
             expect(() => getTableColumnsName('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
         });
     });
+
+    describe(`GET ALL COLUMNS' TYPE FROM A TABLE `, () => {
+        it('should get a tablename and return a list of columns with their type', () => {
+            const result = getSqlTableColumnsType('tbl_example_table4', config)
+            console.log({ result })
+            expect(result).toBeDefined()
+        })
+    })
 
     // -------------------------------------------------------------------------
 

@@ -1,15 +1,10 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
-const { readJoin, getTableFromConfig } = require('./config/get-config');
-const { getReferencedColumns, getPrimaryKeyField, parseSQLTypeForColumn, getAlias, getDefaultColumn, getColumnAlias } = require('./config/config-sql');
+const { readJoin, getDBTypeAndName } = require('./config/get-config');
+const { getReferencedColumns, getPrimaryKeyField, getDefaultColumn, getColumnAlias , getTableFromConfig} = require('./config/config-sql');
+const ConvertQueryToSQLCondition = require('../services/sql/sql-convert-query-to-condition')
 const { viewConnectionsTables, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
-const { convertToSqlCondition } = require('../utils/convert_query');
-
-
-
-const config = require('../config/DBconfig.json');
-const { parseDBname } = require('../utils/parse_name');
 
 
 const mongoCollection = MongoDBOperations;
@@ -38,10 +33,17 @@ async function getAllSql(obj) {
     }
 };
 
-async function autoComplete(obj) {
+async function autoComplete({ entittyName, tableName, condition }) {
+    
     try {
-        const objectWithQuery = autoCompleteQuery({ entity: obj.entity, column: obj.column }, obj.condition)
-        const response = await read(objectWithQuery)
+        const table = getTableFromConfig(tableName)
+        const convert = new  ConvertQueryToSQLCondition()
+        convert.setTable( table)
+        const querycondition = convert.convertCondition( condition);
+        const primaryKey = getPrimaryKeyField(tableName)
+        const defaultValue = getDefaultColumn(tableName)
+
+        const response = await read({tableName,condition:querycondition, n:10, columns:[primaryKey, defaultValue]})
         return response
     }
     catch (error) {
@@ -127,7 +129,6 @@ async function readWithJoin(tableName, column) {
 async function connectTables(obj) {
     try {
         const query = viewConnectionsTables(obj);
-        console.log({query});
         const values = await join(query);
         const res = await selectReferenceColumn(values, obj.tableName);
         const result = mapEntity(res);
@@ -139,10 +140,10 @@ async function connectTables(obj) {
 }
 const selectReferenceColumn = async (values, tableName) => {
     const columnReference = getReferencedColumns(tableName)
-    if(columnReference.length>0){
+    if (columnReference.length > 0) {
         let tablesJoin = []
         columnReference.map(({ ref }) => {
-            tablesJoin = [...tablesJoin, ...values.reduce((state, val) => val[ref] !== null ? state.includes(parseDBname(val[ref]).entityName) ? [...state] : [...state, parseDBname(val[ref]).entityName] : [...state], [])];
+            tablesJoin = [...tablesJoin, ...values.reduce((state, val) => val[ref] !== null ? state.includes(getDBTypeAndName(val[ref]).entityName) ? [...state] : [...state, getDBTypeAndName(val[ref]).entityName] : [...state], [])];
         });
         const alias = getAlias(tableName);
         let query = `${tableName} ${alias}`;
@@ -160,13 +161,12 @@ const selectReferenceColumn = async (values, tableName) => {
         query = `SELECT ${columns} FROM ${query}`;
         const res = await join(query);
         values.map((v) => {
-           const find= res.find((r) => r[getPrimaryKeyField(tableName)] === v[getPrimaryKeyField(tableName)])
-           console.log({find});
-           for(let key in find){
-                if((v[key]===null||v[key]===undefined)&&find[key]!==null){
-                    v[key]=find[key]
+            const find = res.find((r) => r[getPrimaryKeyField(tableName)] === v[getPrimaryKeyField(tableName)])
+            for (let key in find) {
+                if ((v[key] === null || v[key] === undefined) && find[key] !== null) {
+                    v[key] = find[key]
                 }
-           }
+            }
         })
         console.log(values);
     }
