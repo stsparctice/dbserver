@@ -4,21 +4,24 @@ const { create, insertColumn } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const mongoCollection = MongoDBOperations;
 const { newTransaction } = require('../services/sql/sql-connection')
-const { getPrimaryKeyField, getForeignTableAndColumn, getForeginKeyColumns } = require('./config/config-sql')
+const { getForeginKeyColumns } = require('./config/config-sql')
 const { SQL_DBNAME } = process.env
 
 
-const { getSqlTableColumnsType, parseColumnSQLType } = require('./config/config-sql');
+const { getSqlTableColumnsType, parseColumnSQLType, getPrimaryKeyField } = require('./config/config-sql');
 
 async function createSql(obj) {
     try {
         let tabledata = getSqlTableColumnsType(obj.entityName);
-        let arr = parseColumnSQLType(obj.values, tabledata);
-        const result = await create({ tableName: obj.entityName, columns: (Object.keys(obj.values).join()).trim(), values: arr.join() });
+        const filterProps = Object.entries(obj.values).filter(val=>val[1])
+        const insertValues = Object.fromEntries(filterProps)
+        let arr = parseColumnSQLType(insertValues, tabledata);
+        console.log({arr})
+        const result = await create({ tableName: obj.entityName, columns: (Object.keys(insertValues).join()).trim(), values: arr.join() });
         return result;
     }
     catch (error) {
-        console.log("error")
+        console.log(error)
         throw error;
     }
 };
@@ -63,7 +66,7 @@ async function insertOne(obj) {
         return response;
     }
     catch (error) {
-        console.log("error")
+        console.log(error)
         throw error
     }
 };
@@ -74,7 +77,7 @@ async function insertMany(obj) {
         return result;
     }
     catch (error) {
-        console.log("error")
+        console.log(error)
         throw error;
     }
 }

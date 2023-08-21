@@ -39,8 +39,11 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
 
 router.get('/readOne/:entityName', async (req, res) => {
     try {
+        console.log(req.query)
         const condition = convertQueryToObject(req.query)
+        console.log({condition})
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition, topn: 1 }, connectTables, getDetailsMng);
+        console.log({response})
         res.status(200).send(response);
     }
     catch (error) {

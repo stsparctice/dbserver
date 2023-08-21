@@ -1,5 +1,6 @@
 const convertToSQLString = (value) => {
-    if (value === undefined) throw new Error('value is required');
+    if (value === undefined || value === null) return '';
+
     if (typeof value !== 'string') throw new Error('value must be a string');
     let special = ["'", "&", "%", "#", "$"];
     const sqlStrings = [];
@@ -23,6 +24,8 @@ const convertToSQLString = (value) => {
 };
 
 const isValueSent = (value) => {
+    if (value === null)
+        console.log({ value })
     if (value === undefined) throw new Error('value is required');
 };
 
@@ -41,8 +44,12 @@ const types = {
         typeNodeName: 'boolean',
         parseNodeTypeToSqlType: (boolean) => {
             try {
-                isValueSent(boolean);
-                return `'${boolean}'`;
+                if (boolean) {
+                    return `'${boolean}'`;
+                }
+                else {
+                    return `'false'`
+                }
             }
             catch (err) { throw err; };
         }
@@ -52,8 +59,12 @@ const types = {
         typeNodeName: 'Date',
         parseNodeTypeToSqlType: (Date) => {
             try {
-                isValueSent(Date);
-                return `'${Date}'`;
+                if (Date) {
+                    return `'${Date}'`;
+                }
+                else{
+                    return  
+                }
             }
             catch (err) { throw err; }
         }

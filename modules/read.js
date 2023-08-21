@@ -1,10 +1,10 @@
 const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
+const {getConverter} = require('../services/sql/sql-convert-query-to-condition')
+const { getSelectSqlQueryWithFK, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
 const { readJoin, getDBTypeAndName } = require('./config/get-config');
 const { getReferencedColumns, getPrimaryKeyField, getDefaultColumn, getColumnAlias , getTableFromConfig} = require('./config/config-sql');
-const ConvertQueryToSQLCondition = require('../services/sql/sql-convert-query-to-condition')
-const { getSelectSqlQueryWithFK, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
 
 
 const mongoCollection = MongoDBOperations;
@@ -37,8 +37,7 @@ async function autoComplete({ entittyName, tableName, condition }) {
     
     try {
         const table = getTableFromConfig(tableName)
-        const convert = new  ConvertQueryToSQLCondition()
-        convert.setTable( table)
+        const convert = getConverter(table)
         const querycondition = convert.convertCondition( condition);
         const primaryKey = getPrimaryKeyField(tableName)
         const defaultValue = getDefaultColumn(tableName)
@@ -217,7 +216,8 @@ const mapFKIntoEntity = (entities) => {
 }
 async function countRowsSql(obj) {
     try {
-        obj.condition = convertToSqlCondition(getTableFromConfig(obj.tableName), obj.condition)
+        const convert =getConverter(getTableFromConfig(obj.tableName))
+        obj.condition =convert.convertCondition( obj.condition)
         const count = await countRows(obj);
 
         return count.recordset[0];

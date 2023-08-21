@@ -1,8 +1,7 @@
 require('dotenv')
 const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn } = require('../../modules/config/config-sql')
 const { getDBTypeAndName } = require('../../modules/config/get-config');
-const ConvertQueryToSQLCondition = require('../../services/sql/sql-convert-query-to-condition');
-const { convertQueryToSQLCondition } = require('../../services/sql/sql-convert-query-to-condition');
+const {getConverter} = require('../../services/sql/sql-convert-query-to-condition');
 const { parseColumnName } = require('../../utils/parse_name');
 const { SQL_DBNAME } = process.env
 
@@ -10,12 +9,13 @@ const { SQL_DBNAME } = process.env
 const autoCompleteQuery = ({ tablename, column }, condition) => {
     console.log({ tablename, column, condition })
     try {
+        const convert = getConverter(tablename)
         let obj = {}
         obj.tableName = tablename
         let val = {}
         val[column] = ''
         obj.columns = `${Object.keys(parseColumnName(val, tablename))}, ${getPrimaryKeyField(obj.tableName)}`;
-        obj.condition = convertQueryToSQLCondition(getTableFromConfig(obj.tableName), condition);
+        obj.condition = convert.convertCondition(condition);
         obj.n = 10;
         return obj;
     }
@@ -40,8 +40,7 @@ const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) 
             join = `${join} LEFT JOIN ${tableToJoin} ${alias} ON ${myTable.MTDTable.name.name}.${column.sqlName}=${alias}.${columnToJoin}`;
         });
         if (Object.keys(condition).length > 0) {
-            const convert = new ConvertQueryToSQLCondition()
-            convert.setTable(myTable)
+            const convert =getConverter(myTable)
             let conditionString = convert.convertCondition(condition)
 
             join = `${join} WHERE ${conditionString}`;

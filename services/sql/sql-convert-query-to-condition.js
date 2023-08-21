@@ -1,23 +1,26 @@
 const { queryOperators } = require('../../utils/types')
 const { parseColumnName } = require('../../utils/parse_name')
-const { getTableAlias, parseColumnSQLType, getSqlTableColumnsType } = require('../../modules/config/config-sql')
+const { getTableAlias, parseColumnSQLType, getSqlTableColumnsType, getTableColumnsSQLName, getTableFromConfig } = require('../../modules/config/config-sql')
 
 
 class ConvertQueryToSQLCondition {
     constructor() { }
     setTable(value) {
+        console.log({ value })
         this.table = value
+        if (typeof (value) === 'string')
+            this.table = getTableFromConfig(value)
         this.tableName = this.table.MTDTable.name.sqlName;
         this.tableAlias = getTableAlias(this.tableName)
     }
 
     convertCondition(condition) {
-        try{
-        let result = this.buildQuery(condition, queryOperators.AND);
-        result = result.slice(0, result.length - 3);
-        return result;
+        try {
+            let result = this.buildQuery(condition, queryOperators.AND);
+            result = result.slice(0, result.length - 3);
+            return result;
         }
-        catch(error){
+        catch (error) {
             throw error
         }
     }
@@ -64,10 +67,14 @@ class ConvertQueryToSQLCondition {
                         break;
                     default:
                         let val = {}
-                        val[key] = ''
+
+                        val[key] = condition[key]
+
                         let column = Object.keys(parseColumnName(val, this.tableName))
+                        console.log({ column, val })
                         let tabledata = getSqlTableColumnsType(this.tableName)
                         query = `${query} ${this.tableAlias}.${column} ${sign} ${parseColumnSQLType(val, tabledata)} ${operator}`;
+                        console.log({ query })
                         break;
                 }
             }
@@ -134,5 +141,12 @@ class ConvertQueryToSQLCondition {
     }
 }
 
+const convert = new ConvertQueryToSQLCondition()
 
-module.exports = ConvertQueryToSQLCondition 
+const getConverter = (table) => {
+    convert.setTable(table)
+    return convert
+}
+
+
+module.exports = { getConverter } 

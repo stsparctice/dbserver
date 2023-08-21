@@ -5,7 +5,7 @@ const {
     getReferencedColumns,
     getTableAccordingToRef,
     getForeignTableAndDefaultColumn,
-    getTableColumnsName,
+    getTableColumnsSQLName,
     getSqlTableColumnsType
 } = require('../../../modules/config/config-sql')
 
@@ -170,25 +170,25 @@ describe('TEST ON config.js FILE', () => {
 
     describe('GET ALL COLUMNS FROM A TABLE', () => {
         it('The function received a table name and a config and returns the names of its columns in sql', () => {
-            const result = getTableColumnsName('tbl_example_table4', config);
+            const result = getTableColumnsSQLName('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual(['Id', 'Name']);
         });
         it('The function returns an array', () => {
-            const result = getTableColumnsName('tbl_example_table4', config);
+            const result = getTableColumnsSQLName('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toBeInstanceOf(Array);
         });
         it('The table name is of type string', () => {
-            expect(() => getTableColumnsName(15, config)).toThrow('Check the type of the parameter receive');
-            expect(() => getTableColumnsName('tbl_example_table4', config)).not.toThrow();
+            expect(() => getTableColumnsSQLName(15, config)).toThrow('Check the type of the parameter receive');
+            expect(() => getTableColumnsSQLName('tbl_example_table4', config)).not.toThrow();
         });
         it('The table name that does not exist returns an error accordingly', () => {
-            expect(() => getTableColumnsName('not_exist_table', config)).toThrow('Check Table Name');
-            expect(() => getTableColumnsName('tbl_example_table4', config)).not.toThrow();
+            expect(() => getTableColumnsSQLName('not_exist_table', config)).toThrow('Check Table Name');
+            expect(() => getTableColumnsSQLName('tbl_example_table4', config)).not.toThrow();
         });
         it('When the structure of the config file is incorrect', () => {
-            expect(() => getTableColumnsName('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
+            expect(() => getTableColumnsSQLName('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
         });
     });
 

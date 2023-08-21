@@ -131,9 +131,9 @@
                                 "type": "NVARCHAR(30) NOT NULL "
                             },
                             {
-                                "name": "disable",
-                                "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "name": "disabled",
+                                "sqlName": "Disabled",
+                                "type": "BIT DEFAULT '0'"
                             }
                         ]
                     },
@@ -207,7 +207,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -258,7 +258,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -300,7 +300,7 @@
                             {
                                 "name": "addition",
                                 "sqlName": "Addition",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "bookkeepingCode",
@@ -315,7 +315,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -381,7 +381,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -488,7 +488,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disable",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DeleteDate",
@@ -549,7 +549,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -630,7 +630,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -691,7 +691,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -752,7 +752,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -909,7 +909,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1046,7 +1046,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1152,7 +1152,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1194,7 +1194,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1241,7 +1241,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1283,7 +1283,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1405,7 +1405,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1456,7 +1456,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1562,7 +1562,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "INT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1625,7 +1625,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1693,7 +1693,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1744,7 +1744,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -1800,7 +1800,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -2012,7 +2012,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -2080,7 +2080,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -2148,7 +2148,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             }
                             ,
                             {
@@ -2227,7 +2227,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             }
                             ,
                             {
@@ -2296,7 +2296,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -2360,7 +2360,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -2439,7 +2439,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",
@@ -2525,7 +2525,7 @@
                             {
                                 "name": "Disabled",
                                 "sqlName": "Disabled",
-                                "type": "BIT NOT NULL"
+                                "type": "BIT DEFAULT '0'"
                             },
                             {
                                 "name": "DisabledDate",

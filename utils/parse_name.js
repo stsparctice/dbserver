@@ -1,6 +1,6 @@
 const notifications = require('../config/serverNotifictionsConfig.json')
 const { getDBTypeAndName } = require('../modules/config/get-config')
-const {getTableFromConfig} = require('../modules/config/config-sql')
+const { getTableColumns } = require('../modules/config/config-sql')
 
 function parseTableName() {
     return (req, res, next) => {
@@ -17,15 +17,16 @@ function parseTableName() {
 }
 
 function parseColumnName(values, table) {
-    table = getTableFromConfig(table)
-    let columns = {}
+   try{
+    let columns =  getTableColumns(table)
+    const answer = []
     let error = [];
     for (let name in values) {
-        let column = table.columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() ||
+        let column = columns.find(column => column.name.trim().toLowerCase() == name.trim().toLowerCase() ||
             column.sqlName.trim().toLowerCase() == name.trim().toLowerCase())
         //😡 לסדר בהתאם לצורה השפויה
         if (column) {
-            columns[column.sqlName] = values[name]
+            answer[column.sqlName] = values[name]
         }
         else {
             error = [...error, name];
@@ -37,7 +38,12 @@ function parseColumnName(values, table) {
         error.description = description
         throw error
     }
-    return columns
+    return answer
+   
+}
+catch(error){
+    throw error
+}
 
 }
 const parseColumnNameMiddleware = () => {
@@ -47,7 +53,7 @@ const parseColumnNameMiddleware = () => {
             next();
         }
         catch (error) {
-            console.log({error})
+            console.log({ error })
             res.status(error.status).send(error.message);
         }
     }

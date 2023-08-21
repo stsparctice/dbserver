@@ -33,7 +33,7 @@ function getTableFromConfig(tableName, config = DBconfig) {
     }
 }
 
-function getSqlTableColumnsType(tablename, config=DBconfig) {
+function getSqlTableColumnsType(tablename, config = DBconfig) {
     try {
         const table = getTableFromConfig(tablename, config)
         let columns = table.columns.map(col => ({ sqlName: col.sqlName, type: col.type.trim().split(' ')[0] }))
@@ -41,12 +41,12 @@ function getSqlTableColumnsType(tablename, config=DBconfig) {
         return columns
     }
     catch (error) {
-        console.log({error})
+        console.log({ error })
         throw error
     }
 };
 
-function getReferencedColumns(tablename, config=DBconfig) {
+function getReferencedColumns(tablename, config = DBconfig) {
     let columns;
     try {
         const table = getTableFromConfig(tablename, config);
@@ -96,16 +96,26 @@ function getForeignTableAndDefaultColumn(tablename, field, config = DBconfig) {
     }
 }
 
-function getTableColumnsName(tablename, config = DBconfig) {
-    let columns;
+function getTableColumnsSQLName(tablename, config = DBconfig) {
     try {
         const table = getTableFromConfig(tablename, config);
-        columns = table.columns.map(col => col.sqlName);
+        let columns = table.columns.map(col => col.sqlName);
+        return columns;
     }
     catch (err) {
         throw err;
     }
-    return columns;
+}
+
+function getTableColumns(tableName, config = DBconfig) {
+    try {
+        const table = getTableFromConfig(tableName, config);
+        let columns = table.columns;
+        return columns;
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
 function getTableAlias(tableName) {
@@ -182,7 +192,8 @@ function getObjectWithFieldNameForPrimaryKey(tablename, fields, id) {
     }
 }
 
-function parseColumnSQLType(object, tabledata){
+function parseColumnSQLType(object, tabledata) {
+    console.log({object})
     const props = Object.entries(object)
     let arr = props.map(p => parseOneColumnSQLType({ name: p[0], value: p[1] }, tabledata))
     return arr
@@ -190,10 +201,10 @@ function parseColumnSQLType(object, tabledata){
 
 
 function parseOneColumnSQLType(column, tabledata) {
-    
+    console.log({column})
     const props = Object.keys(column)
-    if(!props.includes('name')|| !props.includes('value')){
-        const error=notifictaions.find(n=>n.status===519)
+    if (!props.includes('name') || !props.includes('value')) {
+        const error = notifictaions.find(n => n.status === 519)
         error.description = `Argument column must be an object with the following keys: 'name' and 'value`
         throw error
     }
@@ -208,8 +219,13 @@ function parseOneColumnSQLType(column, tabledata) {
         error.description = `Type: ${type} does not exist.`
         throw error
     }
-    const val = parse.parseNodeTypeToSqlType(column.value);
-    return val
+    if (column.value) {
+        const val = parse.parseNodeTypeToSqlType(column.value);
+        return val
+    }
+    else{
+        return column.value
+    }
 }
 
 module.exports = {
@@ -218,7 +234,8 @@ module.exports = {
     getReferencedColumns,
     getTableAccordingToRef,
     getForeignTableAndDefaultColumn,
-    getTableColumnsName,
+    getTableColumns,
+    getTableColumnsSQLName,
     getTableAlias,
     getDefaultColumn,
     getColumnAlias,
