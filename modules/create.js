@@ -1,24 +1,25 @@
 require('dotenv')
-const { create, insertColumn } = require('../services/sql/sql-operations');
-// const { checkObjCreate } = require('./check')
+const { create } = require('../services/sql/sql-operations');
+const { insertColumn } = require('../services/sql/sql-crud-db')
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
-const mongoCollection = MongoDBOperations;
+
 const { newTransaction } = require('../services/sql/sql-connection')
-const { getForeginKeyColumns } = require('./config/config-sql')
 const { SQL_DBNAME } = process.env
 
 
-const { getSqlTableColumnsType, parseColumnSQLType, getPrimaryKeyField } = require('./config/config-sql');
+const { getSqlTableColumnsType, parseColumnSQLType, getPrimaryKeyField, parseSqlObjectToEntity } = require('./config/config-sql');
+const { getConnectionBetweenMongoAndSqlEntities } = require('./config/get-config');
+const { readFromMongo } = require('./read');
+const { dropDocumentMng } = require('./update');
 
-async function createSql(obj) {
+async function insertOneSql(obj) {
     try {
         let tabledata = getSqlTableColumnsType(obj.entityName);
-        const filterProps = Object.entries(obj.values).filter(val=>val[1])
+        const filterProps = Object.entries(obj.sqlValues)
         const insertValues = Object.fromEntries(filterProps)
         let arr = parseColumnSQLType(insertValues, tabledata);
-        console.log({arr})
-        const result = await create({ tableName: obj.entityName, columns: (Object.keys(insertValues).join()).trim(), values: arr.join() });
-        return result;
+        const result = await create({ tableName:obj.tableName, columns: (Object.keys(insertValues).join()).trim(), values: arr.join() });
+        return result[0];
     }
     catch (error) {
         console.log(error)
@@ -59,10 +60,10 @@ async function creatNewColumn(obj) {
 //     return result
 // }
 
-async function insertOne(obj) {
+async function insertOne({ entityName, data }) {
     try {
-        mongoCollection.setCollection(obj.entityName);
-        const response = await mongoCollection.insertOne(obj.data);
+        const mongo = new MongoDBOperations(entityName)
+        const response = await mongo.insertOne(data);
         return response;
     }
     catch (error) {
@@ -72,8 +73,8 @@ async function insertOne(obj) {
 };
 async function insertMany(obj) {
     try {
-        mongoCollection.setCollection(obj.entityName);
-        const result = await mongoCollection.insertMany(obj.data);
+        const mongo = new MongoDBOperations(entityName)
+        const result = await mongo.insertMany(obj.data);
         return result;
     }
     catch (error) {
@@ -82,12 +83,36 @@ async function insertMany(obj) {
     }
 }
 
+async function transactionSqlMongo(obj) {
+    let mongoId = undefined
+    try {
+        const { sqlReferences } = getConnectionBetweenMongoAndSqlEntities({ mongoEntity: obj.mongoEntityName, sqlEntity: obj.sqlEntityName })
+        if (sqlReferences.length > 0) {
+            const mongo = await insertOne({ entityName: obj.mongoEntityName, data: obj.mongoValues })
+            mongoId = mongo._id
+            sqlReferences.forEach(({ reference, sqlName }) => {
+                obj.sqlValues[sqlName] = mongo[reference.field]
+            })
+
+        }
+        console.log(obj.sqlEntityName)
+        const result = await insertOneSql({ entityName: obj.sqlEntityName, values: obj.sqlValues })
+        return result
+    }
+    catch (error) {
+        console.log({ error })
+        if (mongoId) {
+            const dropData = await dropDocumentMng({ collection: obj.mongoEntityName, filter: { _id: mongoId } })
+        }
+
+        throw error
+    }
+}
+
 const transactionCreate = async (data) => {
     const { statement, transaction } = await newTransaction()
     let result = []
     let insertIds = []
-    let sqlRecords = []
-    let mongoRecords = []
     try {
         await transaction.begin()
 
@@ -143,7 +168,7 @@ const transactionCreate = async (data) => {
                 }
 
             }
-// אני פה בדיוק באמצע של האמצע של האמצע ואני חיייייבת ללכת על כן על המורה להמשיך את זה לטפל בהכנסה של כל מה שמחקתי באובייקט הראשי
+            // אני פה בדיוק באמצע של האמצע של האמצע ואני חיייייבת ללכת על כן על המורה להמשיך את זה לטפל בהכנסה של כל מה שמחקתי באובייקט הראשי
             let arr = parseColumnSQLType(record, tabledata)
             try {
                 console.log(`USE ${SQL_DBNAME} INSERT INTO ${record.entityName} (${Object.keys(iterator).join()}) VALUES(${arr.join()}) SELECT @@IDENTITY ${primarykey}`);
@@ -165,7 +190,7 @@ const transactionCreate = async (data) => {
     catch (error) {
         await transaction.rollback();
         for (let id of insertIds) {
-            await dropDocumentMng({ data: id.id, collection: id.entityName })
+            await dropDocumentMng({ filter: id.id, collection: id.entityName })
         }
         result = []
         console.log({ error });
@@ -174,4 +199,4 @@ const transactionCreate = async (data) => {
 
 }
 
-module.exports = { createSql, insertManySql, insertOne, creatNewColumn, insertMany, transactionCreate };
+module.exports = { insertOneSql, insertManySql, insertOne, creatNewColumn, insertMany, transactionCreate, transactionSqlMongo };

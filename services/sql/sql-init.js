@@ -3,35 +3,69 @@ const path = require('path')
 const { SQL_DBNAME } = process.env;
 const { getPool } = require('./sql-connection');
 const config = require('../../config/DBconfig.json');
-const notifictions = require('../../config/serverNotifictionsConfig.json')
+const notifictions = require('../../config/serverNotifictionsConfig.json');
+const { checkDataBase } = require('../../modules/config/compare-config');
 
 
 function buildColumns(details) {
     let columns = '';
     for (let i = 0; i < details.length; i++) {
-        columns += details[i].sqlName + ' ' + details[i].type + ', ';
+        columns += (details[i]['sqlName']) + ' ' + buildColumnType(details[i]) + ', ';
     };
     columns = columns.substring(0, columns.length - 2);
     return columns;
 };
 
+function buildColumnType({ type, primarykey, foreignkey, isIdentity, uniquekey, sqlName }) {
+    let typeString = type.type
+    if (type.max) {
+        typeString = `${typeString}(${type.max}) `
+
+    }
+    typeString = `${typeString} ${type.isnull ? 'NULL ' : 'NOT NULL '}`
+    if (isIdentity) {
+        typeString = `${typeString}IDENTITY `
+        if (isIdentity.offset && isIdentity.interval) {
+            const { offset, interval } = isIdentity
+            typeString = `${typeString}(${offset}, ${interval}) `
+        }
+    }
+    if (uniquekey) {
+        typeString = `${typeString}UNIQUE`
+    }
+    if (primarykey) {
+        typeString = `${typeString}PRIMARY KEY`
+    }
+    if (foreignkey) {
+        const { ref_column, ref_table } = foreignkey
+        typeString = `${typeString}FOREIGN KEY(${sqlName}) REFERENCES ${ref_table}(${ref_column})`
+    }
+
+    return typeString
+}
+
 async function createTables() {
     if (!SQL_DBNAME) {
         throw notifictions.find(n => n.status == 509)
     }
+    try {
+        _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
-    _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
-
-    let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
-
-    for (let j = 0; j < tables.length; j++) {
-        let table = tables[j];
-        _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](
+        let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
+        for (let j = 0; j < tables.length; j++) {
+            await checkDataBase(SQL_DBNAME, tables[j])
+            let table = tables[j];
+            _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](
             ${buildColumns(table.columns)}
             )
             `);
-    };
-    _ = await createNormalizationTable();
+        };
+        _ = await createNormalizationTable();
+    }
+    catch (error) {
+        console.log({ error })
+        throw error
+    }
 };
 
 
@@ -44,7 +78,7 @@ async function createNormalizationTable() {
             let m = tables[i].columns[j];
             if (Object.keys(m).includes('values')) {
                 let values = tables[i].columns.filter(v => Object.keys(v).includes("values"))
-                if (!values[0].type.toUpperCase().includes('PRIMARY')) {
+                if (!values[0].primarykey) {
                     let values2 = values.map(f => f.values);
                     for (let y = 0; y < values2.length; y++) {
                         _ = await getPool().request().query(`

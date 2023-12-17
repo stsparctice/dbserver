@@ -16,4 +16,8 @@ const DBType = {
     SQL: 'sql', MONGO: 'mongoDB'
 }
 
-module.exports = {queryOperators, DBType}
+const areaType={
+    CITY:'city', POINT:'point', POLYGON:'polygon', RADIUS:'radius'
+}
+
+module.exports = {queryOperators, DBType, areaType}

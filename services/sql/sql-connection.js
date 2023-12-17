@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { SQL_SERVER, SQL_DBNAME, SQL_USERNAME, SQL_PASSWORD, SQL_PORT } = process.env;
+const { SQL_SERVER,  SQL_USERNAME, SQL_PASSWORD, SQL_PORT } = process.env;
 const sql = require('mssql');
 const notifictions = require('../../config/serverNotifictionsConfig.json')
 
@@ -26,13 +26,9 @@ const connectSql = async () => {
     if (!pool) {
 
         pool = new sql.ConnectionPool(poolConfig());
-        // console.log(pool);
     }
     if (!pool.connected) {
-        // console.log(new Date().toISOString())
-        // console.log({connected: pool.connected})
         _ = await pool.connect();
-        // console.log({connected: pool.connected})
     }
 }
 

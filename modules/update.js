@@ -1,8 +1,8 @@
 const { update } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { getPrimaryKeyField } = require('./config/config-sql');
-const mongoCollection = MongoDBOperations;
-const notifications = require('../config/serverNotifictionsConfig.json')
+const notifications = require('../config/serverNotifictionsConfig.json');
+const { removeKeysFromObject } = require('../utils/code');
 
 async function updateSql(obj) {
     try {
@@ -16,8 +16,8 @@ async function updateSql(obj) {
 async function updateOneSql(obj) {
     try {
         const primarykey = getPrimaryKeyField(obj.entityName);
-        if (!obj.condition[primarykey]) {
-            throw notifications.find(n => n.status === 400)
+        if(Object.keys(obj.sqlValues).includes(primarykey)){
+            obj.sqlValues = removeKeysFromObject(obj.sqlValues, [primarykey])
         }
         const result = await update(obj);
         return result;
@@ -28,8 +28,8 @@ async function updateOneSql(obj) {
 };
 async function updateOne(obj) {
     try {
-        mongoCollection.setCollection(obj.collection);
-        const response = await mongoCollection.updateOne(obj);
+        const mongoOperations = new MongoDBOperations(obj.collection)
+        const response = await mongoOperations.updateOne(obj);
         return response;
     }
     catch (error) {
@@ -39,8 +39,8 @@ async function updateOne(obj) {
 
 async function updateMany(obj) {
     try {
-        mongoCollection.setCollection(obj.collection);
-        const response = await mongoCollection.updateMany(obj);
+        const mongoOperations = new MongoDBOperations(obj.collection)
+        const response = await mongoOperations.updateMany(obj);
         return response;
     }
     catch (error) {
@@ -50,8 +50,8 @@ async function updateMany(obj) {
 
 async function dropCollectionMng(obj) {
     try {
-        mongoCollection.setCollection(obj.collection);
-        const response = await mongoCollection.dropCollection(obj);
+        const mongoOperations = new MongoDBOperations(obj.collection)
+        const response = await mongoOperations.dropCollection(obj);
         return response;
     }
     catch (error) {
@@ -59,12 +59,11 @@ async function dropCollectionMng(obj) {
     }
 };
 
-async function dropDocumentMng(obj) {
+async function dropDocumentMng({ collection, filter }) {
     try {
 
-        const { data, collection } = obj;
-        mongoCollection.setCollection(collection);
-        const response = await mongoCollection.dropOneDocument(data);
+        const mongoOperations = new MongoDBOperations(obj.collection)
+        const response = await mongoOperations.dropOneDocument(filter);
         return response;
     }
     catch (error) {

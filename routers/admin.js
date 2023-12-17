@@ -22,10 +22,7 @@ router.post('/updateConfig', express.urlencoded({ extended: true }), async (req,
 //מחיקת טבלה
 router.post('/delTable',express.json(), async (req, res)=> {
     try {
-        console.log('try');
-        console.log(req.body);
         const result = await delTableConfig(req.body);
-        console.log({result});
         res.status(200).send(result);
     }
     catch (error) {
@@ -36,7 +33,6 @@ router.post('/delTable',express.json(), async (req, res)=> {
 //עדכון טבלה עי יצירת חדשה
 router.post('/createTableInConfig', express.json(), async (req, res) => {
     if((req.body.columns).includes(undefined)){
-        console.log('include');
     }        
     console.log('im in router');
 

@@ -1,25 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { createSql, insertManySql, insertOne, insertMany, transactionCreate } = require('../modules/create');
+const { insertOneSql, insertManySql, insertOne, insertMany, transactionCreate, transactionSqlMongo } = require('../modules/create');
 const { routerLogger } = require('../utils/logger');
 
 // const { updateConfig, updateConfigInFiled, updateConfig2 } = require('../modules/admin')
-const { parseColumnName, parseTableName, parseColumnNameMiddleware, parseListOfColumnsName } = require('../utils/parse_name');
+const { parseTableName, parseColumnNameMiddleware, parseListOfColumnsName } = require('../utils/parse_name');
 const { routeEntityByItsType } = require('../utils/route_entity');
 const { checkDataIsUnique } = require('../utils/checkunique');
+const { readFromSql, readFromMongo, readFromSqlAndMongo } = require('../modules/read');
 
 router.use(express.json());
 router.use(routerLogger())
 
 router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        console.log(req.body, ' req.body')
-        const response = await routeEntityByItsType(req.body, createSql, insertOne);
-        res.status(201).send(response);
+        const response = await routeEntityByItsType(req.body, insertOneSql, insertOne, transactionSqlMongo);
+        if (response) {
+            const newObject = await routeEntityByItsType({entityName:req.body.entityName, condition:response,  topn: 1, skip:0 }, readFromSql, readFromMongo, readFromSqlAndMongo)
+            res.status(201).send(newObject);
+        }
+        else{
+            res.status(500).send('internal server error')
+        }
     }
     catch (error) {
         console.log(error.description);
-        res.status(500).send(error.message);
+        res.status(500).send(error);
     }
 });
 
@@ -38,7 +44,7 @@ router.post('/createmany', parseTableName(), parseListOfColumnsName(), checkData
 router.post('/createManyEntities', async (req, res) => {
     try {
 
-    
+
         // const obj = [
         //     {
         //         entityName: 'Orderers', values: [

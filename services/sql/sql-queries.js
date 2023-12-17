@@ -1,8 +1,10 @@
 require('dotenv')
-const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn } = require('../../modules/config/config-sql')
+const { types } = require('../../modules/config/config-objects');
+const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn, parseColumnName, getSqlTableColumnsType, parseOneColumnSQLType } = require('../../modules/config/config-sql')
 const { getDBTypeAndName } = require('../../modules/config/get-config');
 const { getConverter } = require('../../services/sql/sql-convert-query-to-condition');
-const { parseColumnName } = require('../../utils/parse_name');
+const { isEmpyObject } = require('../../utils/code');
+const { DBType } = require('../../utils/types');
 const { SQL_DBNAME } = process.env
 
 
@@ -14,7 +16,7 @@ const autoCompleteQuery = ({ tablename, column }, condition) => {
         obj.tableName = tablename
         let val = {}
         val[column] = ''
-        obj.columns = `${Object.keys(parseColumnName(val, tablename))}, ${getPrimaryKeyField(obj.tableName)}`;
+        obj.columns = `${Object.keys(parseColumnName(val, tablename).sqlValues)}, ${getPrimaryKeyField(obj.tableName)}`;
         obj.condition = convert.convertCondition(condition);
         obj.n = 10;
         return obj;
@@ -25,20 +27,27 @@ const autoCompleteQuery = ({ tablename, column }, condition) => {
     }
 }
 
-const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) => {
+const getSelectSqlQueryWithFK = ({ tableName, fields = [], condition = {}, topn = 50, skip = 0 }) => {
     try {
         const myTable = getTableFromConfig(tableName)
-        const foreignKeyColumns = myTable.columns.filter(({ type }) => type.toLowerCase().includes('foreign key'));
-        let columnsSelect = [{ tableName: myTable.MTDTable.name.name, columnsName: myTable.columns.map(({ sqlName }) => sqlName) }];
+        const foreignKeyColumns = myTable.columns.filter((col) => col.foreignkey);
+        let columnsSelect = [{
+            tableName: myTable.MTDTable.name.name, columnsName: myTable.columns.filter(({ sqlName, name }) => {
+                if (fields.length === 0) {
+                    return true
+                }
+                else {
+                    return fields.includes(sqlName) || fields.includes(name)
+                }
+            }).map(({ sqlName }) => sqlName)
+        }];
         let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
         let joinTables = []
         if (foreignKeyColumns.length > 0) {
             foreignKeyColumns.forEach(column => {
-                let startindex = column.type.toUpperCase().indexOf('REFERENCES')
-                startindex += 11
-                let tableToJoin = column.type.slice(startindex, column.type.indexOf('(', startindex));
-                const columnToJoin = column.type.slice(column.type.indexOf('(', startindex) + 1, column.type.indexOf(')', startindex));
-                let  alias = getTableAlias(tableToJoin);
+                let tableToJoin = column.foreignkey.ref_table;
+                const columnToJoin = column.foreignkey.ref_column;
+                let alias = getTableAlias(tableToJoin);
                 const defaultcolumn = getDefaultColumn(tableToJoin)
                 if (joinTables.some(jt => jt.tableToJoin === tableToJoin)) {
                     let count = joinTables.filter(jt => jt.tableToJoin === tableToJoin).length
@@ -50,7 +59,6 @@ const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) 
                 joinTables.push({ tableToJoin, alias, columnToJoin, entity2: myTable.MTDTable.name.name, column2: column.sqlName })
             });
         }
-        console.log({ joinTables })
         joinTables = joinTables.map(({ tableToJoin, alias, columnToJoin, entity2, column2 }) => `LEFT JOIN ${tableToJoin} ${alias} ON ${entity2}.${column2}=${alias}.${columnToJoin}`)
         join = `${join} ${joinTables.join(' ')}`
         if (Object.keys(condition).length > 0) {
@@ -77,16 +85,27 @@ const getSelectSqlQueryWithFK = ({ tableName, condition = {}, topn, skip = 0 }) 
 
 
 const convertType = (column1, column2) => {
-    const table1 = getTableFromConfig(getDBTypeAndName(column1.tableName).entityName);
-    const current1 = table1.columns.find(({ sqlName }) => sqlName === column1.column);
-    const table2 = getTableFromConfig(getDBTypeAndName(column2.tableName).entityName);
-    const current2 = table2.columns.find(({ sqlName }) => sqlName === column2.column);
+    console.log({ column1, column2 })
+    const table1Type = getDBTypeAndName(column1.tableName);
+    const table1Sql = table1Type.find(({ type }) => type === DBType.SQL)
+    let table1 = {}
+    if (table1Sql) {
+        table1.table = getTableFromConfig(table1Sql.entityName);
+        table1.current = table1.table.columns.find(({ sqlName }) => sqlName === column1.column);
+    }
+    const table2Type = getDBTypeAndName(column2.tableName);
+    const table2Sql = table2Type.find(({ type }) => type === DBType.SQL)
+    let table2 = {}
+    if (table2Sql) {
+        table2.table = getTableFromConfig(table2Sql.entityName);
+        table2.current = table2.table.columns.find(({ sqlName }) => sqlName === column2.column);
+    }
     let result = ``
-    if (current1.type.toLowerCase().includes('nvarchar') && current2.type.toLowerCase().includes('int'))
+    if (table1.current.type.type === 'NVARCHAR' && table2.current.type.type === 'INT')
         result = `${column1.tableName}.${column2.column} = CONVERT(NVARCHAR,${column2.tableName}.${column2.column})`;
     else {
 
-        if (current1.type.toLowerCase().includes('int') && current2.type.toLowerCase().includes('nvarchar')) {
+        if (table1.current.type.type === 'INT' && table2.current.type.type === 'NVARCHAR') {
             result = `CONVERT(NVARCHAR,${column1.tableName}.${column1.column}) = ${column2.tableName}.${column2.column}`
         }
         else {
@@ -94,7 +113,29 @@ const convertType = (column1, column2) => {
         }
     }
     return result;
-
 }
 
-module.exports = { getSelectSqlQueryWithFK, autoCompleteQuery, convertType };
+const updateQuery = (obj) => {
+
+    if (isEmpyObject(obj)) {
+        const error = notifications.find(n => n.status === 400)
+        throw error
+    }
+    try {
+        console.log({ obj })
+        const convert = getConverter(obj.tableName)
+        obj.condition = convert.convertCondition(obj.condition)
+        const alias = getTableAlias(obj.tableName)
+        const valEntries = Object.entries(obj.sqlValues);
+        const tableData = getSqlTableColumnsType(obj.tableName)
+        const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseOneColumnSQLType({ name: c[0], value: c[1] }, tableData)}`).join(',')
+        const query = `use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`
+        return query
+    }
+    catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+module.exports = { getSelectSqlQueryWithFK, autoCompleteQuery, convertType, updateQuery };

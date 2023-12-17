@@ -1,6 +1,6 @@
 const { queryOperators } = require('../../utils/types')
-const { parseColumnName } = require('../../utils/parse_name')
-const { getTableAlias, parseColumnSQLType, getSqlTableColumnsType, getTableColumnsSQLName, getTableFromConfig } = require('../../modules/config/config-sql')
+const { getTableAlias, parseColumnSQLType, getSqlTableColumnsType, getTableColumnsSQLName, getTableFromConfig, parseColumnName } = require('../../modules/config/config-sql')
+const { removeKeysFromObject } = require('../../utils/code')
 
 
 class ConvertQueryToSQLCondition {
@@ -15,6 +15,7 @@ class ConvertQueryToSQLCondition {
     }
 
     convertCondition(condition) {
+        console.log({ condition })
         try {
             let result = this.buildQuery(condition, queryOperators.AND);
             result = result.slice(0, result.length - 3);
@@ -47,7 +48,7 @@ class ConvertQueryToSQLCondition {
                         break;
                     case queryOperators.INCLUDES:
                         const partialquery = this.buildLike(condition[key], key)
-                        console.log(partialquery);
+                        console.log({partialquery});
                         query = `${query} ${this.buildLike(condition[key], key)} ${operator}`;
                         break;
                     case queryOperators.IN:
@@ -67,12 +68,17 @@ class ConvertQueryToSQLCondition {
                         break;
                     default:
                         let val = {}
-
                         val[key] = condition[key]
-
-                        let column = Object.keys(parseColumnName(val, this.tableName))
+                        console.log({val})
+                        let column = Object.keys(parseColumnName(val, this.tableName).sqlValues)
                         console.log({ column, val })
+                        if (key !== column) {
+                           val = removeKeysFromObject(val, [key])
+                           val[column] = condition[key]
+                        }
                         let tabledata = getSqlTableColumnsType(this.tableName)
+                        console.log(tabledata, 'tabledata')
+                        console.log({val})
                         query = `${query} ${this.tableAlias}.${column} ${sign} ${parseColumnSQLType(val, tabledata)} ${operator}`;
                         console.log({ query })
                         break;
@@ -82,6 +88,7 @@ class ConvertQueryToSQLCondition {
         }
         catch (error) {
             console.log(error);
+            throw error
         }
 
 
@@ -103,26 +110,30 @@ class ConvertQueryToSQLCondition {
         const key = Object.keys(between[0])[0];
         let val = {}
         val[key] = ''
-        let column = Object.keys(parseColumnName(val, this.tableName))
+        let column = Object.keys(parseColumnName(val, this.tableName).sqlValues)
         const query = `${this.tablealias}.${column} BETWEEN ${between[0][key]} AND ${between[1][key]}`;
         return query;
 
     }
     buildLike(like, operator) {
-        const key = Object.keys(like[0]);
+        console.log({like})
+        if(Array.isArray(like)){
+            like = like[0]
+        }
+        const key = Object.keys(like);
         let val = {};
         val[key] = '';
-        let column = Object.keys(parseColumnName(val, this.tableName))[0];
+        let column = Object.keys(parseColumnName(val, this.tableName).sqlValues)[0];
         let regex = ``;
         switch (operator) {
             case queryOperators.STARTWITH:
-                regex = `${like[0][key]}%`;
+                regex = `${like[key]}%`;
                 break;
             case queryOperators.ENDWITH:
-                regex = `%${like[0][key]}`;
+                regex = `%${like[key]}`;
                 break;
             case queryOperators.INCLUDES:
-                regex = `%${like[0][key]}%`;
+                regex = `%${like[key]}%`;
                 break;
             default:
                 break;
@@ -134,7 +145,7 @@ class ConvertQueryToSQLCondition {
         const key = Object.keys(inArray[0])[0];
         let val = {};
         val[key] = '';
-        let column = Object.keys(parseColumnName(val, this.tableName))[0];
+        let column = Object.keys(parseColumnName(val, this.tableName).sqlValues)[0];
         const values = inArray.map((v) => { return `${parseSQLTypeForColumn({ name: key, value: v[key] }, this.tableName)}` })
         const query = `${this.tableAlias}.${column} IN (${values.join(',')})`
         return query;

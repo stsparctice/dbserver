@@ -57,14 +57,23 @@
                         },
                         "columns": [
                             {
-                                "name": "Id",
+                                "name": "id",
                                 "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                "type": {
+                                    "type": "INT",
+                                    "isnull": false
+                                },
+                                "primarykey": true,
+                                "isIdentity": true
                             },
                             {
-                                "name": "Name",
+                                "name": "name",
                                 "sqlName": "Name",
-                                "type": "NVARCHAR(50)"
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": 50,
+                                    "isnull": false
+                                }
                             }
                         ]
                     },
@@ -79,14 +88,26 @@
                         },
                         "columns": [
                             {
-                                "name": "Id",
+                                "name": "id",
                                 "sqlName": "Id",
-                                "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                                "type": {
+                                    "type": "INT",
+                                    "isnull": false
+                                },
+                                "primarykey": true,
+                                "isIdentity": true
                             },
                             {
                                 "name": "unitOfMeasure",
                                 "sqlName": "UnitOfMeasure",
-                                "type": "INT NOT NULL FOREIGN KEY(UnitOfMeasure) REFERENCES tbl_example_table4(Id)"
+                                "type": {
+                                    "type": "INT",
+                                    "isnull": false
+                                },
+                                "foreignkey": {
+                                    "ref_table": "tbl_example_table4",
+                                    "ref_column": "Id"
+                                }
                             },
                             {
                                 "name": "ProductId",
@@ -97,7 +118,11 @@
                             {
                                 "name": "tablename",
                                 "sqlName": "TableName",
-                                "type": "NVARCHAR(MAX) NULL"
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": "max",
+                                    "isnull": true
+                                }
                             }
                         ]
                     }

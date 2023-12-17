@@ -2,11 +2,12 @@ const config = require('./TESTconfig/config.json');
 const incorrectConfig = require('./TESTconfig/incorrectConfig.json');
 const {
     getTableFromConfig,
-    getReferencedColumns,
+    getSQLReferencedColumns,
     getTableAccordingToRef,
     getForeignTableAndDefaultColumn,
     getTableColumnsSQLName,
-    getSqlTableColumnsType
+    getSqlTableColumnsType,
+    getConnectedEntities
 } = require('../../../modules/config/config-sql')
 
 describe('TEST ON config.js FILE', () => {
@@ -25,14 +26,23 @@ describe('TEST ON config.js FILE', () => {
                 },
                 "columns": [
                     {
-                        "name": "Id",
+                        "name": "id",
                         "sqlName": "Id",
-                        "type": "INT IDENTITY PRIMARY KEY NOT NULL"
-                    }, 
+                        "type": {
+                            "type": "INT",
+                            "isnull": false
+                        },
+                        "primarykey": true,
+                        "isIdentity": true
+                    },
                     {
-                        "name": "Name",
+                        "name": "name",
                         "sqlName": "Name",
-                        "type": "NVARCHAR(50)"
+                        "type": {
+                            "type": "NVARCHAR",
+                            "max": 50,
+                            "isnull": false
+                        }
                     }
                 ]
             });
@@ -81,30 +91,30 @@ describe('TEST ON config.js FILE', () => {
 
     describe('GET REFERENCED COLUMNS', () => {
         it('The function is given a table name and returns the column name and its reference', () => {
-            const result = getReferencedColumns('tbl_example_table5', config);
+            const result = getSQLReferencedColumns('tbl_example_table5', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual([{ 'name': 'ProductId', 'ref': 'TableName' }]);
         });
         it('The value returned is of type Array', () => {
-            const result = getReferencedColumns('tbl_example_table5', config);
+            const result = getSQLReferencedColumns('tbl_example_table5', config);
             expect(result).toBeInstanceOf(Array);
         });
         it('The table name should be of type string', () => {
-            expect(() => getReferencedColumns(15, config)).toThrow('Check the type of the parameter received');
-            expect(() => getReferencedColumns('tbl_example_table5', config)).not.toThrow();
+            expect(() => getSQLReferencedColumns(15, config)).toThrow('Check the type of the parameter received');
+            expect(() => getSQLReferencedColumns('tbl_example_table5', config)).not.toThrow();
         });
         it('table name does not exist returns an error accordingly', () => {
-            expect(() => getReferencedColumns('table_not_exist', config)).toThrow('Check Table Name');
-            expect(() => getReferencedColumns('tbl_example_table5', config)).not.toThrow();
+            expect(() => getSQLReferencedColumns('table_not_exist', config)).toThrow('Check Table Name');
+            expect(() => getSQLReferencedColumns('tbl_example_table5', config)).not.toThrow();
         });
         it('A table that does not contain a reference returns an empty array', () => {
-            result = getReferencedColumns('tbl_example_table4', config);
+            const result = getSQLReferencedColumns('tbl_example_table4', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual([]);
             expect(result).toBeInstanceOf(Array);
         });
         it('When the structure of the config file is incorrect', () => {
-            expect(() => getReferencedColumns('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
+            expect(() => getSQLReferencedColumns('tbl_example_table4', incorrectConfig)).toThrow('Check config file');
         });
     });
 
@@ -141,7 +151,7 @@ describe('TEST ON config.js FILE', () => {
         it('A function received a table name, a field name and a config and returns an object that includes a table name and its information', () => {
             const result = getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
             expect(result).toBeDefined();
-            expect(result).toStrictEqual({ foreignTableName: 'TBL_EXAMPLE_TABLE4', defaultColumn: 'Name' });
+            expect(result).toStrictEqual({ foreignTableName: 'tbl_example_table4', defaultColumn: 'Name' });
         });
         it('The returned value is of type object', () => {
             const result = getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
@@ -195,8 +205,14 @@ describe('TEST ON config.js FILE', () => {
     describe(`GET ALL COLUMNS' TYPE FROM A TABLE `, () => {
         it('should get a tablename and return a list of columns with their type', () => {
             const result = getSqlTableColumnsType('tbl_example_table4', config)
-            console.log({ result })
             expect(result).toBeDefined()
+        })
+    })
+
+    describe(`GET ALL CONNECTED TABLES`, ()=>{
+        it('should return a list of connected tables', ()=>{
+            const response = getConnectedEntities('tbl_Pumps')
+            expect(response).toBeInstanceOf(Array)
         })
     })
 

@@ -37,9 +37,23 @@ describe('TEST ON createConfig.js FILE', () => {
             expect(result).toBeDefined();
             expect(result).toStrictEqual([
                 {
-                    "name": "Id",
+                    "name": "id",
                     "sqlName": "Id",
-                    "type": "INT IDENTITY PRIMARY KEY NOT NULL"
+                    "type": {
+                        "type": "INT",
+                        "isnull": false
+                    },
+                    "primarykey": true,
+                    "isIdentity": true
+                },
+                {
+                    "name": "name",
+                    "sqlName": "Name",
+                    "type": {
+                        "type": "NVARCHAR",
+                        "max": 50,
+                        "isnull": false
+                    }
                 }
             ]);
         });

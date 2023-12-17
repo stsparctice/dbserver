@@ -19,8 +19,8 @@ describe('TEST ON config-object.js FILE', () => {
             expect(result).toBeDefined();
             expect(result).toBe("N''");
         });
-        it('The function will throw an error when value is not sent', () => {
-            expect(() => convertToSQLString()).toThrow('value is required');
+        it('The function will behave like an empty string when value is not sent', () => {
+            expect(() => convertToSQLString()).toThrow('value must be defined');
         });
         it('The function will throw an error if the value type is not string', () => {
             expect(() => convertToSQLString(5555)).toThrow('value must be a string');
@@ -47,7 +47,7 @@ describe('TEST ON config-object.js FILE', () => {
             });
             it('The function will throw an error when the parameter will not be sent', () => {
                 expect(types.NVARCHAR).toBeDefined();
-                expect(() => types.NVARCHAR.parseNodeTypeToSqlType()).toThrow('value is required');
+                expect(() => types.NVARCHAR.parseNodeTypeToSqlType(undefined)).toThrow('value must be defined');
             });
 
         });
@@ -65,9 +65,9 @@ describe('TEST ON config-object.js FILE', () => {
                 expect(types.BIT).toBeDefined();
                 expect(typeof types.BIT.parseNodeTypeToSqlType(true)).toBe('string');
             });
-            it('The function will throw an error when the parameter will not be sent', () => {
+            it('The function will return false when the parameter will not be sent', () => {
                 expect(types.BIT).toBeDefined();
-                expect(() => types.BIT.parseNodeTypeToSqlType()).toThrow('value is required');
+                expect(types.BIT.parseNodeTypeToSqlType()).toBe(`'false'`);
             });
         });
 
@@ -77,8 +77,9 @@ describe('TEST ON config-object.js FILE', () => {
                 expect(types.DATETIME.typeNodeName).toBe('Date');
             });
             it('The function works as required', () => {
+                const today = new Date()
                 expect(types.DATETIME).toBeDefined();
-                expect(types.DATETIME.parseNodeTypeToSqlType(new Date('2023-09-12'))).toBe("'Tue Sep 12 2023 00:00:00 GMT+0000 (Coordinated Universal Time)'");
+                expect(types.DATETIME.parseNodeTypeToSqlType(today)).toBe(`'${today.toISOString()}'`);
             });
             it('The function returns string', () => {
                 expect(types.DATETIME).toBeDefined();

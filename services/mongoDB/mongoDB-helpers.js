@@ -19,4 +19,8 @@ function convertToMongoFilter(condition) {
     }
     return filter
 }
+
+function geoNearPoint(condition){
+    
+}
 module.exports = { dropMongoDBCollection , convertToMongoFilter}
