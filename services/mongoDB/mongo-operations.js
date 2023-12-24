@@ -64,11 +64,13 @@ class MongoDBOperations {
     }
 
     async find({ filter = {}, sort = {}, projection = {} } = {}) {
+        console.log({filter, sort, projection})
         if (filter._id) {
             filter._id = new ObjectId(obj.filter._id)
         }
         try {
             const result = await getClient().db(this.dbName).collection(this.collectionName).find(filter).sort(sort).project(projection).toArray();
+            console.log({result})
             if (projection._id && projection._id === 0)
                 return result
             return result.map(item => ({ ...item, _id: item._id.toString() }));

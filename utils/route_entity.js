@@ -38,6 +38,7 @@ const routeEntityByItsType = async (data, sql, mongo, transaction) => {
                 result = await mongo(data);
             }
         }
+        // console.log({result})
         return result;
     }
     catch (error) {

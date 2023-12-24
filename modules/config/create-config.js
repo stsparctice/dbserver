@@ -25,6 +25,7 @@ function getTableName(config = DBconfig) {
 }
 
 function getColumns(tableName, config = DBconfig) {
+    console.log({tableName})
     try {
         if (typeof tableName !== 'string') {
             let error = notifictaions.find(({ status }) => status === 519);

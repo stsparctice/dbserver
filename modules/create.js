@@ -13,8 +13,13 @@ const { readFromMongo } = require('./read');
 const { dropDocumentMng } = require('./update');
 
 async function insertOneSql(obj) {
+    console.log({obj})
     try {
-        let tabledata = getSqlTableColumnsType(obj.entityName);
+        if(obj.tableName === undefined){
+            obj.tableName = obj.sqlEntityName
+        }
+        let tabledata = getSqlTableColumnsType(obj.tableName);
+        
         const filterProps = Object.entries(obj.sqlValues)
         const insertValues = Object.fromEntries(filterProps)
         let arr = parseColumnSQLType(insertValues, tabledata);
@@ -96,7 +101,7 @@ async function transactionSqlMongo(obj) {
 
         }
         console.log(obj.sqlEntityName)
-        const result = await insertOneSql({ entityName: obj.sqlEntityName, values: obj.sqlValues })
+        const result = await insertOneSql(obj)
         return result
     }
     catch (error) {

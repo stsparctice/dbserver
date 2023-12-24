@@ -12,7 +12,7 @@ const { getSQLReferencedColumns, getPrimaryKeyField, parseColumnName,
 const { DBType } = require('../utils/types');
 const { removeKeysFromObject } = require('../utils/code');
 
-const {SQL_DBNAME} = process.env
+const { SQL_DBNAME } = process.env
 
 
 
@@ -21,7 +21,7 @@ async function getDetailsSql(obj) {
         if (obj.entityName && !obj.tableName)
             obj.tableName = obj.entityName
         const response = await read(obj);
-       return response
+        return response
     }
     catch (error) {
         throw error
@@ -32,7 +32,7 @@ async function getDetailsSql(obj) {
 async function getAllSql(obj) {
     try {
         const response = await readAll(obj);
-       return response
+        return response
     }
     catch (error) {
         throw error
@@ -137,7 +137,7 @@ async function readFromSql(obj) {
             // const res = await selectReferenceColumn(values, obj.tableName);
             // console.log({res})
             const result = mapFKIntoEntity(values);
-            const list = result.map(item=>parseSqlObjectToEntity(item, obj.entityName))
+            const list = result.map(item => parseSqlObjectToEntity(item, obj.tableName))
             return list;
             // return result;
         }
@@ -152,7 +152,7 @@ async function readFromSql(obj) {
 }
 const selectReferenceColumn = async (values, tableName) => {
     const columnReference = getSQLReferencedColumns(tableName)
-    console.log({columnReference})
+    console.log({ columnReference })
     if (columnReference.length > 0) {
         let tablesJoin = columnReference.reduce((list, { name, ref }) =>
             [...list, ...values.reduce((state, val) => val[name] !== null && state.includes(ref.ref_table) ? [...state] : [...state, ref.ref_table], [])], []
@@ -269,11 +269,14 @@ async function readFromSqlAndMongo(object) {
         // }]
         let sqlResult = undefined
         let mongoResult = undefined
+        console.log(object.fields)
+        console.log(object.condition)
         if (object.fields) {
             if (sqlFields.length > 0) {
                 sqlResult = await readFromSql({
                     tableName: object.entityName, condition: sqlCondition, fields: sqlFields
                 })
+
             }
             if (mongoFields.length > 0) {
                 mongoResult = await readFromMongo({ collection: object.entityName, filter: mongoCondition, fields: mongoFields })
@@ -288,16 +291,19 @@ async function readFromSqlAndMongo(object) {
         }
         else {
             if (object.condition) {
+                console.log(sqlCondition)
+                console.log({object})
                 if (Object.keys(sqlCondition).length > 0)
                     sqlResult = await readFromSql({
                         tableName: object.entityName, condition: sqlCondition, fields: sqlFields
                     })
-
+                console.log(mongoCondition)
                 if (Object.keys(mongoCondition).length > 0) {
                     mongoResult = await readFromMongo({ collection: object.entityName, filter: mongoCondition, fields: mongoFields })
                 }
 
             }
+            console.log(mongoResult===undefined && sqlResult===undefined)
             if (!sqlResult)
                 sqlResult = await readFromSql({
                     tableName: object.entityName, condition: sqlCondition, fields: sqlFields
@@ -348,6 +354,7 @@ async function readFromMongo({ collection, filter = {}, sort = {}, fields = [] }
         }
         else {
             const response = await mongoOperations.find({ filter, sort, projection });
+            console.log({response})
             return response;
         }
     }

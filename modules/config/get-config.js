@@ -38,20 +38,21 @@ const getConnectionBetweenMongoAndSqlEntities = ({ mongoEntity, sqlEntity }) => 
 }
 
 const connectBetweenMongoAndSqlObjects = ({ mongoObjects, sqlObjects, sqlReferences, entityName }) => {
-    const referenceMongoFields = sqlReferences.map(({ sqlName, reference }) => ({ sqlName, mongo: reference.field }))
+    const referenceMongoFields = sqlReferences.map(({ sqlName,name, reference }) => ({ sqlName,name, mongo: reference.field }))
     const fullObjects = sqlObjects.map(item => {
         const itemKeyValues = Object.entries(item).map(([key, value]) => ({ key, value }))
-        const joinFields = itemKeyValues.filter(({ key }) => referenceMongoFields.find(({ sqlName }) => sqlName === key))
-        const search = joinFields.map(({ key, value }) => ({ key: referenceMongoFields.find(({ sqlName }) => sqlName === key).mongo, value }))
+        const joinFields = itemKeyValues.filter(({ key }) => referenceMongoFields.find(({ sqlName, name }) => sqlName === key||name===key))
+        const search = joinFields.map(({ key, value }) => ({ key: referenceMongoFields.find(({ sqlName, name }) => sqlName === key|| name===key).mongo, value }))
         const mongoObject = mongoObjects.find(mongo => {
             for (let query of search) {
+                console.log({query})
                 if (mongo[query.key] !== query.value)
                     return false
             }
             return true
         })
         if (mongoObject) {
-            const mongoFields = removeKeysFromObject(mongoObject, referenceMongoFields.map(({mongo})=>mongo))
+            const mongoFields = removeKeysFromObject(mongoObject, referenceMongoFields.map(({ mongo }) => mongo))
             const fullObject = { ...parseSqlObjectToEntity(item, entityName), ...mongoFields }
             return fullObject
         }

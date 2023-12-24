@@ -162,7 +162,6 @@ const join = async (query = "") => {
           // console.log('join')
           console.log({ query })
           const result = await getPool().request().query(query.trim());
-          console.log(result.recordset)
           if (result.recordset) {
                return result.recordset;
           }

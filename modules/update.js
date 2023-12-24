@@ -2,7 +2,7 @@ const { update } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { getPrimaryKeyField } = require('./config/config-sql');
 const notifications = require('../config/serverNotifictionsConfig.json');
-const { removeKeysFromObject } = require('../utils/code');
+const { removeKeysFromObject, isEmpyObject } = require('../utils/code');
 
 async function updateSql(obj) {
     try {
@@ -16,7 +16,12 @@ async function updateSql(obj) {
 async function updateOneSql(obj) {
     try {
         const primarykey = getPrimaryKeyField(obj.entityName);
+        
         if(Object.keys(obj.sqlValues).includes(primarykey)){
+
+            if(obj.condition === undefined ||isEmpyObject(obj.condition)){
+                obj.condition[primarykey] = obj.sqlValues[primarykey]
+            }
             obj.sqlValues = removeKeysFromObject(obj.sqlValues, [primarykey])
         }
         const result = await update(obj);
