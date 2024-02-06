@@ -113,6 +113,104 @@
                     {
                         "MTDTable": {
                             "name": {
+                                "name": "areas",
+                                "sqlName": "tbl_Areas"
+                            },
+                            "description": {
+                                "description": "Table that contain all areas"
+                            }
+                        },
+                        "columns": [
+                            {
+                                "name": "id",
+                                "sqlName": "Id",
+                                "type": {
+                                    "type": "INT",
+                                    "isnull": false
+                                },
+                                "primarykey": true,
+                                "isIdentity": {
+                                    "offset": 1000,
+                                    "interval": 1
+                                }
+                            },
+                            {
+                                "name": "areaIdFromMongo",
+                                "sqlName": "AreaIdFromMongo",
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": "50",
+                                    "isnull": false
+                                }, 
+                                "uniquekey": true,
+                                "reference":{
+                                    "database":"mongoDB",
+                                    "collection":"areas",
+                                    "field":"_id"
+                                }
+                            },
+                            {
+                                "name": "areaName",
+                                "sqlName": "AreaName",
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": "max",
+                                    "isnull": false
+                                },
+                                "reference":{
+                                    "database":"mongoDB",
+                                    "collection":"areas",
+                                    "field":"name"
+                                }
+                            },
+                            {
+                                "name": "addedDate",
+                                "sqlName": "AddedDate",
+                                "type": {
+                                    "type": "DATETIME",
+                                    "isnull": false
+                                }
+                            },
+                            {
+                                "name": "userName",
+                                "sqlName": "UserName",
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": 50,
+                                    "isnull": false
+                                }
+                            },
+                            {
+                                "name": "disabled",
+                                "sqlName": "Disabled",
+                                "type": {
+                                    "type": "BIT",
+                                    "isnull": true,
+                                    "default": 0
+                                }
+                            },
+                            {
+                                "name": "disabledDate",
+                                "sqlName": "DisabledDate",
+                                "type": {
+                                    "type": "DATETIME",
+                                    "isnull": true
+                                }
+                            },
+                            {
+                                "name": "disableUser",
+                                "sqlName": "DisableUser",
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": 20,
+                                    "isnull": true
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "MTDTable": {
+                            "name": {
                                 "name": "unitOfMeasure",
                                 "sqlName": "tbl_UnitOfMeasure"
                             },
@@ -326,6 +424,7 @@
                                 "name": "additions",
                                 "sqlName": "tbl_Additions"
                             },
+                            "defaultColumn":"Name",
                             "description": "a table of additions to the byton "
                         },
                         "columns": [
@@ -1984,7 +2083,7 @@
                                 }
                             },
                             {
-                                "name": "beton",
+                                "name": "cement",
                                 "sqlName": "Beton",
                                 "type": {
                                     "type": "BIT",
@@ -2087,7 +2186,7 @@
                                 "reference": "TableName"
                             },
                             {
-                                "name": "tableName",
+                                "name": "entity",
                                 "sqlName": "TableName",
                                 "type": {
                                     "type": "NVARCHAR",
@@ -2156,84 +2255,7 @@
                             }
                         ]
                     },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "distanceAdditions",
-                                "sqlName": "tbl_DistanceAdditions"
-                            },
-                            "description": "table that contains all the prices additions about the distance"
-                        },
-                        "columns": [
-                            {
-                                "name": "id",
-                                "sqlName": "Id",
-                                "type": {
-                                    "type": "INT",
-                                    "isnull": false
-                                },
-                                "primarykey": true,
-                                "isIdentity": {
-                                    "offset": 1000,
-                                    "interval": 1
-                                }
-                            },
-                            {
-                                "name": "productId",
-                                "sqlName": "ProductId",
-                                "type": {
-                                    "type": "INT",
-                                    "isnull": false
-                                },
-                                "foreignkey": {
-                                    "ref_table": "tbl_PriceListForProducts",
-                                    "ref_column": "Id"
-                                }
-                            },
-                            {
-                                "name": "minDistance",
-                                "sqlName": "MinDistance",
-                                "type": {
-                                    "type": "FLOAT",
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "price",
-                                "sqlName": "Price",
-                                "type": {
-                                    "type": "FLOAT",
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "disabled",
-                                "sqlName": "Disabled",
-                                "type": {
-                                    "type": "BIT",
-                                    "isnull": true,
-                                    "default": 0
-                                }
-                            },
-                            {
-                                "name": "disabledDate",
-                                "sqlName": "DisabledDate",
-                                "type": {
-                                    "type": "DATETIME",
-                                    "isnull": true
-                                }
-                            },
-                            {
-                                "name": "disableUser",
-                                "sqlName": "DisableUser",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 20,
-                                    "isnull": true
-                                }
-                            }
-                        ]
-                    },
+                   
                     {
                         "MTDTable": {
                             "name": {
@@ -2272,7 +2294,7 @@
                                     "isnull": false
                                 },
                                 "foreignkey": {
-                                    "ref_table": "tbl_PriceListForProducts",
+                                    "ref_table": "tbl_PricelistForProducts",
                                     "ref_column": "Id"
                                 }
                             },
@@ -2331,8 +2353,8 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "buytonStrength",
-                                "sqlName": "tbl_BuytonStrength"
+                                "name": "cementStrength",
+                                "sqlName": "tbl_CementStrength"
                             },
                             "description": "Table that contain buyton strength",
                             "defaultColumn": "StrengthDescribe"
@@ -2370,8 +2392,8 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "buytonDegree",
-                                "sqlName": "tbl_BuytonDegree"
+                                "name": "cementDegree",
+                                "sqlName": "tbl_CementDegree"
                             },
                             "description": "Table that contain Buyton Degree",
                             "defaultColumn": "DegreeDescribe"
@@ -2409,8 +2431,8 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "buytonGrain",
-                                "sqlName": "tbl_BuytonGrain"
+                                "name": "cementGrain",
+                                "sqlName": "tbl_CementGrain"
                             },
                             "description": "Table that contain Buyton Grain",
                             "defaultColumn": "GrainDescribe"
@@ -2445,11 +2467,51 @@
                             }
                         ]
                     },
+                   
+                    {
+                        "MTDTable": {
+                            "name": {
+                                "name": "cementSomech",
+                                "sqlName": "tbl_CementSomech"
+                            },
+                            "description": "Table that contain CementSomech",
+                            "defaultColumn": "SomechDescribe"
+                        },
+                        "columns": [
+                            {
+                                "name": "somechCode",
+                                "sqlName": "SomechCode",
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": 20,
+                                    "isnull": false
+                                }
+                            },
+                            {
+                                "name": "somechDescribe",
+                                "sqlName": "SomechDescribe",
+                                "type": {
+                                    "type": "NVARCHAR",
+                                    "max": 20,
+                                    "isnull": false
+                                }
+                            },
+                            {
+                                "name": "somechNumber",
+                                "sqlName": "SomechNumber",
+                                "type": {
+                                    "type": "INT",
+                                    "isnull": false
+                                },
+                                "primarykey": true
+                            }
+                        ]
+                    },
                     {
                         "MTDTable": {
                             "name": {
                                 "name": "basicProducts",
-                                "sqlName": "tbl_BuytonItems"
+                                "sqlName": "tbl_BasicItems"
                             },
                             "description": "Table that contain Buyton items",
                             "defaultColumn": "ItemDescribe"
@@ -2480,6 +2542,10 @@
                                 "type": {
                                     "type": "INT",
                                     "isnull": false
+                                },
+                                "foreignkey":{
+                                    "ref_table":"tbl_CementGrain", 
+                                    "ref_column":"GrainNumber"
                                 }
                             },
                             {
@@ -2488,6 +2554,10 @@
                                 "type": {
                                     "type": "INT",
                                     "isnull": false
+                                },
+                                "foreignkey":{
+                                    "ref_table":"tbl_CementStrength",
+                                    "ref_column":"StrengthNumber"
                                 }
                             },
                             {
@@ -2496,54 +2566,23 @@
                                 "type": {
                                     "type": "INT",
                                     "isnull": false
+                                }, 
+                                "foreignkey":{
+                                    "ref_table":"tbl_CementDegree",
+                                    "ref_column":"DegreeNumber"
                                 }
                             },
                             {
-                                "name": "buytonSomech",
-                                "sqlName": "BuytonSomech",
-                                "type": {
-                                    "type": "INT",
-                                    "isnull": false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "buytonSomech",
-                                "sqlName": "tbl_BuytonSomech"
-                            },
-                            "description": "Table that contain BuytonSomech",
-                            "defaultColumn": "SomechDescribe"
-                        },
-                        "columns": [
-                            {
-                                "name": "somechCode",
-                                "sqlName": "SomechCode",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 20,
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "somechDescribe",
-                                "sqlName": "SomechDescribe",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 20,
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "somechNumber",
-                                "sqlName": "SomechNumber",
+                                "name": "itemSomech",
+                                "sqlName": "ItemSomech",
                                 "type": {
                                     "type": "INT",
                                     "isnull": false
                                 },
-                                "primarykey": true
+                                "foreignkey":{
+                                    "ref_table":"tbl_CementSomech",
+                                    "ref_column":"SomechNumber"
+                                }
                             }
                         ]
                     },
@@ -2652,9 +2691,8 @@
                                 "name": "citiesAdditions",
                                 "sqlName": "tbl_CitiesAdditions"
                             },
-                            "description": {
+                            
                                 "description": "table that contains all the prices additions about the cities"
-                            }
                         },
                         "columns": [
                             {
@@ -2680,12 +2718,16 @@
                                 }
                             },
                             {
-                                "name": "areaId",
+                                "name": "area",
                                 "sqlName": "AreaId",
                                 "type": {
                                     "type": "NVARCHAR",
                                     "max": 50,
                                     "isnull": false
+                                },
+                                "foreignkey":{
+                                    "ref_table":"tbl_Areas",
+                                    "ref_column":"AreaIdFromMongo"
                                 }
                             },
                             {
@@ -2870,8 +2912,8 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "additionsForDistance",
-                                "sqlName": "tbl_AdditionsForDistance"
+                                "name": "distanceAdditions",
+                                "sqlName": "tbl_DistanceAdditions"
                             },
                             "description": {
                                 "description": "table that contains all the prices additions about the distance"
@@ -2917,8 +2959,8 @@
                                 }
                             },
                             {
-                                "name": "countPrecent",
-                                "sqlName": "CountPrecent",
+                                "name": "countPercent",
+                                "sqlName": "CountPercent",
                                 "type": {
                                     "type": "FLOAT",
                                     "isnull": false
@@ -2969,105 +3011,12 @@
                             }
                         ]
                     },
+                    
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "TruckFill",
-                                "sqlName": "tbl_TruckFill"
-                            },
-                            "description": {
-                                "description": "table that contains the fill count of truck"
-                            }
-                        },
-                        "columns": [
-                            {
-                                "name": "id",
-                                "sqlName": "Id",
-                                "type": {
-                                    "type": "INT",
-                                    "isnull": false
-                                },
-                                "primarykey": true,
-                                "isIdentity": true
-                            },
-                            {
-                                "name": "productId",
-                                "sqlName": "ProductId",
-                                "type": {
-                                    "type": "INT",
-                                    "isnull": false
-                                },
-                                "foreignkey": {
-                                    "ref_table": "tbl_PricelistForProducts",
-                                    "ref_column": "Id"
-                                }
-                            },
-                            {
-                                "name": "transportDiff",
-                                "sqlName": "TransportDiff",
-                                "type": {
-                                    "type": "FLOAT",
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "maxTransportDiff",
-                                "sqlName": "MaxTransportDiff",
-                                "type": {
-                                    "type": "FLOAT",
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "addedDate",
-                                "sqlName": "AddedDate",
-                                "type": {
-                                    "type": "DATETIME",
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "userName",
-                                "sqlName": "UserName",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 50,
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "disabled",
-                                "sqlName": "Disabled",
-                                "type": {
-                                    "type": "BIT",
-                                    "isnull": true,
-                                    "default": 0
-                                }
-                            },
-                            {
-                                "name": "disabledDate",
-                                "sqlName": "DisabledDate",
-                                "type": {
-                                    "type": "DATETIME",
-                                    "isnull": true
-                                }
-                            },
-                            {
-                                "name": "disableUser",
-                                "sqlName": "DisableUser",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 20,
-                                    "isnull": true
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "pricesListBySupplierOrClient",
-                                "sqlName": "tbl_PricesListBySupplierOrClient"
+                                "name": "priceListForBuytonCustomers",
+                                "sqlName": "tbl_PriceListForBuytonCustomers"
                             },
                             "description": {
                                 "description": "table that ocntacts between the suppliers and clients to them prices lists"
@@ -3085,8 +3034,8 @@
                                 "isIdentity": true
                             },
                             {
-                                "name": "priceListId",
-                                "sqlName": "priceListId",
+                                "name": "priceList",
+                                "sqlName": "PriceListId",
                                 "type": {
                                     "type": "INT",
                                     "isnull": false
@@ -3097,8 +3046,8 @@
                                 }
                             },
                             {
-                                "name": "supplierOrClient",
-                                "sqlName": "SupplierOrClient",
+                                "name": "supplier",
+                                "sqlName": "SupplierId",
                                 "type": {
                                     "type": "INT",
                                     "isnull": false
@@ -3108,9 +3057,22 @@
                                     "ref_column": "Id"
                                 }
                             },
+                            
                             {
-                                "name": "deBIT",
-                                "sqlName": "DeBIT",
+                                "name": "client",
+                                "sqlName": "ClientId",
+                                "type": {
+                                    "type": "INT",
+                                    "isnull": false
+                                },
+                                "foreignkey": {
+                                    "ref_table": "tbl_Clients",
+                                    "ref_column": "Id"
+                                }
+                            },
+                            {
+                                "name": "debit",
+                                "sqlName": "Debit",
                                 "type": {
                                     "type": "BIT",
                                     "isnull": false
@@ -3125,12 +3087,16 @@
                                 }
                             },
                             {
-                                "name": "areaId",
+                                "name": "area",
                                 "sqlName": "AreaId",
                                 "type": {
                                     "type": "NVARCHAR",
                                     "max": 50,
                                     "isnull": false
+                                },
+                                "foreignkey":{
+                                    "ref_table":"tbl_Areas",
+                                    "ref_column":"AreaIdFromMongo"
                                 }
                             },
                             {
@@ -3283,104 +3249,8 @@
                                 }
                             }
                         ]
-                    },
-                    {
-                        "MTDTable": {
-                            "name": {
-                                "name": "areas",
-                                "sqlName": "tbl_Areas"
-                            },
-                            "description": {
-                                "description": "Table that contain all areas"
-                            }
-                        },
-                        "columns": [
-                            {
-                                "name": "id",
-                                "sqlName": "Id",
-                                "type": {
-                                    "type": "INT",
-                                    "isnull": false
-                                },
-                                "primarykey": true,
-                                "isIdentity": {
-                                    "offset": 1000,
-                                    "interval": 1
-                                }
-                            },
-                            {
-                                "name": "areaIdFromMongo",
-                                "sqlName": "AreaIdFromMongo",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": "max",
-                                    "isnull": false
-                                }, 
-                                "reference":{
-                                    "database":"mongoDB",
-                                    "collection":"areas",
-                                    "field":"_id"
-                                }
-                            },
-                            {
-                                "name": "areaName",
-                                "sqlName": "AreaName",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": "max",
-                                    "isnull": false
-                                },
-                                "reference":{
-                                    "database":"mongoDB",
-                                    "collection":"areas",
-                                    "field":"name"
-                                }
-                            },
-                            {
-                                "name": "addedDate",
-                                "sqlName": "AddedDate",
-                                "type": {
-                                    "type": "DATETIME",
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "userName",
-                                "sqlName": "UserName",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 50,
-                                    "isnull": false
-                                }
-                            },
-                            {
-                                "name": "disabled",
-                                "sqlName": "Disabled",
-                                "type": {
-                                    "type": "BIT",
-                                    "isnull": true,
-                                    "default": 0
-                                }
-                            },
-                            {
-                                "name": "disabledDate",
-                                "sqlName": "DisabledDate",
-                                "type": {
-                                    "type": "DATETIME",
-                                    "isnull": true
-                                }
-                            },
-                            {
-                                "name": "disableUser",
-                                "sqlName": "DisableUser",
-                                "type": {
-                                    "type": "NVARCHAR",
-                                    "max": 20,
-                                    "isnull": true
-                                }
-                            }
-                        ]
                     }
+                   
                 ]
             }
         ]

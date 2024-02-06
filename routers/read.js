@@ -5,7 +5,8 @@ const { countRowsSql,
     getCountDocumentsMng,
     readFromSql,
     autoComplete, 
-    readFromSqlAndMongo} = require('../modules/read');
+    readFromSqlAndMongo,
+    readFullEntity} = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
 const { convertQueryToObject } = require('../utils/convert_query')
@@ -54,8 +55,19 @@ router.get('/readOne/:entityName', async (req, res) => {
 })
 router.post('/readOne/:entityName', async (req, res) => {
     try {
-        console.log(req.body.condition);
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.body.condition, topn: 1 }, readFromSql, readFromMongo);
+        res.status(200).send(response);
+    }
+    catch (error) {
+        console.log({ error });
+        res.status(500).send(error.message);
+    }
+});
+
+router.post('/readOneDetails/:entityName', async (req, res) => {
+    console.log(req.params.entityName)
+    try {
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.body.condition, topn: 1 }, readFullEntity, readFromMongo);
         res.status(200).send(response);
     }
     catch (error) {

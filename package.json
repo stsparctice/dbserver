@@ -24,7 +24,7 @@
     "dev": "nodemon server",
     "test": "jest",
     "test:coverage": "npm test -- --coverage",
-    "start": "node server"
+    "start": "node --trace-warnings server"
   },
   "repository": {
     "type": "git",

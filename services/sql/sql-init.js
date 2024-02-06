@@ -31,16 +31,15 @@ function buildColumnType({ type, primarykey, foreignkey, isIdentity, uniquekey, 
         }
     }
     if (uniquekey) {
-        typeString = `${typeString}UNIQUE`
+        typeString = `${typeString} UNIQUE`
     }
     if (primarykey) {
-        typeString = `${typeString}PRIMARY KEY`
+        typeString = `${typeString} PRIMARY KEY`
     }
     if (foreignkey) {
         const { ref_column, ref_table } = foreignkey
-        typeString = `${typeString}FOREIGN KEY(${sqlName}) REFERENCES ${ref_table}(${ref_column})`
+        typeString = `${typeString} FOREIGN KEY(${sqlName}) REFERENCES ${ref_table}(${ref_column})`
     }
-
     return typeString
 }
 
@@ -52,20 +51,19 @@ async function createTables() {
         _ = await getPool().request().query(`IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${SQL_DBNAME}') begin use master CREATE DATABASE [${SQL_DBNAME}]; end`);
 
         let tables = config.find(db => db.database == 'sql').dbobjects.find(obj => obj.type == "Tables").list
+
         for (let j = 0; j < tables.length; j++) {
             await checkDataBase(SQL_DBNAME, tables[j])
             let table = tables[j];
-            _ = await getPool().request().query(`use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](
-            ${buildColumns(table.columns)}
-            )
-            `);
-        };
-        _ = await createNormalizationTable();
-    }
+            const query = `use ${SQL_DBNAME} IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '${table.MTDTable.name.sqlName}') CREATE TABLE [dbo].[${table.MTDTable.name.sqlName}](${buildColumns(table.columns)})`
+        _ = await getPool().request().query(query);
+    };
+    _ = await createNormalizationTable();
+}
     catch (error) {
-        console.log({ error })
-        throw error
-    }
+    console.log({ error })
+    throw error
+}
 };
 
 

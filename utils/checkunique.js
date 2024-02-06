@@ -24,14 +24,14 @@ async function uniqueValue(field) {
 function checkDataIsUnique() {
     return async (req, res, next) => {
         let error
-        for (let value of Object.keys(req.body.values)) {
-            let check = await uniqueValue({ table: req.body.tableName, name: value, value: req.body.values[value] })
+        for (let value of Object.keys(req.body.data)) {
+            let check = await uniqueValue({ table: req.body.entityName, name: value, value: req.body.data[value] })
             if (check == false) {
                 error = { value }
             }
         }
         if (error) {
-            let description = `Value: ${req.body.values[error.value]} is exsist.`
+            let description = `Value: ${req.body.data[error.value]} does exist.`
             error = notifications.find(n => n.status == 409)
             error.description = description
             res.status(error.status).send(error.description)

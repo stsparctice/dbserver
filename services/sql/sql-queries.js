@@ -27,6 +27,77 @@ const autoCompleteQuery = ({ tablename, column }, condition) => {
     }
 }
 
+const createQuery = (tableName, columns, values) => {
+    const primarykey = getPrimaryKeyField(tableName)
+    let query = `use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}); SELECT @@IDENTITY ${primarykey}`
+    console.log({ query });
+    return { query, returnValue: primarykey };
+
+}
+
+const updateQuery = (obj) => {
+
+    if (isEmpyObject(obj)) {
+        const error = notifications.find(n => n.status === 400)
+        throw error
+    }
+    try {
+        console.log({ obj })
+        const convert = getConverter(obj.tableName)
+        obj.condition = convert.convertCondition(obj.condition)
+        const alias = getTableAlias(obj.tableName)
+        const valEntries = Object.entries(obj.sqlValues);
+        const tableData = getSqlTableColumnsType(obj.tableName)
+        const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseOneColumnSQLType({ name: c[0], value: c[1] }, tableData)}`).join(',')
+        const query = `use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`
+        return query
+    }
+    catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+const readQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
+    const convert = getConverter(tableName)
+    condition = convert.convertCondition(condition)
+    query = `USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableAlias(tableName)} where ${condition}`
+    return query;
+}
+
+const buildSelectPart = (columns, alias, references) => {
+    let selectpart = columns.map(col => `${alias}.${col} as ${alias}_${col}`).join(', ')
+    if (references !== undefined && Array.isArray(references) && references.length > 0) {
+        for (ref of references) {
+            selectpart = [selectpart, ref.references.map(item => buildSelectPart(item.columns, item.alias, item.references))].join(', ')
+        }
+    }
+    return selectpart
+}
+
+const buildJoinPart = ({ sqlName, alias, references, foreignkeys }) => {
+    let joinpart = ''
+    for (let ref of references) {
+        if (ref.connectedTable === alias) {
+            joinpart += ` left join ${ref.foreignkeys.table.sqlName} ${ref.foreignkeys.table.alias}  on ${ref.foreignkeys.table.alias}.${ref.foreignkeys.sqlName} = ${ref.connectedTable}.${ref.foreignkeys.ref.ref_column} `
+        }
+        if (ref.references.length > 0) {
+            for (let item of ref.references) {
+                joinpart += buildJoinPart(item)
+
+            }
+        }
+    }
+    return joinpart
+}
+const readFullEntityQuery = ({ mainTable, condition }) => {
+    const { sqlName, alias, columns, foreignkeys, references } = mainTable
+    let selectPart = ` use ${SQL_DBNAME} select ${buildSelectPart(columns, alias, references)}`
+    let joinPart = `from ${sqlName}  ${alias} ${buildJoinPart({ sqlName, alias, references })}`
+    let conditionPart = `where ${condition.table}.${condition.field} = ${condition.value}`
+    return `${selectPart} ${joinPart} ${conditionPart}`
+}
+
 const getSelectSqlQueryWithFK = ({ tableName, fields = [], condition = {}, topn = 50, skip = 0 }) => {
     try {
         const myTable = getTableFromConfig(tableName)
@@ -115,27 +186,14 @@ const convertType = (column1, column2) => {
     return result;
 }
 
-const updateQuery = (obj) => {
 
-    if (isEmpyObject(obj)) {
-        const error = notifications.find(n => n.status === 400)
-        throw error
-    }
-    try {
-        console.log({ obj })
-        const convert = getConverter(obj.tableName)
-        obj.condition = convert.convertCondition(obj.condition)
-        const alias = getTableAlias(obj.tableName)
-        const valEntries = Object.entries(obj.sqlValues);
-        const tableData = getSqlTableColumnsType(obj.tableName)
-        const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseOneColumnSQLType({ name: c[0], value: c[1] }, tableData)}`).join(',')
-        const query = `use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`
-        return query
-    }
-    catch (error) {
-        console.log(error)
-        throw error
-    }
-}
 
-module.exports = { getSelectSqlQueryWithFK, autoCompleteQuery, convertType, updateQuery };
+module.exports = {
+    getSelectSqlQueryWithFK,
+    autoCompleteQuery,
+    convertType,
+    updateQuery,
+    createQuery,
+    readQuery,
+    readFullEntityQuery
+};

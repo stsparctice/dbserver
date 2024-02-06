@@ -1,6 +1,5 @@
 const notifications = require('../config/serverNotifictionsConfig.json')
-const { getDBTypeAndName } = require('../modules/config/get-config')
-const { parseColumnName } = require('../modules/config/config-sql');
+const { getDBTypeAndName, parseColumnName } = require('../modules/config/get-config')
 const { DBType } = require('./types');
 
 function parseTableName() {
@@ -28,20 +27,23 @@ function parseTableName() {
 const parseColumnNameMiddleware = () => {
     return (req, res, next) => {
         try {
-            const { sqlValues, noSqlValues } = parseColumnName(req.body.values, req.body.entityName);
+            const { sqlValues, noSqlValues, connectedEntities } = parseColumnName(req.body.data, req.body.entityName);
+            console.log(sqlValues)
+            console.log(noSqlValues)
+            console.log(connectedEntities)
             req.body.sqlValues = sqlValues
-           
-            if (req.body.mongoEntityName){
+            req.body.connectedEntities = connectedEntities
+            if (req.body.mongoEntityName) {
                 req.body.mongoValues = noSqlValues
             }
-        //     else{
-                
-        //         let description = `The column${error.length > 1 ? 's' : ''}: ${error.join(', ')} ${error.length > 1 ? 'do' : 'does'} not exist.`
-        // //     error = notifications.find(n => n.status === 514)
-        // //     error.description = description
-        // //     throw error
+            //     else{
+
+            //         let description = `The column${error.length > 1 ? 's' : ''}: ${error.join(', ')} ${error.length > 1 ? 'do' : 'does'} not exist.`
+            // //     error = notifications.find(n => n.status === 514)
+            // //     error.description = description
+            // //     throw error
             // }
-                next();
+            next();
         }
         catch (error) {
             console.log({ error })
@@ -56,7 +58,7 @@ const parseListOfColumnsName = () => {
             let tables = sql.dbobjects.find(obj => obj.type == 'Tables').list
             let table = tables.find(table => table.MTDTable.name.sqlName.trim() == req.body.entityName || table.MTDTable.name.sqlName == req.body.entityName)
             if (table) {
-                req.body.values = req.body.values.map(obj => parseColumnName(obj, req.body.entityName).sqlValues)
+                req.body.data = req.body.data.map(obj => parseColumnName(obj, req.body.entityName).sqlValues)
                 next()
             }
             else {

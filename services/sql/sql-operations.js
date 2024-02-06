@@ -9,11 +9,12 @@ const { getPrimaryKeyField,
      getTableAlias,
      parseOneColumnSQLType,
      getSqlTableColumnsType,
-     parseColumnName } = require('../../modules/config/config-sql')
+} = require('../../modules/config/config-sql')
 const notifications = require('../../config/serverNotifictionsConfig.json');
 const { getConverter } = require('./sql-convert-query-to-condition');
 
 const { updateQuery } = require('./sql-queries');
+const { removeKeysFromObject } = require('../../utils/code');
 
 const sqlKeyTypes = {
      PRIMARY_KEY: 'PRIMARY KEY',
@@ -24,13 +25,11 @@ const sqlKeyTypes = {
 //      throw notifications.find(n => n.status == 509)
 // }
 
-const create = async function (obj) {
-     const { tableName, columns, values } = obj;
+const create = async function (query) {
      try {
-          const primarykey = getPrimaryKeyField(tableName)
-          console.log(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`);
-          const result = await getPool().request().query(`use ${SQL_DBNAME} INSERT INTO ${tableName} (${columns}) VALUES(${values}) SELECT @@IDENTITY ${primarykey}`)
-
+          console.log({ query });
+          const result = await getPool().request().query(query.query)
+          console.log({ result });
           return result.recordset;
      }
 
@@ -40,7 +39,22 @@ const create = async function (obj) {
 
 }
 
-const read = async function (obj) {
+const read = async (query = "") => {
+     try {
+          console.log({ query })
+          const result = await getPool().request().query(query.trim());
+          if (result.recordset) {
+               return result.recordset;
+          }
+          return false;
+     }
+     catch (error) {
+          console.log({ error })
+          throw error
+     }
+};
+
+const read1 = async function (obj) {
      console.log({ read: obj })
 
      try {
@@ -72,6 +86,7 @@ const readAll = async function (obj) {
           };
           const { tableName, condition } = obj;
           const readQuery = `use ${SQL_DBNAME} select * from ${tableName} as ${getTableFromConfig(tableName).MTDTable.name.name} where ${condition}`
+          console.log(readQuery)
           const result = await getPool().request().query(readQuery)
           return result.recordset;
      }
@@ -83,28 +98,78 @@ const readAll = async function (obj) {
 
 const sqlTransaction = async function (queries) {
      try {
-          // let connectionPool = new sql.ConnectionPool(poolConfig());
-          // await connectionPool.connect();
-          // const transaction = new sql.Transaction(connectionPool);
+          console.log(queries)
+          let returnResponse = { rowsAffected: 0, recordset: [] }
           const { statement, transaction } = await newTransaction()
           try {
                await transaction.begin();
-               for (const command of queries) {
-                    await statement.prepare(command)
-                    try {
-                         await statement.execute()
-                    }
-                    finally {
-                         await statement.unprepare()
+               if (Array.isArray(queries)) {
+                    for (const command of queries) {
+                         await statement.prepare(command)
+                         try {
+                              let response = await statement.execute()
+                              returnResponse.recordset = [...returnResponse.recordset, ...response.recordset]
+                              returnResponse.rowsAffected += response.rowsAffected[0]
+                         }
+                         finally {
+                              await statement.unprepare()
+                         }
                     }
                }
+               else {
+                    while (queries.mainquery !== undefined) {
+                         const { mainquery } = queries
+                         const { query, returnValue } = mainquery
+                         await statement.prepare(query)
+                         let response
+                         try {
+                              response = await statement.execute()
+                              returnResponse.recordset = [...returnResponse.recordset, ...response.recordset]
+                              returnResponse.rowsAffected += response.rowsAffected[0]
+                         }
+                         finally {
+                              await statement.unprepare()
+                         }
+                         let { connectedQueries } = queries
+                         queries = removeKeysFromObject(queries, ['mainquery'])
+                         let executeQueries = connectedQueries.map((q, i) => ({ query: q, index: i })).filter(({ query }) => typeof query.query === 'string')
+                         executeQueries = executeQueries.map(({ query }) => query.query.replace('<result>', response.recordset[0][returnValue]))
+                         console.log(executeQueries)
+                         for (const command of executeQueries) {
+                              console.log({ command })
+                              await statement.prepare(command)
+                              try {
+                                   let response = await statement.execute()
+                                   returnResponse.recordset = [...returnResponse.recordset, ...response.recordset]
+                                   returnResponse.rowsAffected += response.rowsAffected[0]
+                              }
+                              finally {
+                                   await statement.unprepare()
+                              }
+                         }
+                         let removeIndexes = executeQueries.map(({ index }) => index)
+
+                         connectedQueries = connectedQueries.reduce((list, q, i) => {
+                              if (removeIndexes.indexOf(i) === -1) {
+                                   list = [...list, q]
+                              }
+                              return list
+
+                         }, [])
+                         if (connectedQueries.length === 0) {
+                              queries = {}
+                         }
+                    }
+               }
+
+
                await transaction.commit();
 
           } catch (error) {
                console.log({ error });
                await transaction.rollback();
           }
-          return true
+          return returnResponse
      }
      catch (error) {
           console.log({ error });
@@ -157,21 +222,7 @@ const transaction = async (data) => {
 
 }
 
-const join = async (query = "") => {
-     try {
-          // console.log('join')
-          console.log({ query })
-          const result = await getPool().request().query(query.trim());
-          if (result.recordset) {
-               return result.recordset;
-          }
-          return false;
-     }
-     catch (error) {
-          console.log({ error })
-          throw error
-     }
-};
+
 const update = async function (obj) {
      try {
           const query = updateQuery(obj)
@@ -300,7 +351,6 @@ module.exports = {
      readAll,
      update,
      countRows,
-     join,
      getTableKeys,
      getIdentityColumns,
      getForeignKeysData,

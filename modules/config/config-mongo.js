@@ -2,6 +2,7 @@ const DBconfig = require('../../config/DBconfig.json');
 const notifictaions = require('../../config/serverNotifictionsConfig.json');
 
 function getCollectionsFromConfig(collectionName, config = DBconfig) {
+    console.log({collectionName})
     try {
         if (typeof collectionName !== 'string') {
             let error = notifictaions.find(({ status }) => status === 519);

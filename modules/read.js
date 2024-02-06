@@ -1,26 +1,38 @@
 require('dotenv').config()
 
-const { read, readAll, countRows, join } = require('../services/sql/sql-operations');
+const { read, readAll, countRows } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
 const { getConverter } = require('../services/sql/sql-convert-query-to-condition')
-const { getSelectSqlQueryWithFK, autoCompleteQuery, convertType } = require('../services/sql/sql-queries')
-const { getDBTypeAndName, getConnectionBetweenMongoAndSqlEntities, connectBetweenMongoAndSqlObjects } = require('./config/get-config');
-const { getSQLReferencedColumns, getPrimaryKeyField, parseColumnName,
+const { getSelectSqlQueryWithFK, convertType, readQuery, readFullEntityQuery } = require('../services/sql/sql-queries')
+const { getConnectionBetweenMongoAndSqlEntities, connectBetweenMongoAndSqlObjects, parseColumnName } = require('./config/get-config');
+const { getSQLReferencedColumns, getPrimaryKeyField,
     getDefaultColumn, getColumnAlias, getTableFromConfig, getTableAlias,
-    readJoin, parseSqlObjectToEntity, getTableColumns } = require('./config/config-sql');
-const { DBType } = require('../utils/types');
-const { removeKeysFromObject } = require('../utils/code');
+    parseSqlObjectToEntity, buildFullReferences, parseOneColumnSQLType, getSqlTableColumnsType, getInnerReferencedColumns, getTableSQLName, getForeignTableDefaultColumn } = require('./config/config-sql');
+const { removeKeysFromObject, groupByObjects, distinctObjectsArrays, isEmpyObject } = require('../utils/code');
 
 const { SQL_DBNAME } = process.env
 
+async function autoComplete({ entittyName, tableName, condition }) {
 
+    try {
+        const primaryKey = getPrimaryKeyField(tableName)
+        const defaultValue = getDefaultColumn(tableName)
+        const query = readQuery({ tableName, condition, n: 10, columns: [primaryKey, defaultValue] })
+        const response = await read(query)
+        return response
+    }
+    catch (error) {
+        throw error
+    }
+}
 
 async function getDetailsSql(obj) {
     try {
         if (obj.entityName && !obj.tableName)
             obj.tableName = obj.entityName
-        const response = await read(obj);
+        let query = readQuery({ tableName: obj.tableName })
+        const response = await read(query);
         return response
     }
     catch (error) {
@@ -39,18 +51,7 @@ async function getAllSql(obj) {
     }
 };
 
-async function autoComplete({ entittyName, tableName, condition }) {
 
-    try {
-        const primaryKey = getPrimaryKeyField(tableName)
-        const defaultValue = getDefaultColumn(tableName)
-        const response = await read({ tableName, condition, n: 10, columns: [primaryKey, defaultValue] })
-        return response
-    }
-    catch (error) {
-        throw error
-    }
-}
 
 async function readRelatedObjects(tablename, primaryKey, value, column) {
     try {
@@ -60,8 +61,8 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "columns": '*',
             "condition": `${primaryKey}=${value}`
         }
-
-        const allData = await read(obj)
+        const query1 = readQuery(obj)
+        const allData = await read(query1)
         const refTablename = allData[0].TableName
         const refPrimaryKeyField = getPrimaryKeyField(refTablename)
         obj = {
@@ -69,7 +70,8 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "columns": "*",
             "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
         }
-        const result = await read(obj)
+        const query2 = readQuery(obj)
+        const result = await read(query2)
         allData[0].TableName = result
         return allData
     }
@@ -94,34 +96,107 @@ async function readFullObjects(tablename) {
 
 async function readFullObjectsWithRef(table, fullObjects) {
     const TabeColumnName = getTabeColumnName(table)
-    let y = await read({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
-    let answer = await Promise.all(y.map(myFunction));
-    async function myFunction(value) {
-        value[`${fullObjects.name}`] = await read({ tableName: `${value[`${fullObjects.ref}`]}`, columns: '*', condition: `${await getPrimaryKeyField(value[`${fullObjects.ref}`])}='${value[fullObjects.name]}'` })
-        return value;
-    }
+    console.log({TabeColumnName});
+    const query = readQuery({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
+    let data = await read(query)
+    let answer = await Promise.all(data.map(async item => {
+        const query = readQuery({ tableName: `${item[`${fullObjects.ref}`]}`, columns: '*', condition: `${getPrimaryKeyField(item[`${fullObjects.ref}`])}='${item[fullObjects.name]}'` })
+        item[`${fullObjects.name}`] = await read(query)
+        return item;
+    }))
     return answer
 }
 
-async function readWithJoin(tableName, column) {
-    try {
+function buildConditionObject({ entityName, property, value }) {
+    const conditionTable = getTableFromConfig(entityName)
+    const conditionProperty = conditionTable.columns.find(({ name }) => name === property)
+    let field = getPrimaryKeyField(entityName)
+    if (conditionProperty) {
+        field = conditionProperty.sqlName
+    }
 
-        const query = await readJoin(tableName, column);
-        const values = await join(query);
+    const tableData = getSqlTableColumnsType(entityName)
+    value = parseOneColumnSQLType({ name: field, value }, tableData)
+    return { table: entityName, field, value }
+}
+
+async function buildObjectFromConnectedTables({ table, data }) {
+    let objectData = data.map(item => {
+        const keys = Object.keys(item)
+        const mainKeys = keys.filter(key => {
+            const splitKey = key.split('_')
+            if (splitKey[0] === table.alias)
+                return key
+        })
+        const removeKeys = keys.filter(key => mainKeys.includes(key) === false)
+        return removeKeysFromObject(item, removeKeys)
+    })
+    if (objectData.every(item => isEmpyObject(item))) {
+        return []
+    }
+    objectData = objectData.map(obj => {
+        let changeKeys = Object.entries(obj).map(ent => {
+            ent[0] = ent[0].split('_')[1]
+            return ent
+        })
+        return Object.fromEntries(changeKeys)
+    })
+    let primaryKey = getPrimaryKeyField(table.alias)
+    let groupObjects = groupByObjects(objectData, primaryKey)
+    let objectsList = groupObjects.map(({ value }) => distinctObjectsArrays(value)).reduce((arr, item) => arr = [...arr, ...item], [])
+    const innerReferrences = getInnerReferencedColumns(table.alias)
+    console.log({ innerReferrences })
+    if (innerReferrences.length > 0) {
+        for (let innerRef of innerReferrences) {
+            objectsList = await Promise.all(objectsList.map(async item => {
+                let ref_table = getTableSQLName(item[innerRef.reference])
+                let ref_column = getPrimaryKeyField(item[innerRef.reference])
+                const condition = {}
+                condition[ref_column] = item[innerRef.sqlName]
+                const defaultColumn = getForeignTableDefaultColumn(ref_table)
+                console.log(ref_column, defaultColumn);
+                let readquery = readQuery({ tableName: ref_table, condition, columns: [ref_column, defaultColumn], n: 1 })
+                const result = await read(readquery)
+                item[innerRef.sqlName] = result[0]
+                return item
+            }))
+        }
+    }
+    if (table.references.length > 0) {
+        for (let reference of table.references) {
+            if (reference.references.length > 0) {
+                for (let ref2 of reference.references) {
+                    objectsList = await Promise.all(objectsList.map(async obj => {
+                        let response = await buildObjectFromConnectedTables({ table: ref2, data })
+                        let groups = groupByObjects(response, reference.foreignkeys.ref.ref_column)
+                        obj[reference.foreignkeys.table.alias] = groups.map(({ value }) => distinctObjectsArrays(value)).reduce((arr, item) => arr = [...arr, ...item], [])
+                        return obj
+                    }))
+                }
+            }
+        }
+    }
+    return objectsList
+}
+
+async function readFullEntity(request) {
+    try {
+        const { tableName, condition } = request
+        const table = getTableFromConfig(tableName)
+        const mainTable = buildFullReferences(table)
+        const sqlConditionObject = buildConditionObject(condition)
+        const query = readFullEntityQuery({ mainTable, condition: sqlConditionObject });
+        let values = await read(query);
+
         let result = [];
         if (values) {
-            values.forEach(val => {
-                const sameRecord = values.filter(v => v[`${tableName}_${column}`] === val[`${tableName}_${column}`]);
-                const keys = Object.keys(sameRecord[0]);
-                const temp = {}
-                for (let key of keys) {
-                    temp[key] = (sameRecord.map(sr => { return sr[key] })).reduce((state, next) => state.includes(next) ? [...state] : [...state, next], []);
-                }
-                result = result.filter(r => r[`${tableName}_${column}`][0] == temp[`${tableName}_${column}`][0]).length == 0 ? [...result, temp] : [...result];
-            });
+            values = values.map(item => {
+                let removeKeys = Object.keys(item).filter(key => item[key] === null)
+                return removeKeysFromObject(item, removeKeys)
+            })
+            result = await buildObjectFromConnectedTables({ table: mainTable, data: values })
         }
-        console.log("result")
-        console.log(result)
+        result = result.map(item => parseSqlObjectToEntity(item, mainTable.alias))
         return result;
     }
     catch (error) {
@@ -132,14 +207,11 @@ async function readWithJoin(tableName, column) {
 async function readFromSql(obj) {
     try {
         const query = getSelectSqlQueryWithFK(obj);
-        const values = await join(query);
+        const values = await read(query);
         if (values.length > 0) {
-            // const res = await selectReferenceColumn(values, obj.tableName);
-            // console.log({res})
             const result = mapFKIntoEntity(values);
             const list = result.map(item => parseSqlObjectToEntity(item, obj.tableName))
             return list;
-            // return result;
         }
         else {
             return values
@@ -242,6 +314,7 @@ async function countRowsSql(obj) {
 
 async function readFromSqlAndMongo(object) {
     try {
+        console.log({object})
         const { sqlReferences } = getConnectionBetweenMongoAndSqlEntities({ mongoEntity: object.entityName, sqlEntity: object.entityName })
         // const referenceMongoFields = sqlReferences.map(({ reference }) => reference.field)
         let sqlCondition = {};
@@ -250,13 +323,13 @@ async function readFromSqlAndMongo(object) {
         let mongoFields = []
         if (object.condition) {
             const { sqlValues, noSqlValues } = parseColumnName(object.condition, object.entityName)
-            sqlCondition = sqlValues
-            mongoCondition = noSqlValues
+            sqlCondition = sqlValues ?? {}
+            mongoCondition = noSqlValues ?? {}
         }
         if (object.fields) {
             const { sqlValues, noSqlValues } = parseColumnName(object.fields, object.entityName)
-            sqlFields = sqlValues
-            mongoFields = noSqlValues
+            sqlFields = sqlValues ?? []
+            mongoFields = noSqlValues ?? []
         }
         // const readMethods = [{
         //     type: DBType.SQL, read: readFromSql, param: {
@@ -292,7 +365,7 @@ async function readFromSqlAndMongo(object) {
         else {
             if (object.condition) {
                 console.log(sqlCondition)
-                console.log({object})
+                console.log({ object })
                 if (Object.keys(sqlCondition).length > 0)
                     sqlResult = await readFromSql({
                         tableName: object.entityName, condition: sqlCondition, fields: sqlFields
@@ -303,7 +376,7 @@ async function readFromSqlAndMongo(object) {
                 }
 
             }
-            console.log(mongoResult===undefined && sqlResult===undefined)
+            console.log(mongoResult === undefined && sqlResult === undefined)
             if (!sqlResult)
                 sqlResult = await readFromSql({
                     tableName: object.entityName, condition: sqlCondition, fields: sqlFields
@@ -354,7 +427,7 @@ async function readFromMongo({ collection, filter = {}, sort = {}, fields = [] }
         }
         else {
             const response = await mongoOperations.find({ filter, sort, projection });
-            console.log({response})
+            console.log({ response })
             return response;
         }
     }
@@ -421,7 +494,7 @@ module.exports = {
     getDetailsSql,
     getAllSql, countRowsSql,
     readFullObjects, readFullObjectsWithRef, readRelatedObjects,
-    readFromMongo, readWithJoin, autoComplete,
+    readFromMongo, readFullEntity, autoComplete,
     readFromSqlAndMongo,
     getDetailsWithAggregateMng, getCountDocumentsMng, getDetailsWithDistinct, readFromSql, getPolygon
 };

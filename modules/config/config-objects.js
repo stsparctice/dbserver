@@ -1,8 +1,10 @@
 const convertToSQLString = (value) => {
+
     if (value === undefined || value === null)
         throw new Error('value must be defined');
 
-    if (typeof value !== 'string') throw new Error('value must be a string');
+    if (typeof value !== 'string')
+        value = value.toString()
     let special = ["'", "&", "%", "#", "$"];
     const sqlStrings = [];
     const split = value.split('');
@@ -59,13 +61,13 @@ const types = {
     DATETIME: {
         typeNodeName: 'Date',
         parseNodeTypeToSqlType: (value) => {
-            console.log({value})
+            console.log({ value })
             try {
                 if (value) {
                     return `'${new Date(value).toISOString()}'`;
                 }
                 else {
-                    throw new Error('value is required') 
+                    throw new Error('value is required')
                 }
             }
             catch (err) { throw err; }

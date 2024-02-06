@@ -4,10 +4,11 @@ const {
     getTableFromConfig,
     getSQLReferencedColumns,
     getTableAccordingToRef,
-    getForeignTableAndDefaultColumn,
+    getForeignTableDefaultColumn,
     getTableColumnsSQLName,
     getSqlTableColumnsType,
-    getConnectedEntities
+    getConnectedEntities,
+    getInnerReferencedColumns
 } = require('../../../modules/config/config-sql')
 
 describe('TEST ON config.js FILE', () => {
@@ -149,32 +150,32 @@ describe('TEST ON config.js FILE', () => {
 
     describe('GET FOREIGN TABLE AND COLUMN', () => {
         it('A function received a table name, a field name and a config and returns an object that includes a table name and its information', () => {
-            const result = getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
+            const result = getForeignTableDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
             expect(result).toBeDefined();
             expect(result).toStrictEqual({ foreignTableName: 'tbl_example_table4', defaultColumn: 'Name' });
         });
         it('The returned value is of type object', () => {
-            const result = getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
+            const result = getForeignTableDefaultColumn('tbl_example_table5', 'unitOfMeasure', config);
             expect(result).toBeInstanceOf(Object);
         });
         it('The table name is of type string', () => {
-            expect(() => getForeignTableAndDefaultColumn(15, 'unitOfMeasure', config)).toThrow('Check the type of the parameter received');
+            expect(() => getForeignTableDefaultColumn(15, 'unitOfMeasure', config)).toThrow('Check the type of the parameter received');
         });
         it('The field name is of type string', () => {
-            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 15, config)).toThrow('Check Field Name');
+            expect(() => getForeignTableDefaultColumn('tbl_example_table4', 15, config)).toThrow('Check Field Name');
         });
         it('The table name and field name are of type string', () => {
-            expect(() => getForeignTableAndDefaultColumn(15, 15, config)).toThrow('Check the type of the parameter received');
-            expect(() => getForeignTableAndDefaultColumn('tbl_example_table5', 'unitOfMeasure', config)).not.toThrow();
+            expect(() => getForeignTableDefaultColumn(15, 15, config)).toThrow('Check the type of the parameter received');
+            expect(() => getForeignTableDefaultColumn('tbl_example_table5', 'unitOfMeasure', config)).not.toThrow();
         });
         it('A table name without a foreign key will return an error accordingly', () => {
-            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
+            expect(() => getForeignTableDefaultColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
         });
         it('A table column without a foreign key will return an error accordingly', () => {
-            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
+            expect(() => getForeignTableDefaultColumn('tbl_example_table4', 'unitOfMeasure', config)).toThrow('Check Field Name');
         });
         it('When the structure of the config file is incorrect', () => {
-            expect(() => getForeignTableAndDefaultColumn('tbl_example_table4', 'unitOfMeasure', incorrectConfig)).toThrow('Check config file');
+            expect(() => getForeignTableDefaultColumn('tbl_example_table4', 'unitOfMeasure', incorrectConfig)).toThrow('Check config file');
         });
     });
 
@@ -211,7 +212,15 @@ describe('TEST ON config.js FILE', () => {
 
     describe(`GET ALL CONNECTED TABLES`, ()=>{
         it('should return a list of connected tables', ()=>{
-            const response = getConnectedEntities('tbl_Pumps')
+            const response = getConnectedEntities('tbl_PricelistForProducts')
+            expect(response).toBeInstanceOf(Array)
+        })
+    })
+
+    describe('GET INNER REFERENCED COLUMNS', ()=>{
+        it('should return an array of referenced columns', ()=>{
+            const response=getInnerReferencedColumns('productsPricelist')
+            console.log(response)
             expect(response).toBeInstanceOf(Array)
         })
     })

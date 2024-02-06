@@ -1,12 +1,12 @@
 const { queryOperators } = require('../../utils/types')
-const { getTableAlias, parseColumnSQLType, getSqlTableColumnsType, getTableColumnsSQLName, getTableFromConfig, parseColumnName } = require('../../modules/config/config-sql')
+const { getTableAlias, parseColumnSQLType, getSqlTableColumnsType, getTableColumnsSQLName, getTableFromConfig } = require('../../modules/config/config-sql')
+const {parseColumnName} = require('../../modules/config/get-config')
 const { removeKeysFromObject } = require('../../utils/code')
 
 
 class ConvertQueryToSQLCondition {
     constructor() { }
     setTable(value) {
-        console.log({ value })
         this.table = value
         if (typeof (value) === 'string')
             this.table = getTableFromConfig(value)
@@ -15,7 +15,6 @@ class ConvertQueryToSQLCondition {
     }
 
     convertCondition(condition) {
-        console.log({ condition })
         try {
             let result = this.buildQuery(condition, queryOperators.AND);
             result = result.slice(0, result.length - 3);
@@ -69,16 +68,12 @@ class ConvertQueryToSQLCondition {
                     default:
                         let val = {}
                         val[key] = condition[key]
-                        console.log({val})
                         let column = Object.keys(parseColumnName(val, this.tableName).sqlValues)
-                        console.log({ column, val })
                         if (key !== column) {
                            val = removeKeysFromObject(val, [key])
                            val[column] = condition[key]
                         }
                         let tabledata = getSqlTableColumnsType(this.tableName)
-                        console.log(tabledata, 'tabledata')
-                        console.log({val})
                         query = `${query} ${this.tableAlias}.${column} ${sign} ${parseColumnSQLType(val, tabledata)} ${operator}`;
                         console.log({ query })
                         break;
