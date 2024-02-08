@@ -3050,7 +3050,7 @@
                                 "sqlName": "SupplierId",
                                 "type": {
                                     "type": "INT",
-                                    "isnull": false
+                                    "isnull": true
                                 },
                                 "foreignkey": {
                                     "ref_table": "tbl_Suppliers",
@@ -3063,7 +3063,7 @@
                                 "sqlName": "ClientId",
                                 "type": {
                                     "type": "INT",
-                                    "isnull": false
+                                    "isnull": true
                                 },
                                 "foreignkey": {
                                     "ref_table": "tbl_Clients",

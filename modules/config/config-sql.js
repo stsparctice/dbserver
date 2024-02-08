@@ -18,14 +18,14 @@ function getAllSQLTablesFromConfig(config = DBconfig) {
 }
 
 function existsEntityInSql(
-    entityName, config=DBconfig){
+    entityName, config = DBconfig) {
     const tables = getAllSQLTablesFromConfig(config)
-    const entitiesNames = tables.map(({MTDTable})=>MTDTable.name)
+    const entitiesNames = tables.map(({ MTDTable }) => MTDTable.name)
     return entitiesNames.includes(entityName)
 }
 
 function getTableFromConfig(tableName, config = DBconfig) {
-    console.log({tableName});
+    console.log({ tableName });
     try {
         if (typeof tableName !== 'string') {
             let error = notifications.find(({ status }) => status === 519);
@@ -63,11 +63,16 @@ function getSqlTableColumnsType(tablename, config = DBconfig) {
 function getSQLReferencedColumns(tablename, config = DBconfig) {
     try {
         const table = getTableFromConfig(tablename, config);
-        const columns = table.columns.filter(col => col.foreignkey).map(col => ({
-            table: { sqlName: table.MTDTable.name.sqlName, alias: table.MTDTable.name.name },
-            sqlName: col.sqlName,
-            ref: col.foreignkey
-        }));
+        const columns = table.columns.filter(col => col.foreignkey).map(col => {
+            const { ref_table, ref_column } = col.foreignkey
+            const refTable = getTableFromConfig(ref_table)
+            const column = refTable.columns.find(({ sqlName }) => sqlName === ref_column)
+            return {
+                table: { sqlName: table.MTDTable.name.sqlName, alias: table.MTDTable.name.name },
+                sqlName: col.sqlName,
+                ref: { ...col.foreignkey, name: column.name }
+            }
+        });
         return columns;
     }
     catch (err) {
@@ -370,7 +375,7 @@ function parseSqlListToEntities(list, entity, config = DBconfig) {
 }
 
 function parseSqlObjectToEntity(object, entity, config = DBconfig) {
-    console.log({object, entity})
+    console.log({ object, entity })
     const columns = getTableColumns(entity, config)
     let objectKeys = Object.keys(object)
     let entityObject = columns.reduce((obj, col) => {
@@ -401,7 +406,7 @@ function parseSqlObjectToEntity(object, entity, config = DBconfig) {
             entityObject[key] = parseSqlListToEntities(object[key], key)
         else {
             // entityObject[key] = parseSqlObjectToEntity(object[key], key)
-            entityObject[key] = object[ key];
+            entityObject[key] = object[key];
         }
     }
     return entityObject

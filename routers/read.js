@@ -4,9 +4,9 @@ const { countRowsSql,
     readFromMongo,
     getCountDocumentsMng,
     readFromSql,
-    autoComplete, 
+    autoComplete,
     readFromSqlAndMongo,
-    readFullEntity} = require('../modules/read');
+    readFullEntity } = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
 const { convertQueryToObject } = require('../utils/convert_query')
@@ -43,9 +43,9 @@ router.get('/readOne/:entityName', async (req, res) => {
     try {
         console.log(req.query)
         const condition = convertQueryToObject(req.query)
-        console.log({condition})
-        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition, topn: 1 }, readFromSql, readFromMongo);
-        console.log({response})
+        console.log({ condition })
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition, topn: 1 }, readFromSql, readFromMongo, readFromSqlAndMongo);
+        console.log({ response })
         res.status(200).send(response);
     }
     catch (error) {
@@ -102,7 +102,7 @@ router.get('/readMany/:entityName', async (req, res) => {
 
 router.post('/readMany/:entityName', async (req, res) => {
     try {
-        const { condition,fields, topn, skip } = req.body
+        const { condition, fields, topn, skip } = req.body
         let response = await routeEntityByItsType({ entityName: req.params.entityName, condition, fields, topn: topn ? topn : 100, skip: skip ? skip : 0 }, readFromSql, readFromMongo, readFromSqlAndMongo);
         res.status(200).send(response);
     }

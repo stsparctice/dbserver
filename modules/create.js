@@ -6,7 +6,7 @@ const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 const { newTransaction } = require('../services/sql/sql-connection')
 const { SQL_DBNAME } = process.env
 
-const { getSqlTableColumnsType, parseColumnSQLType, getPrimaryKeyField, parseSqlObjectToEntity, getConnectedEntities, getConnectionBetweenEntities, getTableFromConfig } = require('./config/config-sql');
+const { getSqlTableColumnsType, parseColumnSQLType, getPrimaryKeyField, parseSqlObjectToEntity, getConnectedEntities, getConnectionBetweenEntities, getTableFromConfig, getInnerReferencedColumns, getSQLReferencedColumns } = require('./config/config-sql');
 const { getConnectionBetweenMongoAndSqlEntities } = require('./config/get-config');
 const { dropDocumentMng } = require('./update');
 const { createQuery } = require('../services/sql/sql-queries');
@@ -66,7 +66,13 @@ async function insertOneSql(obj) {
         }
 
         const { connectedEntities } = obj
-        console.log('connected', obj);
+        const referenceColumns = getSQLReferencedColumns(obj.tableName)
+        referenceColumns.forEach(({sqlName, ref})=>{
+            if(typeof(obj.sqlValues[sqlName])==='object'){
+                const value = obj.sqlValues[sqlName]
+                obj.sqlValues[sqlName] = value[ref.name]
+            }
+        })
         if (connectedEntities) {
             const queries = buildInsertQueriesForTransaction(obj)
             const response = await sqlTransaction(queries)

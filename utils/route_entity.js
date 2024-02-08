@@ -6,11 +6,11 @@ const { DBType } = require('./types')
 
 const routeEntityByItsType = async (data, sql, mongo, transaction) => {
     try {
+        console.log(data);
         let dbObject = getDBTypeAndName(data.entityName)
+        console.log(dbObject);
         let result;
         if (dbObject.length > 1) {
-            
-            // data.sqlEntityName = dbObject.find(({type})=>type===DBType.SQL)
             result =await transaction(data)
         }
         else {
