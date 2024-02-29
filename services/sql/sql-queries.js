@@ -1,9 +1,9 @@
 require('dotenv')
 const { types } = require('../../modules/config/config-objects');
-const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn, parseColumnName, getSqlTableColumnsType, parseOneColumnSQLType } = require('../../modules/config/config-sql')
+const { getTableFromConfig, getPrimaryKeyField, getTableAlias, getDefaultColumn, parseColumnName, getSqlTableColumnsType, parseOneColumnSQLType, getIdentityColumns, parseEntityToSqlObject } = require('../../modules/config/config-sql')
 const { getDBTypeAndName } = require('../../modules/config/get-config');
 const { getConverter } = require('../../services/sql/sql-convert-query-to-condition');
-const { isEmpyObject } = require('../../utils/code');
+const { isEmpyObject, removeKeysFromObject } = require('../../utils/code');
 const { DBType } = require('../../utils/types');
 const { SQL_DBNAME } = process.env
 
@@ -42,10 +42,13 @@ const updateQuery = (obj) => {
         throw error
     }
     try {
-        console.log({ obj })
         const convert = getConverter(obj.tableName)
         obj.condition = convert.convertCondition(obj.condition)
         const alias = getTableAlias(obj.tableName)
+        const identityColumns = getIdentityColumns(obj.tableName);
+        obj.sqlValues =  removeKeysFromObject(obj.sqlValues, identityColumns)
+        obj.sqlValues = parseEntityToSqlObject(obj.sqlValues, obj.tableName);
+        console.log(obj.sqlValues);
         const valEntries = Object.entries(obj.sqlValues);
         const tableData = getSqlTableColumnsType(obj.tableName)
         const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseOneColumnSQLType({ name: c[0], value: c[1] }, tableData)}`).join(',')
@@ -58,7 +61,7 @@ const updateQuery = (obj) => {
     }
 }
 
-const readQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
+const buildReadQuey = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
     const convert = getConverter(tableName)
     condition = convert.convertCondition(condition)
     query = `USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableAlias(tableName)} where ${condition}`
@@ -113,6 +116,7 @@ const getSelectSqlQueryWithFK = ({ tableName, fields = [], condition = {}, topn 
             }).map(({ sqlName }) => sqlName)
         }];
         let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
+        console.log({join});
         let joinTables = []
         if (foreignKeyColumns.length > 0) {
             foreignKeyColumns.forEach(column => {
@@ -120,6 +124,7 @@ const getSelectSqlQueryWithFK = ({ tableName, fields = [], condition = {}, topn 
                 const columnToJoin = column.foreignkey.ref_column;
                 let alias = getTableAlias(tableToJoin);
                 const defaultcolumn = getDefaultColumn(tableToJoin)
+                console.log({defaultcolumn});
                 if (joinTables.some(jt => jt.tableToJoin === tableToJoin)) {
                     let count = joinTables.filter(jt => jt.tableToJoin === tableToJoin).length
                     alias = `${alias}${count}`
@@ -194,6 +199,6 @@ module.exports = {
     convertType,
     updateQuery,
     createQuery,
-    readQuery,
+    buildReadQuey,
     readFullEntityQuery
 };

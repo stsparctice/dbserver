@@ -105,10 +105,10 @@ function parseColumnName(values, table) {
                     else {
                         if (Array.isArray(values[name])) {
                             const isEntity = existsEntityInSql(name)
-                            if(isEntity){
+                            if (isEntity) {
                                 connectedEntities[name] = values[name].map(item => parseColumnName(item, name))
                             }
-                            else{
+                            else {
                                 noSqlValues[name] = values[name];
                             }
                         }
@@ -116,7 +116,7 @@ function parseColumnName(values, table) {
                             noSqlValues[name] = values[name];
                         }
                     }
-                                  }
+                }
             }
         }
 

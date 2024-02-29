@@ -5,7 +5,7 @@ const { drop, updateColumn, readAll, read, sqlTransaction } = require('../servic
 const { table } = require('console');
 const { getConnectedEntities } = require('./config/config-sql');
 const { updateOneSql } = require('./update');
-const { updateQuery } = require('../services/sql/sql-queries');
+const { updateQuery, buildReadQuey } = require('../services/sql/sql-queries');
 
 // const mongoCollection = MongoDBOperations;
 
@@ -46,21 +46,29 @@ async function delTableConfig(name) {
 }
 
 async function deleteSql(obj) {
-
     try {
         console.log({ delete: obj })
         const connectedEntities = getConnectedEntities(obj.tableName)
         if (connectedEntities.length > 0) {
             const connectedProps = connectedEntities.map(({ MTDTable, columns }) => ({ tablename: MTDTable.name.sqlName, columns: columns.filter(({ foreignkey }) => foreignkey && foreignkey.ref_table === obj.tableName).map(({ sqlName, foreignkey }) => ({ sqlName, ref_column: foreignkey.ref_column })) }))
-            const mainObject = await read(obj)
-            console.log({ mainObject })
+            const myReadQuery = buildReadQuey({ tableName: obj.tableName, condition: obj.condition })
+            const mainObject = await read(myReadQuery)
             let queryItems = connectedProps.map(({ tablename, columns }) => columns.map(({ sqlName, ref_column }) => ({ tableName: tablename, sqlValues: obj.sqlValues, condition: Object.fromEntries([[sqlName, mainObject[0][ref_column]]]) })))
             queryItems = queryItems.reduce((all, item) => all = [...all, ...item], [])
-            console.log(queryItems)
-
-            const updateQueries = queryItems.map(q => updateQuery(q))
+            const readQueryItems = queryItems.map(({ tableName, condition }, index) => ({ index, query: buildReadQuey({ tableName, condition }) }))
+            const disableIndexes = await Promise.all(readQueryItems.map(async rqi => {
+                const result = await read(rqi.query)
+                if (result.length>0) {
+                    return rqi.index
+                }
+                else {
+                    return -1
+                }
+            }))
+            
+            let updateQueries = queryItems.map((q, i) => disableIndexes.includes(i)? updateQuery(q):'')
             updateQueries.push(updateQuery(obj))
-            console.log(updateQueries)
+            updateQueries = updateQueries.filter(q=>q!=='');
             const response = await sqlTransaction(updateQueries)
             console.log({ response })
             return response

@@ -118,7 +118,8 @@
                             },
                             "description": {
                                 "description": "Table that contain all areas"
-                            }
+                            },
+                            "defaultColumn":"AreaName"
                         },
                         "columns": [
                             {

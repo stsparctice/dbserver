@@ -40,6 +40,7 @@ const create = async function (query) {
 }
 
 const read = async (query = "") => {
+
      try {
           console.log({ query })
           const result = await getPool().request().query(query.trim());
@@ -108,7 +109,9 @@ const sqlTransaction = async function (queries) {
                          await statement.prepare(command)
                          try {
                               let response = await statement.execute()
-                              returnResponse.recordset = [...returnResponse.recordset, ...response.recordset]
+                              console.log(response);
+                              if (response.recordset)
+                                   returnResponse.recordset = [...returnResponse.recordset, ...response.recordset]
                               returnResponse.rowsAffected += response.rowsAffected[0]
                          }
                          finally {

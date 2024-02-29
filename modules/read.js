@@ -4,7 +4,7 @@ const { read, readAll, countRows } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
 const { getConverter } = require('../services/sql/sql-convert-query-to-condition')
-const { getSelectSqlQueryWithFK, convertType, readQuery, readFullEntityQuery } = require('../services/sql/sql-queries')
+const { getSelectSqlQueryWithFK, convertType, buildReadQuey, readFullEntityQuery } = require('../services/sql/sql-queries')
 const { getConnectionBetweenMongoAndSqlEntities, connectBetweenMongoAndSqlObjects, parseColumnName } = require('./config/get-config');
 const { getSQLReferencedColumns, getPrimaryKeyField,
     getDefaultColumn, getColumnAlias, getTableFromConfig, getTableAlias,
@@ -18,7 +18,7 @@ async function autoComplete({ entittyName, tableName, condition }) {
     try {
         const primaryKey = getPrimaryKeyField(tableName)
         const defaultValue = getDefaultColumn(tableName)
-        const query = readQuery({ tableName, condition, n: 10, columns: [primaryKey, defaultValue] })
+        const query = buildReadQuey({ tableName, condition, n: 10, columns: [primaryKey, defaultValue] })
         const response = await read(query)
         return response
     }
@@ -31,7 +31,7 @@ async function getDetailsSql(obj) {
     try {
         if (obj.entityName && !obj.tableName)
             obj.tableName = obj.entityName
-        let query = readQuery({ tableName: obj.tableName })
+        let query = buildReadQuey({ tableName: obj.tableName })
         const response = await read(query);
         return response
     }
@@ -61,7 +61,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "columns": '*',
             "condition": `${primaryKey}=${value}`
         }
-        const query1 = readQuery(obj)
+        const query1 = buildReadQuey(obj)
         const allData = await read(query1)
         const refTablename = allData[0].TableName
         const refPrimaryKeyField = getPrimaryKeyField(refTablename)
@@ -70,7 +70,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "columns": "*",
             "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
         }
-        const query2 = readQuery(obj)
+        const query2 = buildReadQuey(obj)
         const result = await read(query2)
         allData[0].TableName = result
         return allData
@@ -97,10 +97,10 @@ async function readFullObjects(tablename) {
 async function readFullObjectsWithRef(table, fullObjects) {
     const TabeColumnName = getTabeColumnName(table)
     console.log({TabeColumnName});
-    const query = readQuery({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
+    const query = buildReadQuey({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
     let data = await read(query)
     let answer = await Promise.all(data.map(async item => {
-        const query = readQuery({ tableName: `${item[`${fullObjects.ref}`]}`, columns: '*', condition: `${getPrimaryKeyField(item[`${fullObjects.ref}`])}='${item[fullObjects.name]}'` })
+        const query = buildReadQuey({ tableName: `${item[`${fullObjects.ref}`]}`, columns: '*', condition: `${getPrimaryKeyField(item[`${fullObjects.ref}`])}='${item[fullObjects.name]}'` })
         item[`${fullObjects.name}`] = await read(query)
         return item;
     }))
@@ -155,7 +155,7 @@ async function buildObjectFromConnectedTables({ table, data }) {
                 condition[ref_column] = item[innerRef.sqlName]
                 const defaultColumn = getForeignTableDefaultColumn(ref_table)
                 console.log(ref_column, defaultColumn);
-                let readquery = readQuery({ tableName: ref_table, condition, columns: [ref_column, defaultColumn], n: 1 })
+                let readquery = buildReadQuey({ tableName: ref_table, condition, columns: [ref_column, defaultColumn], n: 1 })
                 const result = await read(readquery)
                 item[innerRef.sqlName] = result[0]
                 return item

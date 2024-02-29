@@ -53,7 +53,7 @@ const groupByObjects = (list, key) => {
     return groups
 }
 
-const distinctObjectsArrays = (list)=>{
+const distinctObjectsArrays = (list) => {
     const distinct = list.reduce((arr, obj) => {
         if (arr.length === 0) {
             return [obj]
@@ -70,4 +70,10 @@ const distinctObjectsArrays = (list)=>{
 }
 
 
-module.exports = { removeKeysFromObject, isEmpyObject, compareObjectValues, groupByObjects, distinctObjectsArrays }
+module.exports = {
+    removeKeysFromObject,
+    isEmpyObject,
+    compareObjectValues,
+    groupByObjects,
+    distinctObjectsArrays
+}

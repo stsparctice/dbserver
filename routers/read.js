@@ -50,9 +50,10 @@ router.get('/readOne/:entityName', async (req, res) => {
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 })
+
 router.post('/readOne/:entityName', async (req, res) => {
     try {
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: req.body.condition, topn: 1 }, readFromSql, readFromMongo);

@@ -2,6 +2,7 @@ const { types } = require('./config-objects')
 const notifications = require('../../config/serverNotifictionsConfig.json')
 const DBconfig = require('../../config/DBconfig.json');
 const { DBType } = require('../../utils/types');
+const { removeKeysFromObject } = require('../../utils/code');
 // const { getDBTypeAndName } = require('./get-config');
 
 function getAllSQLTablesFromConfig(config = DBconfig) {
@@ -17,15 +18,13 @@ function getAllSQLTablesFromConfig(config = DBconfig) {
     }
 }
 
-function existsEntityInSql(
-    entityName, config = DBconfig) {
+function existsEntityInSql(entityName, config = DBconfig) {
     const tables = getAllSQLTablesFromConfig(config)
     const entitiesNames = tables.map(({ MTDTable }) => MTDTable.name)
     return entitiesNames.includes(entityName)
 }
 
 function getTableFromConfig(tableName, config = DBconfig) {
-    console.log({ tableName });
     try {
         if (typeof tableName !== 'string') {
             let error = notifications.find(({ status }) => status === 519);
@@ -34,7 +33,7 @@ function getTableFromConfig(tableName, config = DBconfig) {
         }
         let tables = getAllSQLTablesFromConfig(config);
 
-        let table = tables.find(tbl => tbl.MTDTable.name.sqlName === tableName || tbl.MTDTable.name.name.trim() === tableName);
+        let table = tables.find(tbl => tbl.MTDTable.name.sqlName.trim() === tableName || tbl.MTDTable.name.name.trim() === tableName);
         if (!table) {
             let error = notifications.find(n => n.status === 512);
             error.description = `Table: ${tableName} does not exist.`;
@@ -46,7 +45,6 @@ function getTableFromConfig(tableName, config = DBconfig) {
         throw error;
     }
 }
-
 
 function getSqlTableColumnsType(tablename, config = DBconfig) {
     try {
@@ -65,7 +63,7 @@ function getSQLReferencedColumns(tablename, config = DBconfig) {
         const table = getTableFromConfig(tablename, config);
         const columns = table.columns.filter(col => col.foreignkey).map(col => {
             const { ref_table, ref_column } = col.foreignkey
-            const refTable = getTableFromConfig(ref_table)
+            const refTable = getTableFromConfig(ref_table, config)
             const column = refTable.columns.find(({ sqlName }) => sqlName === ref_column)
             return {
                 table: { sqlName: table.MTDTable.name.sqlName, alias: table.MTDTable.name.name },
@@ -79,7 +77,6 @@ function getSQLReferencedColumns(tablename, config = DBconfig) {
         throw err;
     }
 }
-
 
 function getInnerReferencedColumns(tablename, primarykey = getPrimaryKeyField, config = DBconfig) {
     try {
@@ -110,7 +107,7 @@ function getTableAccordingToRef(tablename, config = DBconfig) {
     }
 }
 
-function getForeignTableDefaultColumn(tablename, field, config = DBconfig) {
+function getForeignTableDefaultColumn(tablename, config = DBconfig) {
     try {
         const foreignTable = getTableFromConfig(tablename, config);
         const { defaultColumn } = foreignTable.MTDTable;
@@ -192,6 +189,20 @@ function getPrimaryKeyField(tablename) {
         let col = x.columns.find(col => (col.primarykey))
         if (col) {
             return col.sqlName
+        }
+        return false
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+function getIdentityColumns(tablename) {
+    try {
+        let x = getTableFromConfig(tablename)
+        let col = x.columns.filter(col => (col.isIdentity))
+        if (col) {
+            return col.map(({ sqlName }) => sqlName)
         }
         return false
     }
@@ -369,13 +380,42 @@ const readJoin = (baseTableName, baseColumn, config = DBconfig) => {
     return result;
 }
 
+function parseEntityToSqlObject(object, entity, config = DBconfig) {
+    const columns = getTableColumns(entity, config)
+    const removeKeys = []
+    let sqlObject = columns.reduce((obj, col) => {
+        const { name, sqlName } = col
+
+        if (object[name] !== undefined) {
+            obj[sqlName] = object[name]
+        }
+        if (object[sqlName] !== undefined) {
+            obj[sqlName] = object[sqlName];
+        }
+        if (Array.isArray(obj[sqlName])) {
+            obj[sqlName] = undefined
+            removeKeys.push(sqlName)
+        }
+
+        if (obj[sqlName] !== undefined && obj[sqlName] !== null && typeof obj[sqlName] === 'object') {
+            const { foreignkey } = col;
+            const entityName = getColumnAlias(foreignkey.ref_table, foreignkey.ref_column)
+            obj[sqlName] = obj[sqlName][entityName]
+        }
+        return obj;
+    }, {})
+
+    sqlObject = removeKeysFromObject(sqlObject, removeKeys)
+    return sqlObject;
+
+}
+
 function parseSqlListToEntities(list, entity, config = DBconfig) {
     list = list.map(item => parseSqlObjectToEntity(item, entity, config))
     return list
 }
 
 function parseSqlObjectToEntity(object, entity, config = DBconfig) {
-    console.log({ object, entity })
     const columns = getTableColumns(entity, config)
     let objectKeys = Object.keys(object)
     let entityObject = columns.reduce((obj, col) => {
@@ -390,6 +430,15 @@ function parseSqlObjectToEntity(object, entity, config = DBconfig) {
                         let ref_table = object[col.reference]
                         obj[name] = parseSqlObjectToEntity(object[sqlName], ref_table)
                     }
+                    else {
+                        if (object[sqlName]) {
+                            obj[name] = object[sqlName]
+                        }
+                        else {
+                            obj[name] = undefined
+                        }
+                    }
+
                 }
             }
             else {
@@ -428,11 +477,13 @@ module.exports = {
     getDefaultColumn,
     getColumnAlias,
     getPrimaryKeyField,
+    getIdentityColumns,
     getForeginKeyColumns,
     getConnectedEntities,
     getConnectionBetweenEntities,
     getObjectWithFieldNameForPrimaryKey,
     parseColumnSQLType,
+    parseEntityToSqlObject,
     parseOneColumnSQLType,
     parseSqlObjectToEntity,
     buildFullReferences
