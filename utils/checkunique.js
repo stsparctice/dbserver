@@ -34,7 +34,7 @@ function checkDataIsUnique() {
             let description = `Value: ${req.body.data[error.value]} does exist.`
             error = notifications.find(n => n.status == 409)
             error.description = description
-            res.status(error.status).send(error.description)
+            res.status(500).send(error.description)
         }
         else {
             next()

@@ -37,7 +37,7 @@ router.post('/createmany', parseTableName(), parseListOfColumnsName(), checkData
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 });
 
@@ -90,7 +90,7 @@ router.post('/createManyEntities', async (req, res) => {
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message)
+        res.status(500).send(error.message)
     }
 })
 

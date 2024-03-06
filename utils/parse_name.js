@@ -17,7 +17,7 @@ function parseTableName() {
         }
         catch (error) {
             console.log(error.description)
-            res.status(error.status).send(error.message);
+            res.status(500).send(error.message);
 
         }
     }
@@ -47,7 +47,7 @@ const parseColumnNameMiddleware = () => {
         }
         catch (error) {
             console.log({ error })
-            res.status(error.status).send(error.message);
+            res.status(500).send(error.message);
         }
     }
 }
@@ -66,7 +66,7 @@ const parseListOfColumnsName = () => {
             }
         }
         catch (error) {
-            res.status(error.status).send(error.message)
+            res.status(500).send(error.message)
         }
 
     }

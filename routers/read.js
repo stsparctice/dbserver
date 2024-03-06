@@ -22,7 +22,7 @@ router.get('/auto_complete/:entity/:column', async (req, res) => {
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message)
+        res.status(500).send(error.message)
     }
 
 });
@@ -35,7 +35,7 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
     }
     catch (error) {
         console.log(error.description)
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 });
 
@@ -97,7 +97,7 @@ router.get('/readMany/:entityName', async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        res.status(error.status).send(error.message)
+        res.status(500).send(error.message)
     }
 });
 
@@ -109,7 +109,7 @@ router.post('/readMany/:entityName', async (req, res) => {
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 })
 

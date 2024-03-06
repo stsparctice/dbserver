@@ -17,7 +17,7 @@ router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDat
     } catch (error) {
         console.log({ error })
         console.log(error.description);
-        res.status(error.status).send(error)
+        res.status(500).send(error)
     }
 })
 
@@ -28,7 +28,7 @@ router.put('/updatemany', parseTableName(), parseColumnNameMiddleware(), checkDa
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 })
 

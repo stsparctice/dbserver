@@ -5,9 +5,12 @@ const { updateOne, updateSql, updateMany, updateOneSql } = require('../modules/u
 const { parseColumnNameMiddleware, parseTableName } = require('../utils/parse_name');
 const { deleteSql } = require('../modules/delete');
 const { routerLogger } = require('../utils/logger');
+
 const router = express.Router();
+
 router.use(express.json());
 router.use(routerLogger())
+
 router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
         let response = await routeEntityByItsType(req.body, deleteSql, updateOne);
@@ -16,7 +19,7 @@ router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 });
 
@@ -27,7 +30,7 @@ router.delete('/deletemany', parseTableName(), parseColumnNameMiddleware(), asyn
     }
     catch (error) {
         console.log(error.description);
-        res.status(error.status).send(error.message);
+        res.status(500).send(error.message);
     }
 })
 
