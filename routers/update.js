@@ -5,6 +5,7 @@ const { updateSql, updateOneSql, updateOne, updateMany } = require('../modules/u
 const { routerLogger } = require('../utils/logger');
 const { checkDataIsUnique } = require('../utils/checkunique');
 const { routeEntityByItsType } = require('../utils/route_entity');
+const { readFromSql, readFromMongo } = require('../modules/read');
 
 router.use(express.json());
 router.use(routerLogger())
@@ -13,7 +14,9 @@ router.use(routerLogger())
 router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
         const response = await routeEntityByItsType(req.body, updateOneSql, updateOne)
-        res.status(204).send(response)
+        console.log({ response });
+        res.setHeader('content-location', `${JSON.stringify(response)}`)
+        res.status(204).send()
     } catch (error) {
         console.log({ error })
         console.log(error.description);

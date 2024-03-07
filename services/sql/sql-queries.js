@@ -43,16 +43,16 @@ const updateQuery = (obj) => {
     }
     try {
         const convert = getConverter(obj.tableName)
-        obj.condition = convert.convertCondition(obj.condition)
+        const condition = convert.convertCondition(obj.condition)
         const alias = getTableAlias(obj.tableName)
         const identityColumns = getIdentityColumns(obj.tableName);
-        obj.sqlValues =  removeKeysFromObject(obj.sqlValues, identityColumns)
+        obj.sqlValues = removeKeysFromObject(obj.sqlValues, identityColumns)
         obj.sqlValues = parseEntityToSqlObject(obj.sqlValues, obj.tableName);
         console.log(obj.sqlValues);
         const valEntries = Object.entries(obj.sqlValues);
         const tableData = getSqlTableColumnsType(obj.tableName)
         const updateValues = valEntries.map(c => `${alias}.${c[0]} =  ${parseOneColumnSQLType({ name: c[0], value: c[1] }, tableData)}`).join(',')
-        const query = `use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${obj.condition}`
+        const query = `use ${SQL_DBNAME} UPDATE ${alias} SET ${updateValues} FROM ${obj.tableName} ${alias} WHERE ${condition}`
         return query
     }
     catch (error) {
@@ -116,7 +116,7 @@ const getSelectSqlQueryWithFK = ({ tableName, fields = [], condition = {}, topn 
             }).map(({ sqlName }) => sqlName)
         }];
         let join = `${myTable.MTDTable.name.sqlName} ${myTable.MTDTable.name.name}`;
-        console.log({join});
+        console.log({ join });
         let joinTables = []
         if (foreignKeyColumns.length > 0) {
             foreignKeyColumns.forEach(column => {
@@ -124,7 +124,7 @@ const getSelectSqlQueryWithFK = ({ tableName, fields = [], condition = {}, topn 
                 const columnToJoin = column.foreignkey.ref_column;
                 let alias = getTableAlias(tableToJoin);
                 const defaultcolumn = getDefaultColumn(tableToJoin)
-                console.log({defaultcolumn});
+                console.log({ defaultcolumn });
                 if (joinTables.some(jt => jt.tableToJoin === tableToJoin)) {
                     let count = joinTables.filter(jt => jt.tableToJoin === tableToJoin).length
                     alias = `${alias}${count}`

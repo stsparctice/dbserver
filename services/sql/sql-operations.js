@@ -231,7 +231,11 @@ const update = async function (obj) {
           const query = updateQuery(obj)
           console.log({ query })
           const result = await getPool().request().query(query)
-          return result;
+          console.log({ result });
+          if (result.rowsAffected)
+               return result.rowsAffected[0];
+          else
+               return 0
      }
      catch (error) {
           console.log(error)
