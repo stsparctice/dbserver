@@ -1,13 +1,29 @@
 [
     {
-        "name":"bookkeeping",
-        "fields":{
-            "tbl_FinishProducts":"BookkeepingCode",
-            "tbl_Additions":"BookkeepingCode",
-            "tbl_Pumps":"BookkeepingCode",
-            "tbl_Clients":"BookkeepingNumber",
-            "tbl_Suppliers":"BookkeepingNumber"
-        }, 
-        "allowNulls":true
+        "name": "bookkeepingCode",
+        "fields": [
+            {
+                "table": "tbl_FinishProducts",
+                "sqlName": "BookkeepingCode"
+            },
+            {
+                "table": "tbl_Additions",
+                "sqlName": "BookkeepingCode"
+            },
+            {
+                "table": "tbl_Pumps",
+                "sqlName": "BookkeepingCode"
+            },
+            {
+                "table": "tbl_Clients",
+                "sqlName": "BookkeepingCode"
+            }
+            ,
+            {
+                "table": "tbl_Suppliers",
+                "sqlName": "BookkeepingCode"
+            }
+        ],
+        "allowNulls": true
     }
 ]

@@ -61,11 +61,30 @@ const updateQuery = (obj) => {
     }
 }
 
-const buildReadQuey = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
-    const convert = getConverter(tableName)
-    condition = convert.convertCondition(condition)
-    query = `USE ${SQL_DBNAME} SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableAlias(tableName)} where ${condition}`
+const selectQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
+    if (typeof condition === 'object' && Object.keys(condition).length > 0) {
+        condition = '1=1';
+    }
+    if (condition !== '1=1') {
+        const convert = getConverter(tableName)
+        condition = convert.convertCondition(condition)
+    }
+    query = `SELECT TOP ${n} ${columns} FROM ${tableName} AS ${getTableAlias(tableName)} where ${condition}`
     return query;
+}
+
+const selectOneQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 })=>{
+    const query = selectQuery({tableName, columns, condition, n})
+    return `USE ${SQL_DBNAME} ${query}`
+}
+
+const selectFromMutipleTablesQuery = ({ queries }) => {
+    if (Array.isArray(queries) === false) {
+        throw new Error(`'queries must be of type Array`)
+    }
+    const unionAll = queries.join(` union all `)
+
+    return  `USE ${SQL_DBNAME} ${unionAll}`;
 }
 
 const buildSelectPart = (columns, alias, references) => {
@@ -199,6 +218,8 @@ module.exports = {
     convertType,
     updateQuery,
     createQuery,
-    buildReadQuey,
+    selectQuery,
+    selectOneQuery,
+    selectFromMutipleTablesQuery,
     readFullEntityQuery
 };

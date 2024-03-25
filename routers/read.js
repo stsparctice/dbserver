@@ -6,7 +6,8 @@ const { countRowsSql,
     readFromSql,
     autoComplete,
     readFromSqlAndMongo,
-    readFullEntity } = require('../modules/read');
+    readFullEntity, 
+    readUniqueDataInMoreEntities} = require('../modules/read');
 const { routerLogger } = require('../utils/logger');
 const { routeEntityByItsType } = require('../utils/route_entity');
 const { convertQueryToObject } = require('../utils/convert_query')
@@ -31,7 +32,13 @@ router.get('/readOne/:entityName/:id', async (req, res) => {
     try {
         const condition = convertQueryToObject(req.query)
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition: { Id: req.params.id, ...condition }, topn: 1 }, readFromSql, readFromMongo);
-        res.status(200).send(response);
+        console.log({ response })
+        if (response.length == 0) {
+            res.status(200).json(null)
+        }
+        if (response.length >= 1){
+            res.status(200).json(response[0]);
+        }
     }
     catch (error) {
         console.log(error.description)
@@ -45,6 +52,21 @@ router.get('/readOne/:entityName', async (req, res) => {
         const condition = convertQueryToObject(req.query)
         console.log({ condition })
         const response = await routeEntityByItsType({ entityName: req.params.entityName, condition, topn: 1 }, readFromSql, readFromMongo, readFromSqlAndMongo);
+        console.log({ response })
+        res.status(200).send(response);
+    }
+    catch (error) {
+        console.log(error.description);
+        res.status(500).send(error.message);
+    }
+})
+
+router.get('/unique/:entityName', async(req, res)=>{
+    try {
+        console.log(req.query)
+        const condition = convertQueryToObject(req.query)
+        console.log({ condition })
+        const response = await routeEntityByItsType({ entityName: req.params.entityName, condition }, readUniqueDataInMoreEntities);
         console.log({ response })
         res.status(200).send(response);
     }

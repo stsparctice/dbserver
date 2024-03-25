@@ -40,7 +40,6 @@ const create = async function (query) {
 }
 
 const read = async (query = "") => {
-
      try {
           console.log({ query })
           const result = await getPool().request().query(query.trim());
