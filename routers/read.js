@@ -61,7 +61,7 @@ router.get('/readOne/:entityName', async (req, res) => {
     }
 })
 
-router.get('/unique/:entityName', async(req, res)=>{
+router.get('/uniqueindb/:entityName', async(req, res)=>{
     try {
         console.log(req.query)
         const condition = convertQueryToObject(req.query)

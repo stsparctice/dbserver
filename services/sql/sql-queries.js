@@ -62,7 +62,8 @@ const updateQuery = (obj) => {
 }
 
 const selectQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
-    if (typeof condition === 'object' && Object.keys(condition).length > 0) {
+    console.log({condition});
+    if (typeof condition === 'object' && Object.keys(condition).length === 0) {
         condition = '1=1';
     }
     if (condition !== '1=1') {

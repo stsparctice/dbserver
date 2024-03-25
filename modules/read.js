@@ -221,10 +221,10 @@ async function readFromSql(obj) {
     }
 }
 
-async function readUniqueDataInMoreEntities({ entityName, data }) {
+async function readUniqueDataInMoreEntities({ entityName,condition={}, data }) {
     const tableName = getTableSQLName(entityName)
     const uniqueGroups = getAllUniqueGroupsForTable(tableName)
-    const selectQueries = uniqueGroups.map(({ name, fields }) => ({ name, queries: fields.map(({ table, sqlName }) => selectQuery({ tableName: table, columns: [sqlName] })) }))
+    const selectQueries = uniqueGroups.map(({ name, fields }) => ({ name, queries: fields.map(({ table, sqlName }) => selectQuery({ tableName: table, columns: [sqlName], condition })) }))
     selectQueries.forEach((q) => {
         q.uniqueQuery = selectFromMutipleTablesQuery({ queries: q.queries })
     })
