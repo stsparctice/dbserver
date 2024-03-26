@@ -12,11 +12,11 @@ const { readFromSql, readFromMongo, readFromSqlAndMongo } = require('../modules/
 router.use(express.json());
 router.use(routerLogger())
 
-router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
+router.post('/createone/:entityname', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
         const response = await routeEntityByItsType(req.body, insertOneSql, insertOne, transactionSqlMongo);
         if (response) {
-            const newObject = await routeEntityByItsType({entityName:req.body.entityName, condition:response,  topn: 1, skip:0 }, readFromSql, readFromMongo, readFromSqlAndMongo)
+            const newObject = await routeEntityByItsType({entityName:req.params.entityname, condition:response,  topn: 1, skip:0 }, readFromSql, readFromMongo, readFromSqlAndMongo)
             res.status(201).send(newObject);
         }
         else{
@@ -29,7 +29,7 @@ router.post('/createone', parseTableName(), parseColumnNameMiddleware(), checkDa
     }
 });
 
-router.post('/createmany', parseTableName(), parseListOfColumnsName(), checkDataIsUnique(), async (req, res) => {
+router.post('/createmany/:entityname', parseTableName(), parseListOfColumnsName(), checkDataIsUnique(), async (req, res) => {
     try {
 
         const response = await routeEntityByItsType(req.body, insertManySql, insertMany);

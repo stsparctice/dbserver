@@ -11,12 +11,13 @@ router.use(express.json());
 router.use(routerLogger())
 
 
-router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
+router.put('/updateone/:entityname', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
+       
         const response = await routeEntityByItsType(req.body, updateOneSql, updateOne)
         console.log({ response });
         res.setHeader('content-location', `${JSON.stringify(response)}`)
-        res.status(204).send()
+        res.status(204).end()
     } catch (error) {
         console.log({ error })
         console.log(error.description);
@@ -24,7 +25,7 @@ router.put('/updateone', parseTableName(), parseColumnNameMiddleware(), checkDat
     }
 })
 
-router.put('/updatemany', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
+router.put('/updatemany/:entityname', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
         const response = await routeEntityByItsType(req.body, updateSql, updateMany);
         res.status(204).send(response);

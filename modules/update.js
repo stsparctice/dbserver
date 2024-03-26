@@ -21,13 +21,13 @@ async function updateOneSql(obj) {
 
             if (obj.condition === undefined || isEmpyObject(obj.condition)) {
                 obj.condition[primarykey] = obj.sqlValues[primarykey]
-                console.log({condition:obj.condition});
+                console.log({ condition: obj.condition });
             }
             obj.sqlValues = removeKeysFromObject(obj.sqlValues, [primarykey])
         }
         const rowsAffected = await update(obj);
         const condition = parseSqlObjectToEntity(obj.condition, obj.entityName)
-        const result = { rowsAffected, condition };
+        const result = { count: rowsAffected, condition };
         return result;
     }
     catch (error) {

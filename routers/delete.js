@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(express.json());
 router.use(routerLogger())
 
-router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
+router.delete('/deleteone/:entityname', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
         let response = await routeEntityByItsType(req.body, deleteSql, updateOne);
         console.log({response})
@@ -23,7 +23,7 @@ router.delete('/deleteone', parseTableName(), parseColumnNameMiddleware(), async
     }
 });
 
-router.delete('/deletemany', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
+router.delete('/deletemany/:entityname', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
         let response = await routeEntityByItsType(req.body, updateSql, updateMany);
         res.status(204).send(response);

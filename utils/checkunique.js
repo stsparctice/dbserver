@@ -25,7 +25,7 @@ function checkDataIsUnique() {
     return async (req, res, next) => {
         let error
         for (let value of Object.keys(req.body.data)) {
-            let check = await uniqueValue({ table: req.body.entityName, name: value, value: req.body.data[value] })
+            let check = await uniqueValue({ table: req.params.entityname, name: value, value: req.body.data[value] })
             if (check == false) {
                 error = { value }
             }
