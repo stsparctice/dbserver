@@ -16,7 +16,6 @@ router.put('/updateone/:entityname', parseTableName(), parseColumnNameMiddleware
        
         const response = await routeEntityByItsType(req.body, updateOneSql, updateOne)
         console.log({ response });
-        res.setHeader('content-location', `${JSON.stringify(response)}`)
         res.status(204).end()
     } catch (error) {
         console.log({ error })
