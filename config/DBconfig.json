@@ -3164,7 +3164,7 @@
                     {
                         "MTDTable": {
                             "name": {
-                                "name": "productsCombinations",
+                                "name": "pumpsCombinations",
                                 "sqlName": "tbl_ProductsCombinations"
                             },
                             "description": {

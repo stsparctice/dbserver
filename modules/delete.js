@@ -7,7 +7,6 @@ const { getConnectedEntities } = require('./config/config-sql');
 const { updateOneSql } = require('./update');
 const { updateQuery, selectOneQuery } = require('../services/sql/sql-queries');
 
-// const mongoCollection = MongoDBOperations;
 
 async function delTableConfig(name) {
     console.log(name);
@@ -44,7 +43,6 @@ async function delTableConfig(name) {
     // fs.writeFileSync('config.json', JSON.stringify(config));
 
 }
-
 async function deleteSql(obj) {
     try {
         console.log({ delete: obj })
