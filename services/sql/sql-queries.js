@@ -62,7 +62,6 @@ const updateQuery = (obj) => {
 }
 
 const selectQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
-    console.log({condition});
     if (typeof condition === 'object' && Object.keys(condition).length === 0) {
         condition = '1=1';
     }
@@ -74,8 +73,20 @@ const selectQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) =
     return query;
 }
 
-const selectOneQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 })=>{
-    const query = selectQuery({tableName, columns, condition, n})
+const selectOneTableQuery = ({ tableName, columns = '*', condition = '1=1', n = 100 }) => {
+    const query = selectQuery({ tableName, columns, condition, n })
+    return `USE ${SQL_DBNAME} ${query}`
+}
+
+const existQuery = ({ tableName, condition = '1=1' }) => {
+    if (typeof condition === 'object' && Object.keys(condition).length === 0) {
+        condition = '1=1';
+    }
+    if (condition !== '1=1') {
+        const convert = getConverter(tableName)
+        condition = convert.convertCondition(condition)
+    }
+    const query = `SELECT  CAST(CASE WHEN EXISTS(SELECT * FROM ${tableName} AS ${getTableAlias(tableName)} where ${condition}) THEN 1  ELSE 0  END AS BIT) as [exists]`
     return `USE ${SQL_DBNAME} ${query}`
 }
 
@@ -85,7 +96,7 @@ const selectFromMutipleTablesQuery = ({ queries }) => {
     }
     const unionAll = queries.join(` union all `)
 
-    return  `USE ${SQL_DBNAME} ${unionAll}`;
+    return `USE ${SQL_DBNAME} ${unionAll}`;
 }
 
 const buildSelectPart = (columns, alias, references) => {
@@ -220,7 +231,8 @@ module.exports = {
     updateQuery,
     createQuery,
     selectQuery,
-    selectOneQuery,
+    selectOneTableQuery,
     selectFromMutipleTablesQuery,
+    existQuery,
     readFullEntityQuery
 };

@@ -4,7 +4,7 @@ const { read, readAll, countRows } = require('../services/sql/sql-operations');
 const MongoDBOperations = require('../services/mongoDB/mongo-operations');
 
 const { getConverter } = require('../services/sql/sql-convert-query-to-condition')
-const { getSelectSqlQueryWithFK, convertType, selectQuery, selectOneQuery, readFullEntityQuery, selectFromMutipleTablesQuery } = require('../services/sql/sql-queries')
+const { getSelectSqlQueryWithFK, convertType, selectQuery, selectOneTableQuery, readFullEntityQuery, selectFromMutipleTablesQuery, existQuery } = require('../services/sql/sql-queries')
 const { getConnectionBetweenMongoAndSqlEntities, connectBetweenMongoAndSqlObjects, parseColumnName } = require('./config/get-config');
 const { getSQLReferencedColumns, getPrimaryKeyField,
     getDefaultColumn, getColumnAlias, getTableFromConfig, getTableAlias,
@@ -19,9 +19,20 @@ async function autoComplete({ entittyName, tableName, condition }) {
     try {
         const primaryKey = getPrimaryKeyField(tableName)
         const defaultValue = getDefaultColumn(tableName)
-        const query = selectOneQuery({ tableName, condition, n: 10, columns: [primaryKey, defaultValue] })
+        const query = selectOneTableQuery({ tableName, condition, n: 10, columns: [primaryKey, defaultValue] })
         const response = await read(query)
         return response
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+async function existInSql({ tableName, condition }) {
+    try {
+        const query = existQuery({ tableName, condition })
+        const result = await read(query)
+        return result
     }
     catch (error) {
         throw error
@@ -32,7 +43,7 @@ async function getDetailsSql(obj) {
     try {
         if (obj.entityName && !obj.tableName)
             obj.tableName = obj.entityName
-        let query = selectOneQuery({ tableName: obj.tableName })
+        let query = selectOneTableQuery({ tableName: obj.tableName })
         const response = await read(query);
         return response
     }
@@ -59,7 +70,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "columns": '*',
             "condition": `${primaryKey}=${value}`
         }
-        const query1 = selectOneQuery(obj)
+        const query1 = selectOneTableQuery(obj)
         const allData = await read(query1)
         const refTablename = allData[0].TableName
         const refPrimaryKeyField = getPrimaryKeyField(refTablename)
@@ -68,7 +79,7 @@ async function readRelatedObjects(tablename, primaryKey, value, column) {
             "columns": "*",
             "condition": `${refPrimaryKeyField} = ${allData[0][column]}`
         }
-        const query2 = selectOneQuery(obj)
+        const query2 = selectOneTableQuery(obj)
         const result = await read(query2)
         allData[0].TableName = result
         return allData
@@ -95,10 +106,10 @@ async function readFullObjects(tablename) {
 async function readFullObjectsWithRef(table, fullObjects) {
     const TabeColumnName = getTabeColumnName(table)
     console.log({ TabeColumnName });
-    const query = selectOneQuery({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
+    const query = selectOneTableQuery({ tableName: `${table}`, columns: `${[...TabeColumnName]}` })
     let data = await read(query)
     let answer = await Promise.all(data.map(async item => {
-        const query = selectOneQuery({ tableName: `${item[`${fullObjects.ref}`]}`, columns: '*', condition: `${getPrimaryKeyField(item[`${fullObjects.ref}`])}='${item[fullObjects.name]}'` })
+        const query = selectOneTableQuery({ tableName: `${item[`${fullObjects.ref}`]}`, columns: '*', condition: `${getPrimaryKeyField(item[`${fullObjects.ref}`])}='${item[fullObjects.name]}'` })
         item[`${fullObjects.name}`] = await read(query)
         return item;
     }))
@@ -153,7 +164,7 @@ async function buildObjectFromConnectedTables({ table, data }) {
                 condition[ref_column] = item[innerRef.sqlName]
                 const defaultColumn = getForeignTableDefaultColumn(ref_table)
                 console.log(ref_column, defaultColumn);
-                let readquery = selectOneQuery({ tableName: ref_table, condition, columns: [ref_column, defaultColumn], n: 1 })
+                let readquery = selectOneTableQuery({ tableName: ref_table, condition, columns: [ref_column, defaultColumn], n: 1 })
                 const result = await read(readquery)
                 item[innerRef.sqlName] = result[0]
                 return item
@@ -221,7 +232,7 @@ async function readFromSql(obj) {
     }
 }
 
-async function readUniqueDataInMoreEntities({ entityName,condition={}, data }) {
+async function readUniqueDataInMoreEntities({ entityName, condition = {}, data }) {
     const tableName = getTableSQLName(entityName)
     const uniqueGroups = getAllUniqueGroupsForTable(tableName)
     const selectQueries = uniqueGroups.map(({ name, fields }) => ({ name, queries: fields.map(({ table, sqlName }) => selectQuery({ tableName: table, columns: [sqlName], condition })) }))
@@ -248,6 +259,7 @@ async function readUniqueDataInMoreEntities({ entityName,condition={}, data }) {
 
     return responseList
 }
+
 const selectReferenceColumn = async (values, tableName) => {
     const columnReference = getSQLReferencedColumns(tableName)
     console.log({ columnReference })
@@ -518,7 +530,7 @@ async function getCountDocumentsMng({ collection, condition = {} }) {
 module.exports = {
     getDetailsSql,
     getAllSql, countRowsSql,
-    readUniqueDataInMoreEntities,
+    readUniqueDataInMoreEntities, existInSql,
     readFullObjects, readFullObjectsWithRef, readRelatedObjects,
     readFromMongo, readFullEntity, autoComplete,
     readFromSqlAndMongo,

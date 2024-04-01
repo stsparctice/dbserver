@@ -241,8 +241,8 @@ function getConnectedEntities(tableName, config = DBconfig) {
 function getConnectionBetweenEntities(tableName) {
     const connectedTables = getConnectedEntities(tableName)
     const connectedFields = connectedTables.map(({ MTDTable, columns }) => ({
-        tableName: MTDTable.name.sqlName, column: columns.filter(({ foreignkey }) => foreignkey && foreignkey.ref_table === tableName)
-            .map(({ sqlName, foreignkey }) => ({ sqlName, referenceField: foreignkey.ref_column }))
+        tableName: MTDTable.name.sqlName, columns: columns.filter(({ foreignkey }) => foreignkey && foreignkey.ref_table === tableName)
+            .map(({ sqlName, foreignkey, checkUpdates }) => ({ sqlName, referenceField: foreignkey.ref_column, update:checkUpdates }))
     }))
 
     return connectedFields
@@ -398,6 +398,8 @@ function parseEntityToSqlObject(object, entity, config = DBconfig) {
         }
 
         if (obj[sqlName] !== undefined && obj[sqlName] !== null && typeof obj[sqlName] === 'object') {
+            console.log({col});
+            console.log({x: obj[sqlName]});
             const { foreignkey } = col;
             const entityName = getColumnAlias(foreignkey.ref_table, foreignkey.ref_column)
             obj[sqlName] = obj[sqlName][entityName]

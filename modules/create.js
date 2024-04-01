@@ -45,7 +45,7 @@ function buildInsertQueriesForTransaction(data) {
                     item.sqlValues = removeKeysFromObject(item.sqlValues, removeEmptyKeys)
                     console.log(item.sqlValues)
                     let { columns, values } = getInsertQueryData({ tableName: item.sqlEntityName, sqlValues: item.sqlValues })
-                    columns = columns + `,${connectionColumns.column[0].sqlName}`
+                    columns = columns + `,${connectionColumns.columns[0].sqlName}`
                     values = values + `, <result>`
                     return createQuery(item.sqlEntityName, columns, values)
 

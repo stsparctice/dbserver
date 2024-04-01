@@ -43,6 +43,7 @@ const read = async (query = "") => {
      try {
           console.log({ query })
           const result = await getPool().request().query(query.trim());
+          console.log(result)
           if (result.recordset) {
                return result.recordset;
           }
@@ -230,7 +231,6 @@ const update = async function (obj) {
           const query = updateQuery(obj)
           console.log({ query })
           const result = await getPool().request().query(query)
-          console.log({ result });
           if (result.rowsAffected)
                return result.rowsAffected[0];
           else
