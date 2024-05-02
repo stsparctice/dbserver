@@ -14,12 +14,12 @@ router.use(routerLogger())
 
 router.post('/createone/:entityname', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        const response = await routeEntityByItsType(req.body, insertOneSql, insertOne, transactionSqlMongo);
+        const response = await routeEntityByItsType({ data: req.body, sql: insertOneSql, mongo: insertOne, transaction: transactionSqlMongo });
         if (response) {
-            const newObject = await routeEntityByItsType({entityName:req.params.entityname, condition:response,  topn: 1, skip:0 }, readFromSql, readFromMongo, readFromSqlAndMongo)
+            const newObject = await routeEntityByItsType({ data: { entityName: req.params.entityname, condition: response, topn: 1, skip: 0 }, sql: readFromSql, mongo: readFromMongo, transaction: readFromSqlAndMongo })
             res.status(201).send(newObject);
         }
-        else{
+        else {
             res.status(500).send('internal server error')
         }
     }
@@ -32,7 +32,7 @@ router.post('/createone/:entityname', parseTableName(), parseColumnNameMiddlewar
 router.post('/createmany/:entityname', parseTableName(), parseListOfColumnsName(), checkDataIsUnique(), async (req, res) => {
     try {
 
-        const response = await routeEntityByItsType(req.body, insertManySql, insertMany);
+        const response = await routeEntityByItsType({ data: req.body, sql: insertManySql, mongo: insertMany });
         res.status(201).send(response);
     }
     catch (error) {

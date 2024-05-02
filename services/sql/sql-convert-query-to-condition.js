@@ -16,6 +16,7 @@ class ConvertQueryToSQLCondition {
 
     convertCondition(condition) {
         try {
+            console.log({condition});
             let result = this.buildQuery(condition, queryOperators.AND);
             result = result.slice(0, result.length - 3);
             return result;
@@ -91,6 +92,7 @@ class ConvertQueryToSQLCondition {
 
     buildOrAndGteLte(array, operator, sign = '=') {
         let query = ``;
+        console.log({array});
         for (let item of array) {
             if (array.indexOf(item) === array.length - 1) {
                 query = `${query} ${this.buildQuery(item, "", sign)}`

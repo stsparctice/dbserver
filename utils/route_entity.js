@@ -4,16 +4,16 @@ const { convertToMongoFilter } = require('../services/mongoDB/mongoDB-helpers')
 const { notifications } = require('../config/serverNotifictionsConfig.json')
 const { DBType } = require('./types')
 
-const routeEntityByItsType = async (data, sql, mongo, transaction) => {
+const routeEntityByItsType = async ({data, sql, mongo, transaction}) => {
     try {
         let dbObject = getDBTypeAndName(data.entityName)
         let result;
-        if (dbObject.length > 1) {
+        console.log({dbObject});
+        if (dbObject.length > 1 && transaction) {
             result =await transaction(data)
         }
         else {
             let { type } = dbObject[0]
-
             if (type === DBType.SQL) {
                 data.tableName = dbObject[0].entityName
                 if (sql === undefined) {

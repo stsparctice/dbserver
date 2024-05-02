@@ -13,8 +13,8 @@ router.use(routerLogger())
 
 router.delete('/deleteone/:entityname', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
-        let response = await routeEntityByItsType(req.body, deleteSql, updateOne);
-        console.log({response})
+        let response = await routeEntityByItsType({ data: req.body, sql: deleteSql, mongo: updateOne });
+        console.log({ response })
         res.status(204).send();
     }
     catch (error) {
@@ -25,7 +25,7 @@ router.delete('/deleteone/:entityname', parseTableName(), parseColumnNameMiddlew
 
 router.delete('/deletemany/:entityname', parseTableName(), parseColumnNameMiddleware(), async (req, res) => {
     try {
-        let response = await routeEntityByItsType(req.body, updateSql, updateMany);
+        let response = await routeEntityByItsType({ data: req.body, sql: updateSql, mongo: updateMany });
         res.status(204).send(response);
     }
     catch (error) {

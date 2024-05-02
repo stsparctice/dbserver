@@ -14,7 +14,7 @@ router.use(routerLogger())
 router.put('/updateone/:entityname', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
        
-        const response = await routeEntityByItsType(req.body, updateOneSql, updateOne)
+        const response = await routeEntityByItsType({data:req.body,sql: updateOneSql,mongo: updateOne})
         console.log({ response });
         res.status(204).end()
     } catch (error) {
@@ -26,7 +26,7 @@ router.put('/updateone/:entityname', parseTableName(), parseColumnNameMiddleware
 
 router.put('/updatemany/:entityname', parseTableName(), parseColumnNameMiddleware(), checkDataIsUnique(), async (req, res) => {
     try {
-        const response = await routeEntityByItsType(req.body, updateSql, updateMany);
+        const response = await routeEntityByItsType({data:req.body,sql: updateSql,mongo: updateMany});
         res.status(204).send(response);
     }
     catch (error) {
